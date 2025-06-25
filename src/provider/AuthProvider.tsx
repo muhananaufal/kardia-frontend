@@ -19,6 +19,7 @@ const AuthContext = createContext<
           token: string | null;
           user: User | null;
           setToken: (newToken: string | null) => void;
+          refreshUserProfile: () => Promise<void>;
       }
     | undefined
 >(undefined);
@@ -31,11 +32,29 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken_(newToken);
     };
 
+    // refresh user profile function
+    const refreshUserProfile = async () => {
+        if (token) {
+            try {
+                axios.defaults.headers.common["Authorization"] =
+                    "Bearer " + token;
+                const response = await fetchProfile(token);
+                console.log("Refreshed user profile:", response);
+                setUser(response.data);
+            } catch (error) {
+                console.error("Failed to refresh user profile:", error);
+                setToken(null); // Clear token if validation fails
+                setUser(null);
+            }
+        }
+    };
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             if (token) {
                 try {
-                    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+                    axios.defaults.headers.common["Authorization"] =
+                        "Bearer " + token;
                     localStorage.setItem("token", token);
 
                     const response = await fetchProfile(token);
@@ -62,6 +81,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             token,
             user,
             setToken,
+            refreshUserProfile,
         }),
         [token, user]
     );

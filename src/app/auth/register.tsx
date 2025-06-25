@@ -38,9 +38,6 @@ const registerSchema = z
             })
             .regex(/[0-9]/, {
                 message: "Password must contain at least one number",
-            })
-            .regex(/[^A-Za-z0-9]/, {
-                message: "Password must contain at least one special character",
             }),
         confirmPassword: z.string(),
     })
@@ -332,7 +329,7 @@ const Register = () => {
                                                             {
                                                                 passwordStrength.strength
                                                             }
-                                                            /5
+                                                            /4
                                                         </span>
                                                     </div>
                                                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -342,14 +339,14 @@ const Register = () => {
                                                                 2
                                                                     ? "bg-red-500"
                                                                     : passwordStrength.strength <=
-                                                                      4
+                                                                      3
                                                                     ? "bg-yellow-500"
                                                                     : "bg-green-500"
                                                             }`}
                                                             style={{
                                                                 width: `${
                                                                     (passwordStrength.strength /
-                                                                        5) *
+                                                                        4) *
                                                                     100
                                                                 }%`,
                                                             }}
@@ -462,7 +459,7 @@ const Register = () => {
                                     type="submit"
                                     disabled={
                                         isLoading ||
-                                        passwordStrength.strength < 5
+                                        passwordStrength.strength < 4
                                     }
                                     className="w-full h-12 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >

@@ -38,7 +38,9 @@ const DashboardLayout = () => {
                 <div className="flex flex-col min-h-screen">
                     <SidebarToggle />
                     <main className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 to-blue-50/30">
-                        <Outlet />
+                        <div className="py-6 bg-white dark:bg-slate-900">
+                            <Outlet />
+                        </div>
                     </main>
                 </div>
             </SidebarInset>

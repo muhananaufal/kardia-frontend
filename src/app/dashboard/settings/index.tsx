@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
     User,
@@ -25,7 +25,9 @@ import { Switch } from "@/components/ui/switch";
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
@@ -34,6 +36,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/provider/AuthProvider";
 import { updateProfile } from "@/hooks/api";
+import { regionMap } from "@/lib/data";
+import { formatCountryName, formatGroupLabel } from "@/lib/utils";
 
 const pageVariants = {
     initial: { opacity: 0, y: 20 },
@@ -103,6 +107,7 @@ export default function SettingsPage() {
           }
           console.log("Profile updated successfully", profileData);
           setIsEditing(false);
+          auth?.refreshUserProfile(); // Refresh user profile after update
         } catch (error) {
           console.error("Failed to update profile:", error);
           // Optionally, you can show an error message to the user
@@ -117,8 +122,15 @@ export default function SettingsPage() {
         setPreferences((prev) => ({ ...prev, [key]: value }));
     };
 
-    console.log(profileData.date_of_birth
-    );
+    // set language ke profile data ketika preferences berubah
+    useEffect(() => {
+        setProfileData((prev) => ({
+            ...prev,
+            language: preferences.language,
+        }));
+    }, [preferences.language]);
+
+    console.log(new Date(profileData.date_of_birth).toLocaleDateString().split('/').reverse().join('-'));
 
     return (
         <div className="min-h-screen bg-white">
@@ -281,20 +293,7 @@ export default function SettingsPage() {
                                     <Input
                                         id="date_of_birth"
                                         type="date"
-                                        value={
-                                            profileData.date_of_birth &&
-                                            !isNaN(
-                                                new Date(
-                                                    profileData.date_of_birth
-                                                ).getTime()
-                                            )
-                                                ? new Date(
-                                                      profileData.date_of_birth
-                                                  )
-                                                      .toISOString()
-                                                      .split("T")[0]
-                                                : ""
-                                        }
+                                        value={new Date(profileData.date_of_birth).toLocaleDateString("en-CA")}
                                         onChange={(e) =>
                                             setProfileData((prev) => ({
                                                 ...prev,
@@ -324,7 +323,7 @@ export default function SettingsPage() {
                                     }
                                     disabled={!isEditing}
                                   >
-                                    <SelectTrigger className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                       <SelectValue placeholder="Pilih jenis kelamin" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -336,6 +335,50 @@ export default function SettingsPage() {
                                       </SelectItem>
                                     </SelectContent>
                                   </Select>
+                                </div>
+
+                                {/* Tempat tinggal berdasarkan region Mapping dengan grouping select */}
+                                <div className="space-y-2 w-full">
+                                    <Label
+                                        htmlFor="country_of_residence"
+                                        className="text-sm font-medium text-gray-700"
+                                    >
+                                        Negara Tempat Tinggal
+                                    </Label>
+                                    <Select
+                                        value={
+                                            profileData.country_of_residence
+                                        }
+                                        onValueChange={(value) =>
+                                            setProfileData((prev) => ({
+                                                ...prev,
+                                                country_of_residence: value,
+                                            }))
+                                        }
+                                        disabled={!isEditing}
+                                    >
+                                        <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            <SelectValue placeholder="Pilih negara" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {/* --- MULAI PERUBAHAN --- */}
+                                            {Object.entries(regionMap).map(([groupKey, countries]) => (
+                                                <SelectGroup key={groupKey}>
+                                                    <SelectLabel>
+                                                        {/* Menggunakan fungsi helper untuk format label */}
+                                                        {formatGroupLabel(groupKey)}
+                                                    </SelectLabel>
+                                                    {countries.map((country) => (
+                                                        <SelectItem key={country} value={country}>
+                                                            {/* Menggunakan fungsi helper untuk format nama negara */}
+                                                            {formatCountryName(country)}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            ))}
+                                            {/* --- AKHIR PERUBAHAN --- */}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
 

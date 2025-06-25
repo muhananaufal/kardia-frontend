@@ -332,7 +332,7 @@ const Login = () => {
                                 {/* Register Link */}
                                 <div className="text-center">
                                     <Link
-                                        to="/register"
+                                        to="/auth/register"
                                         className="text-rose-600 hover:text-rose-700 font-semibold transition-colors"
                                     >
                                         Create a new account
