@@ -4,16 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
-
-const heartRiskData = [
-  { date: "Jan 1", risk: 15, fullDate: "1 Januari 2024" },
-  { date: "Jan 5", risk: 18, fullDate: "5 Januari 2024" },
-  { date: "Jan 10", risk: 12, fullDate: "10 Januari 2024" },
-  { date: "Jan 15", risk: 22, fullDate: "15 Januari 2024" },
-  { date: "Jan 20", risk: 16, fullDate: "20 Januari 2024" },
-  { date: "Jan 25", risk: 14, fullDate: "25 Januari 2024" },
-  { date: "Jan 30", risk: 11, fullDate: "30 Januari 2024" },
-]
+import { useEffect, useState } from "react"
+import { fetchDashboard } from "@/hooks/api"
+import { useAuth } from "@/provider/AuthProvider"
+import { Link } from "react-router-dom"
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -43,6 +37,61 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 }
 
 export default function DashboardPage() {
+  const auth = useAuth()
+  const token = auth?.token
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        if (!token) {
+          console.error("No authentication token found")
+          return
+        }
+
+        const response = await fetchDashboard(token)
+
+        setDashboardData(response.data)
+        setLoading(false)
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error)
+      }
+    }
+
+  fetchDashboardData()    
+  }, [])
+
+  const getTrendStatus = (trend: string) => {
+    if (trend === "improving") {
+      return { text: "Membaik", color: "text-green-600" }
+    } else {
+      return { text: "Memburuk", color: "text-red-600" }
+    }
+  }
+
+  const heartRiskData = dashboardData?.graph_data_30_days
+  ? Object.keys(dashboardData.graph_data_30_days.labels).map((key) => {
+      const date = dashboardData.graph_data_30_days.labels[key]
+      const risk = dashboardData.graph_data_30_days.values[key]
+
+      return {
+        date,
+        risk: risk * 100,
+        fullDate: date,
+      }
+    })
+  : []
+
+  if (loading || !dashboardData) {
+    // loader spiner
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
   return (
     <motion.div
       variants={pageVariants}
@@ -77,8 +126,12 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">Risiko Rendah</Badge>
-                <p className="text-sm text-emerald-600">Kondisi kesehatan Anda dalam keadaan baik</p>
+                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
+                  {dashboardData.summary.latest_status.category_title}
+                </Badge>
+                <p className="text-sm text-emerald-600">
+                  {dashboardData.summary.latest_status.description}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -94,7 +147,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <p className="text-2xl font-bold text-blue-700">2 hari</p>
+                <p className="text-2xl font-bold text-blue-700">{dashboardData.summary.last_assessment_date_human}</p>
                 <p className="text-sm text-blue-600">yang lalu</p>
               </div>
             </CardContent>
@@ -111,8 +164,8 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <p className="text-2xl font-bold text-purple-700">↗ Membaik</p>
-                <p className="text-sm text-purple-600">+5% dari bulan lalu</p>
+                <p className="text-2xl font-bold text-purple-700">{getTrendStatus(dashboardData.summary.health_trend.direction).text}</p>
+                <p className="text-sm text-purple-600">{dashboardData.summary.health_trend.text}</p>
               </div>
             </CardContent>
           </Card>
@@ -186,8 +239,8 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3 p-4 rounded-xl bg-white/60 border border-yellow-200/50">
               <Clock className="h-5 w-5 text-yellow-600" />
               <div>
-                <p className="font-medium text-yellow-800">Terakhir melakukan analisis: 3 minggu yang lalu</p>
-                <p className="text-sm text-yellow-700">15 Desember 2023, 14:30 WIB</p>
+                <p className="font-medium text-yellow-800">Terakhir melakukan analisis: </p>
+                <p className="text-sm text-yellow-700">{dashboardData.summary.last_assessment_date_human}</p>
               </div>
             </div>
 
@@ -210,11 +263,11 @@ export default function DashboardPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-slate-600">Status Risiko</span>
-                    <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200">Sedang</Badge>
+                    <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200">{dashboardData.latest_assessment_details.riskSummary.riskCategory.title}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-600">Skor Kesehatan</span>
-                    <span className="font-semibold text-slate-800">72/100</span>
+                    <span className="text-sm text-slate-600">Persentase Resiko</span>
+                    <span className="font-semibold text-slate-800">{dashboardData.latest_assessment_details.riskSummary.riskPercentage * 100}%</span>
                   </div>
                 </div>
               </div>
@@ -222,16 +275,16 @@ export default function DashboardPage() {
               <div className="p-4 rounded-xl bg-white/60 border border-yellow-200/50">
                 <h4 className="font-medium text-slate-800 mb-2">Rekomendasi Utama</h4>
                 <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• Kurangi konsumsi garam</li>
-                  <li>• Olahraga ringan 30 menit/hari</li>
-                  <li>• Kontrol tekanan darah rutin</li>
+                  {dashboardData.latest_assessment_details.primaryContributors.slice(0, 3).map((item, i) => (
+                    <li key={i}>• {item.title}</li>
+                  ))}
                 </ul>
               </div>
             </div>
 
             {/* CTA Button */}
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-2">
-              <a href="/analisis-baru">
+              <Link to="/dashboard/analysis">
                 <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                   <CheckCircle className="h-5 w-5 mr-2" />
                   Lakukan Analisis Sekarang
@@ -243,7 +296,7 @@ export default function DashboardPage() {
                     →
                   </motion.div>
                 </Button>
-              </a>
+              </Link>
             </motion.div>
           </CardContent>
         </Card>

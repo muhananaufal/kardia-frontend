@@ -1,58 +1,14 @@
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Calendar, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, ChevronDown, ChevronUp } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Calendar, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Eye, Filter, Search } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RiwayatDetailModal } from "@/components/fragments/riwayat-detail-modal"
-
-const analysisHistory = [
-  {
-    id: 1,
-    date: "2024-01-15",
-    time: "14:30",
-    status: "Risiko Rendah",
-    statusColor: "emerald",
-    icon: CheckCircle,
-    summary: "Kondisi kesehatan baik, tidak ada indikator risiko tinggi",
-    details: {
-      heartRisk: "12%",
-      bloodPressure: "Normal",
-      cholesterol: "Baik",
-      recommendations: ["Pertahankan pola makan sehat", "Lanjutkan olahraga rutin", "Kontrol kesehatan berkala"],
-    },
-  },
-  {
-    id: 2,
-    date: "2024-01-10",
-    time: "09:15",
-    status: "Risiko Sedang",
-    statusColor: "amber",
-    icon: AlertTriangle,
-    summary: "Beberapa indikator perlu perhatian, terutama tekanan darah",
-    details: {
-      heartRisk: "28%",
-      bloodPressure: "Tinggi",
-      cholesterol: "Batas Normal",
-      recommendations: ["Kurangi konsumsi garam", "Olahraga kardio 30 menit/hari", "Konsultasi dokter dalam 2 minggu"],
-    },
-  },
-  {
-    id: 3,
-    date: "2024-01-05",
-    time: "16:45",
-    status: "Risiko Tinggi",
-    statusColor: "red",
-    icon: TrendingUp,
-    summary: "Perlu perhatian medis segera, beberapa faktor risiko tinggi",
-    details: {
-      heartRisk: "45%",
-      bloodPressure: "Sangat Tinggi",
-      cholesterol: "Tinggi",
-      recommendations: ["Konsultasi dokter segera", "Mulai pengobatan hipertensi", "Diet rendah kolesterol ketat"],
-    },
-  },
-]
+import { fetchDashboard } from "@/hooks/api"
+import { useAuth } from "@/provider/AuthProvider"
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -60,207 +16,298 @@ const pageVariants = {
   exit: { opacity: 0, y: -20 },
 }
 
-export default function HistoryPage() {
-  const [expandedItems, setExpandedItems] = useState<number[]>([])
-  const [selectedAnalysis, setSelectedAnalysis] = useState<(typeof analysisHistory)[0] | null>(null)
+const cardVariants = {
+  initial: { opacity: 0, scale: 0.95 },
+  animate: { opacity: 1, scale: 1 },
+  transition: { duration: 0.3 },
+}
 
-  const toggleExpanded = (id: number) => {
-    setExpandedItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
-  }
+export default function RiwayatPage() {
+  const auth = useAuth();
+  const token = auth?.token;
+  const [selectedRecord, setSelectedRecord] = useState<AnalysisRecord | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterRisk, setFilterRisk] = useState<string>("all")
+  const [analysisHistory, setAnalysisHistory] = useState<AnalysisRecord[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const getStatusBadge = (status: string, color: string) => {
-    const colorClasses = {
-      emerald: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200",
-      amber: "bg-amber-100 text-amber-700 hover:bg-amber-200",
-      red: "bg-red-100 text-red-700 hover:bg-red-200",
+  useEffect(() => {
+    const fetchAnalysisHistory = async () => {
+      setIsLoading(true)
+      try {
+        if (!token) return
+
+        const response = await fetchDashboard(token).then((res) => {
+          setAnalysisHistory(res.data.assessment_history); // ← langsung tanpa mapping ulang
+        });
+      } catch (error) {
+        console.error("Gagal mengambil data riwayat:", error)
+      } finally {
+        setIsLoading(false)
+      }
     }
 
-    return <Badge className={colorClasses[color as keyof typeof colorClasses]}>{status}</Badge>
+    fetchAnalysisHistory()
+  }, [])
+
+  const getRiskColor = (level: string) => {
+    switch (level) {
+      case "rendah":
+        return "bg-green-50 text-green-600 border-green-200 hover:bg-green-100"
+      case "sedang":
+        return "bg-yellow-50 text-yellow-600 border-yellow-200 hover:bg-yellow-100"
+      case "tinggi":
+        return "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
+      default:
+        return "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+    }
   }
 
-  return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.5 }}
-      className="p-6 space-y-6"
-    >
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="space-y-2"
-      >
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-          Riwayat Analisis
-        </h1>
-        <p className="text-slate-600">Lihat semua hasil analisis kesehatan Anda sebelumnya</p>
-      </motion.div>
+  const getRiskIcon = (level: string) => {
+    switch (level) {
+      case "rendah":
+        return <CheckCircle className="h-4 w-4" />
+      case "tinggi":
+        return <AlertTriangle className="h-4 w-4" />
+      case "sangat tinggi":
+        return <AlertTriangle className="h-4 w-4" />
+      default:
+        return <CheckCircle className="h-4 w-4" />
+    }
+  }
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="rounded-2xl shadow-md border-0 bg-gradient-to-br from-emerald-50 to-emerald-100/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-emerald-700 text-lg flex items-center gap-2">
-                <CheckCircle className="h-5 w-5" />
-                Total Analisis
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-emerald-700">12</p>
-              <p className="text-sm text-emerald-600">Analisis selesai</p>
-            </CardContent>
-          </Card>
-        </motion.div>
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case "up":
+        return <TrendingUp className="h-4 w-4 text-red-500" />
+      case "down":
+        return <TrendingDown className="h-4 w-4 text-green-500" />
+      default:
+        return <div className="h-4 w-4 rounded-full bg-gray-400" />
+    }
+  }
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="rounded-2xl shadow-md border-0 bg-gradient-to-br from-blue-50 to-blue-100/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-blue-700 text-lg flex items-center gap-2">
-                <TrendingDown className="h-5 w-5" />
-                Trend Risiko
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-blue-700">↓ 15%</p>
-              <p className="text-sm text-blue-600">Menurun bulan ini</p>
-            </CardContent>
-          </Card>
-        </motion.div>
+  const getRiskLevel = (code?: string): "rendah" | "tinggi" | "sangat tinggi" | "tidak diketahui" => {
+    switch (code) {
+      case "LOW_MODERATE":
+        return "rendah"
+      case "HIGH":
+        return "tinggi"
+      case "VERY_HIGH":
+        return "sangat tinggi"
+      default:
+        return "tidak diketahui"
+    }
+  }
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card className="rounded-2xl shadow-md border-0 bg-gradient-to-br from-purple-50 to-purple-100/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-purple-700 text-lg flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Analisis Terakhir
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-purple-700">2</p>
-              <p className="text-sm text-purple-600">hari yang lalu</p>
-            </CardContent>
-          </Card>
-        </motion.div>
+  const filteredHistory = analysisHistory.filter((record) => {
+    const matchesSearch =
+      record.result_details?.riskSummary?.executiveSummary
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      record.date.toLowerCase().includes(searchTerm.toLowerCase())
+
+    const matchesFilter =
+      filterRisk === "all" ||
+      getRiskLevel(record.result_details?.riskSummary?.riskCategory?.code) === filterRisk
+    return matchesSearch && matchesFilter
+  })
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-500"></div>
       </div>
+    )
+  }
 
-      {/* Analysis History */}
+  console.log("Filtered History:", filteredHistory)
+
+  return (
+    <div className="min-h-screen bg-white">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="space-y-4"
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={{ duration: 0.5 }}
+        className="max-w-full mx-auto px-6 md:px-8 py-6 md:py-10 space-y-6 md:space-y-8"
       >
-        <h2 className="text-xl font-semibold text-slate-800 mb-4">Riwayat Analisis Terbaru</h2>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="space-y-2"
+        >
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Riwayat Analisis</h1>
+          <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+            Pantau perkembangan kesehatan jantung Anda dari waktu ke waktu
+          </p>
+        </motion.div>
 
+        {/* Summary Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-blue-500 text-base md:text-lg font-bold">Total Analisis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl md:text-3xl font-bold text-gray-900">{analysisHistory.length}</p>
+              <p className="text-sm md:text-base text-gray-600">kali pemeriksaan</p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-blue-500 text-base md:text-lg font-bold">Rata-rata Risiko</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl md:text-3xl font-bold text-gray-900">
+                {Math.round(
+                  analysisHistory.reduce((acc, record) => acc + record?.risk_percentage, 0) / analysisHistory.length,
+                )}
+                %
+              </p>
+              <p className="text-sm md:text-base text-gray-600">dalam 3 bulan terakhir</p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-blue-500 text-base md:text-lg font-bold">Trend Kesehatan</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <TrendingDown className="h-6 w-6 text-green-500" />
+                <p className="text-2xl md:text-3xl font-bold text-gray-900">Membaik</p>
+              </div>
+              <p className="text-sm md:text-base text-gray-600">dibanding bulan lalu</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Search and Filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col md:flex-row gap-4"
+        >
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Cari berdasarkan tanggal atau ringkasan..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base h-10 md:h-12"
+            />
+          </div>
+          <Select value={filterRisk} onValueChange={setFilterRisk}>
+            <SelectTrigger className="w-full md:w-48 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-10 md:h-12">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Filter Risiko" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Risiko</SelectItem>
+              <SelectItem value="rendah">Risiko Rendah</SelectItem>
+              <SelectItem value="sedang">Risiko Sedang</SelectItem>
+              <SelectItem value="tinggi">Risiko Tinggi</SelectItem>
+            </SelectContent>
+          </Select>
+        </motion.div>
+
+        {/* Analysis History List */}
         <div className="space-y-4">
-          {analysisHistory.map((analysis, index) => (
-            <motion.div
-              key={analysis.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 + index * 0.1 }}
-            >
-              <Collapsible>
-                <Card className="rounded-2xl shadow-md border-0 hover:shadow-lg transition-all duration-300">
-                  <CollapsibleTrigger asChild>
-                    <CardHeader
-                      className="cursor-pointer hover:bg-slate-50/50 transition-colors rounded-t-2xl"
-                      onClick={() => setSelectedAnalysis(analysis)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className={`p-2 rounded-xl bg-${analysis.statusColor}-100`}>
-                            <analysis.icon className={`h-5 w-5 text-${analysis.statusColor}-600`} />
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg text-slate-800">Analisis {analysis.date}</CardTitle>
-                            <CardDescription className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              {analysis.time} • {analysis.summary}
-                            </CardDescription>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          {getStatusBadge(analysis.status, analysis.statusColor)}
-                          {expandedItems.includes(analysis.id) ? (
-                            <ChevronUp className="h-5 w-5 text-slate-400" />
-                          ) : (
-                            <ChevronDown className="h-5 w-5 text-slate-400" />
-                          )}
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </CollapsibleTrigger>
-
-                  <AnimatePresence>
-                    {expandedItems.includes(analysis.id) && (
-                      <CollapsibleContent>
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <CardContent className="pt-0 space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                                <h4 className="font-medium text-slate-800 mb-2">Risiko Jantung</h4>
-                                <p className="text-2xl font-bold text-slate-700">{analysis.details.heartRisk}</p>
-                              </div>
-                              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                                <h4 className="font-medium text-slate-800 mb-2">Tekanan Darah</h4>
-                                <p className="text-lg font-semibold text-slate-700">{analysis.details.bloodPressure}</p>
-                              </div>
-                              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                                <h4 className="font-medium text-slate-800 mb-2">Kolesterol</h4>
-                                <p className="text-lg font-semibold text-slate-700">{analysis.details.cholesterol}</p>
-                              </div>
-                            </div>
-
-                            <div className="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-200/50">
-                              <h4 className="font-medium text-slate-800 mb-3">Rekomendasi AI</h4>
-                              <ul className="space-y-2">
-                                {analysis.details.recommendations.map((rec, idx) => (
-                                  <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                                    {rec}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </CardContent>
-                        </motion.div>
-                      </CollapsibleContent>
-                    )}
-                  </AnimatePresence>
-                </Card>
-              </Collapsible>
+          {filteredHistory.length === 0 ? (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                <Calendar className="h-8 w-8 text-gray-400" />
+              </div>
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Tidak ada hasil yang ditemukan</h3>
+              <p className="text-sm md:text-base text-gray-600">
+                Coba ubah kata kunci pencarian atau filter yang digunakan
+              </p>
             </motion.div>
-          ))}
+          ) : (
+            filteredHistory.map((record, index) => (
+              <motion.div
+                key={record?.slug}
+                variants={cardVariants}
+                initial="initial"
+                animate="animate"
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card
+                  className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  onClick={() => {
+                    setSelectedRecord(null)
+                    setTimeout(() => {
+                      setSelectedRecord(record)
+                    }, 100) // Delay to allow card click animation
+                  }}
+                >
+                  <CardContent className="p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="flex-1 space-y-3 max-w-4xl">
+                        <div className="flex items-center gap-3">
+                          <Calendar className="h-5 w-5 text-blue-500" />
+                          <div>
+                            <p className="font-bold text-gray-900 text-sm md:text-base">{record?.date}</p>
+                            {/* <p className="text-xs md:text-sm text-gray-600">{record.time} WIB</p> */}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <Badge
+                            className={`${getRiskColor(record?.result_details.riskSummary.riskCategory.title)} text-xs font-medium uppercase tracking-wide border`}
+                          >
+                            {getRiskIcon(record?.result_details.riskSummary.riskCategory.title)}
+                            <span className="ml-1">{record?.result_details.riskSummary.riskCategory.title}</span>
+                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl md:text-2xl font-bold text-gray-900">
+                              {(record?.risk_percentage * 100).toFixed(1)}%
+                            </span>
+                            {/* {getTrendIcon(record.trend)} */}
+                          </div>
+                        </div>
+
+                        <p className="text-sm md:text-base text-gray-600 leading-relaxed">{record?.result_details.riskSummary.executiveSummary}</p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation() // Prevent card click event
+                            setSelectedRecord(null)
+                            setTimeout(() => {
+                              setSelectedRecord(record)
+                            }, 100) // Delay to allow card click animation
+                          }}
+                          className="bg-blue-500 text-white hover:bg-blue-600 rounded-lg text-sm font-medium uppercase tracking-wide h-10 md:h-12 transition-all duration-300"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Detail
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))
+          )}
         </div>
       </motion.div>
-      <RiwayatDetailModal
-        analysis={selectedAnalysis}
-        isOpen={!!selectedAnalysis}
-        onClose={() => setSelectedAnalysis(null)}
-      />
-    </motion.div>
+      {/* Detail Modal */}
+      {selectedRecord && (
+        <RiwayatDetailModal key={selectedRecord.slug} record={selectedRecord} isOpen={!!selectedRecord} onClose={() => setSelectedRecord(null)} />
+      )}
+    </div>
   )
 }

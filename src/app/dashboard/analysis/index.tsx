@@ -31,29 +31,6 @@ import { newAnalysis, personalizeAnalysis } from "@/hooks/api";
 import { set } from "zod";
 
 // Types
-interface FormData {
-    age: string;
-    gender: string;
-    smokingStatus: string;
-    riskRegion: string;
-    region: string;
-    diabetesHistory: string;
-    diabetesAge?: string;
-    healthProfile: {
-        sbp: HealthParameter;
-        totalCholesterol: HealthParameter;
-        hdlCholesterol: HealthParameter;
-        hba1c?: HealthParameter;
-        serumCreatinine?: HealthParameter;
-    };
-}
-
-interface HealthParameter {
-  inputType: "manual" | "proxy" | "";
-  manualValue?: string;
-  proxyAnswers?: Record<string, any>;
-  completed: boolean;
-}
 
 const initialFormData: FormData = {
     age: "",
@@ -82,7 +59,6 @@ const initialFormData: FormData = {
             proxyAnswers: {},
             completed: false,
         },
-        // hba1c dan serumCreatinine hanya muncul jika diabetesHistory === "Ya"
     },
 };
 
@@ -181,8 +157,6 @@ export default function AnalisisPage() {
             }
         }
     }, [user?.date_of_birth, user?.sex, user?.country_of_residence]);
-
-    console.log(formData.riskRegion, formData.age, formData.gender);
 
     useEffect(() => {
         if (formData.diabetesHistory === "Ya") {
