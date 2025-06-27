@@ -68,27 +68,6 @@ const bottomNavItems = [
     },
 ];
 
-export interface NavItem {
-    title: string;
-    url: string;
-    icon: React.ComponentType<{ className?: string }>;
-}
-
-interface AppSidebarProps {
-    user: {
-        age: number;
-        country_of_residence: string;
-        date_of_birth: string;
-        email: string;
-        first_name: string;
-        language: string;
-        last_name: string;
-        risk_region: string;
-        sex: string;
-    };
-    handleLogout: () => void;
-}
-
 export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
     const location = useLocation();
     const { isMobile } = useSidebar();
@@ -102,11 +81,11 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
                     transition={{ duration: 0.5 }}
                     className="flex items-center gap-3"
                 >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-blue-600 text-white shadow-lg">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-500 text-white shadow-lg">
                         <Heart className="h-6 w-6" />
                     </div>
                     <div className="group-data-[collapsible=icon]:hidden">
-                        <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                        <h1 className="text-xl font-bold text-rose-500">
                             HealthAI
                         </h1>
                         <p className="text-xs text-slate-500">
@@ -139,7 +118,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
                                                 location.pathname === item.url
                                             }
                                             tooltip={item.title}
-                                            className="group relative overflow-hidden rounded-xl transition-all duration-200 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-blue-50 data-[active=true]:bg-gradient-to-r data-[active=true]:from-emerald-100 data-[active=true]:to-blue-100 data-[active=true]:text-emerald-700 data-[active=true]:shadow-sm"
+                                            className="group relative overflow-hidden rounded-md transition-all duration-200 hover:bg-rose-50 data-[active=true]:bg-rose-100 data-[active=true]:text-rose-700"
                                         >
                                             <Link
                                                 to={item.url}
@@ -153,7 +132,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
                                                     item.url && (
                                                     <motion.div
                                                         layoutId="activeIndicator"
-                                                        className="absolute right-2 h-2 w-2 rounded-full bg-emerald-500 group-data-[collapsible=icon]:hidden"
+                                                        className="absolute right-2 h-2 w-2 rounded-full bg-rose-500 group-data-[collapsible=icon]:hidden"
                                                         transition={{
                                                             type: "spring",
                                                             stiffness: 300,

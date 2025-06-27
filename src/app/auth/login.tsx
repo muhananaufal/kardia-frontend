@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "@/hooks/api";
+import { login } from "@/hooks/api/auth";
 import { useAuth } from "@/provider/AuthProvider";
 
 // Validation schema
@@ -44,7 +44,7 @@ const cardVariants = {
 const Login = () => {
     const auth = useAuth();
     const setToken = auth?.setToken;
-    
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState<LoginFormData>({
         email: "",
@@ -93,18 +93,17 @@ const Login = () => {
         try {
             const response = await login(formData.email, formData.password);
 
-            if(response.success !== true) {
+            if (response.success !== true) {
                 setErrors({
-                    email: response.message || "Login failed. Please try again.",
-                    password: response.message || "Login failed. Please try again.",
+                    email:
+                        response.message || "Login failed. Please try again.",
+                    password:
+                        response.message || "Login failed. Please try again.",
                 });
             } else {
                 setToken?.(response.data.access_token);
                 navigate("/dashboard");
             }
-
-            
-
         } catch (error) {
             setErrors({
                 email: "Login failed. Please try again.",
@@ -135,22 +134,6 @@ const Login = () => {
                     animate="animate"
                     className="mb-8 text-center"
                 >
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
-                            <Heart
-                                className="h-6 w-6 text-white"
-                                fill="currentColor"
-                            />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
-                                Kardia
-                            </h1>
-                            <p className="text-sm text-gray-600">
-                                AI Heart Health Platform
-                            </p>
-                        </div>
-                    </div>
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">
                         Welcome Back
                     </h2>

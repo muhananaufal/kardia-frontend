@@ -35,9 +35,9 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/provider/AuthProvider";
-import { updateProfile } from "@/hooks/api";
 import { regionMap } from "@/lib/data";
 import { formatCountryName, formatGroupLabel } from "@/lib/utils";
+import { updateProfile } from "@/hooks/api/auth";
 
 const pageVariants = {
     initial: { opacity: 0, y: 20 },
@@ -50,18 +50,6 @@ const cardVariants = {
     animate: { opacity: 1, scale: 1 },
     transition: { duration: 0.3 },
 };
-
-interface User {
-    age: number;
-    country_of_residence: string;
-    date_of_birth: string;
-    email: string;
-    first_name: string;
-    language: string;
-    last_name: string;
-    risk_region: string;
-    sex: string;
-}
 
 export default function SettingsPage() {
     const auth = useAuth();
@@ -99,18 +87,18 @@ export default function SettingsPage() {
 
     const handleSaveProfile = async () => {
         try {
-          if (token) {
-              const response = await updateProfile(token, profileData);
-              console.log("Profile updated successfully:", response);
-          } else {
-              console.error("Token is missing. Cannot update profile.");
-          }
-          console.log("Profile updated successfully", profileData);
-          setIsEditing(false);
-          auth?.refreshUserProfile(); // Refresh user profile after update
+            if (token) {
+                const response = await updateProfile(token, profileData);
+                console.log("Profile updated successfully:", response);
+            } else {
+                console.error("Token is missing. Cannot update profile.");
+            }
+            console.log("Profile updated successfully", profileData);
+            setIsEditing(false);
+            auth?.refreshUserProfile(); // Refresh user profile after update
         } catch (error) {
-          console.error("Failed to update profile:", error);
-          // Optionally, you can show an error message to the user
+            console.error("Failed to update profile:", error);
+            // Optionally, you can show an error message to the user
         }
     };
 
@@ -130,7 +118,13 @@ export default function SettingsPage() {
         }));
     }, [preferences.language]);
 
-    console.log(new Date(profileData.date_of_birth).toLocaleDateString().split('/').reverse().join('-'));
+    console.log(
+        new Date(profileData.date_of_birth)
+            .toLocaleDateString()
+            .split("/")
+            .reverse()
+            .join("-")
+    );
 
     return (
         <div className="min-h-screen bg-white">
@@ -198,8 +192,7 @@ export default function SettingsPage() {
                                     <AvatarFallback className="bg-blue-500 text-white text-xl font-bold">
                                         {profileData.first_name?.charAt(0) ||
                                             "U"}
-                                        {profileData.last_name?.charAt(0) ||
-                                            ""}
+                                        {profileData.last_name?.charAt(0) || ""}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
@@ -293,7 +286,9 @@ export default function SettingsPage() {
                                     <Input
                                         id="date_of_birth"
                                         type="date"
-                                        value={new Date(profileData.date_of_birth).toLocaleDateString("en-CA")}
+                                        value={new Date(
+                                            profileData.date_of_birth
+                                        ).toLocaleDateString("en-CA")}
                                         onChange={(e) =>
                                             setProfileData((prev) => ({
                                                 ...prev,
@@ -306,35 +301,35 @@ export default function SettingsPage() {
                                 </div>
 
                                 <div className="space-y-2 w-full">
-                                  {/* gender */}
-                                  <Label
-                                    htmlFor="sex"
-                                    className="text-sm font-medium text-gray-700"
-                                  >
-                                    Jenis Kelamin
-                                  </Label>
-                                  <Select
-                                    value={profileData.sex}
-                                    onValueChange={(value) =>
-                                      setProfileData((prev) => ({
-                                        ...prev,
-                                        sex: value,
-                                      }))
-                                    }
-                                    disabled={!isEditing}
-                                  >
-                                    <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                      <SelectValue placeholder="Pilih jenis kelamin" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="male">
-                                        Laki-laki
-                                      </SelectItem>
-                                      <SelectItem value="female">
-                                        Perempuan
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
+                                    {/* gender */}
+                                    <Label
+                                        htmlFor="sex"
+                                        className="text-sm font-medium text-gray-700"
+                                    >
+                                        Jenis Kelamin
+                                    </Label>
+                                    <Select
+                                        value={profileData.sex}
+                                        onValueChange={(value) =>
+                                            setProfileData((prev) => ({
+                                                ...prev,
+                                                sex: value,
+                                            }))
+                                        }
+                                        disabled={!isEditing}
+                                    >
+                                        <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            <SelectValue placeholder="Pilih jenis kelamin" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="male">
+                                                Laki-laki
+                                            </SelectItem>
+                                            <SelectItem value="female">
+                                                Perempuan
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
 
                                 {/* Tempat tinggal berdasarkan region Mapping dengan grouping select */}
@@ -346,9 +341,7 @@ export default function SettingsPage() {
                                         Negara Tempat Tinggal
                                     </Label>
                                     <Select
-                                        value={
-                                            profileData.country_of_residence
-                                        }
+                                        value={profileData.country_of_residence}
                                         onValueChange={(value) =>
                                             setProfileData((prev) => ({
                                                 ...prev,
@@ -362,20 +355,35 @@ export default function SettingsPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {/* --- MULAI PERUBAHAN --- */}
-                                            {Object.entries(regionMap).map(([groupKey, countries]) => (
-                                                <SelectGroup key={groupKey}>
-                                                    <SelectLabel>
-                                                        {/* Menggunakan fungsi helper untuk format label */}
-                                                        {formatGroupLabel(groupKey)}
-                                                    </SelectLabel>
-                                                    {countries.map((country) => (
-                                                        <SelectItem key={country} value={country}>
-                                                            {/* Menggunakan fungsi helper untuk format nama negara */}
-                                                            {formatCountryName(country)}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            ))}
+                                            {Object.entries(regionMap).map(
+                                                ([groupKey, countries]) => (
+                                                    <SelectGroup key={groupKey}>
+                                                        <SelectLabel>
+                                                            {/* Menggunakan fungsi helper untuk format label */}
+                                                            {formatGroupLabel(
+                                                                groupKey
+                                                            )}
+                                                        </SelectLabel>
+                                                        {countries.map(
+                                                            (country) => (
+                                                                <SelectItem
+                                                                    key={
+                                                                        country
+                                                                    }
+                                                                    value={
+                                                                        country
+                                                                    }
+                                                                >
+                                                                    {/* Menggunakan fungsi helper untuk format nama negara */}
+                                                                    {formatCountryName(
+                                                                        country
+                                                                    )}
+                                                                </SelectItem>
+                                                            )
+                                                        )}
+                                                    </SelectGroup>
+                                                )
+                                            )}
                                             {/* --- AKHIR PERUBAHAN --- */}
                                         </SelectContent>
                                     </Select>

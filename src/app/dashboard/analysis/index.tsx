@@ -27,12 +27,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/provider/AuthProvider";
 import { regionMap } from "@/lib/data";
 import { formatCountryName, formatGroupLabel } from "@/lib/utils";
-import { newAnalysis, personalizeAnalysis } from "@/hooks/api";
 import { set } from "zod";
+import { newAnalysis, personalizeAnalysis } from "@/hooks/api/analysis";
 
 // Types
 
-const initialFormData: FormData = {
+const initialFormData: AnalysisFormData = {
     age: "",
     gender: "",
     smokingStatus: "",
@@ -80,7 +80,7 @@ export default function AnalisisPage() {
     const user = auth?.user;
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [formData, setFormData] = useState<AnalysisFormData>(initialFormData);
     const [isLoading, setIsLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("");
     const [progress, setProgress] = useState(0);
@@ -119,10 +119,10 @@ export default function AnalisisPage() {
             }));
         }
 
-        if(user?.country_of_residence) {
+        if (user?.country_of_residence) {
             setFormData((prev) => ({
                 ...prev,
-                region: user.country_of_residence.toLowerCase()
+                region: user.country_of_residence.toLowerCase(),
             }));
         }
 
@@ -223,7 +223,6 @@ export default function AnalisisPage() {
         painMedication: "q_nsaid_use",
     };
 
-
     const buildPayload = () => {
         const payload: any = {
             has_diabetes: formData.diabetesHistory === "Ya",
@@ -231,19 +230,28 @@ export default function AnalisisPage() {
         };
 
         if (formData.diabetesHistory === "Ya") {
-            payload.age_at_diabetes_diagnosis = parseInt(formData?.diabetesAge ?? '0');
+            payload.age_at_diabetes_diagnosis = parseInt(
+                formData?.diabetesAge ?? "0"
+            );
         }
 
         const mapParam = (key: string, apiKey: string) => {
-            const param = formData.healthProfile[key as keyof typeof formData.healthProfile];
+            const param =
+                formData.healthProfile[
+                    key as keyof typeof formData.healthProfile
+                ];
             if (!param) return;
 
             payload[`${apiKey}_input_type`] = param.inputType;
 
             if (param.inputType === "manual") {
-                payload[`${apiKey}_value`] = parseFloat(param.manualValue ?? "0");
+                payload[`${apiKey}_value`] = parseFloat(
+                    param.manualValue ?? "0"
+                );
             } else if (param.inputType === "proxy") {
-                payload[`${apiKey}_proxy_answers`] = transformProxyAnswers(param.proxyAnswers ?? {});
+                payload[`${apiKey}_proxy_answers`] = transformProxyAnswers(
+                    param.proxyAnswers ?? {}
+                );
             }
         };
 
@@ -279,7 +287,7 @@ export default function AnalisisPage() {
             "diabetesHistory",
         ];
         const basicComplete = required.every(
-            (field) => formData[field as keyof FormData]
+            (field) => formData[field as keyof AnalysisFormData]
         );
 
         if (formData.diabetesHistory === "Ya") {
@@ -342,15 +350,22 @@ export default function AnalisisPage() {
             console.log("Analysis response:", response);
             setProgress(30);
             setLoadingText("Mengirim analisis Anda...");
-            if(response) {
-                setProgress(60);
-                setLoadingText("Analisis berhasil dikirim. Menyiapkan personalisasi...");
-                const personalize = await personalizeAnalysis(token, response.assessment_slug);
+            if (response) {
+                setProgress(40);
+                setLoadingText(
+                    "Analisis berhasil dikirim. Menyiapkan personalisasi..."
+                );
+                const personalize = await personalizeAnalysis(
+                    token,
+                    response.assessment_slug
+                );
 
                 console.log("Personalization response:", personalize);
                 if (personalize) {
                     setProgress(90);
-                    setLoadingText("Analisis berhasil dipersonalisasi. Anda akan diarahkan ke halaman riwayat.");
+                    setLoadingText(
+                        "Analisis berhasil dipersonalisasi. Anda akan diarahkan ke halaman riwayat."
+                    );
                     setProgress(100);
                     setTimeout(() => {
                         navigate("/dashboard/history");
@@ -359,7 +374,6 @@ export default function AnalisisPage() {
                     setLoadingText("Personalisasi gagal. Silakan coba lagi.");
                     setIsLoading(false);
                 }
-
             } else {
                 setLoadingText("Analisis gagal dikirim. Silakan coba lagi.");
                 setIsLoading(false);
@@ -412,10 +426,10 @@ export default function AnalisisPage() {
                                 repeat: Number.POSITIVE_INFINITY,
                                 ease: "easeInOut",
                             }}
-                            className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center"
+                            className="w-20 h-20 mx-auto bg-rose-100 rounded-full flex items-center justify-center"
                         >
                             <Heart
-                                className="h-10 w-10 text-white"
+                                className="h-10 w-10 text-rose-500"
                                 fill="currentColor"
                             />
                         </motion.div>
@@ -437,9 +451,12 @@ export default function AnalisisPage() {
 
                         <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                             <motion.div
-                                className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full"
+                                className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full"
                                 animate={{ width: `${progress}%` }}
-                                transition={{ duration: 0.6, ease: "easeInOut" }}
+                                transition={{
+                                    duration: 0.6,
+                                    ease: "easeInOut",
+                                }}
                             />
                         </div>
                     </CardContent>
@@ -490,7 +507,7 @@ export default function AnalisisPage() {
                             <div
                                 className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
                                     step <= currentStep
-                                        ? "bg-blue-500 text-white shadow-md"
+                                        ? "bg-rose-500 text-white shadow-md"
                                         : "bg-gray-200 text-gray-500"
                                 }`}
                             >
@@ -504,7 +521,7 @@ export default function AnalisisPage() {
                                 <div
                                     className={`w-16 h-1 mx-2 transition-all duration-300 ${
                                         step < currentStep
-                                            ? "bg-gradient-to-r from-blue-500 to-emerald-500"
+                                            ? "bg-gradient-to-r from-rose-400 to-rose-600"
                                             : "bg-slate-200"
                                     }`}
                                 />
@@ -578,7 +595,7 @@ function Step1Form({
                                     onChange={(e) =>
                                         updateFormData("age", e.target.value)
                                     }
-                                    className="rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 h-8 md:h-9 text-base"
+                                    className="rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-8 md:h-9 text-base"
                                     placeholder="Masukkan usia"
                                 />
                                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
@@ -599,7 +616,7 @@ function Step1Form({
                                 }
                                 disabled
                             >
-                                <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 h-10 md:h-12 text-base">
+                                <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-10 md:h-12 text-base">
                                     <SelectValue placeholder="Pilih jenis kelamin" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -629,7 +646,7 @@ function Step1Form({
                                 }
                                 disabled
                             >
-                                <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
                                     <SelectValue placeholder="Pilih negara" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -671,7 +688,7 @@ function Step1Form({
                                 }
                                 disabled
                             >
-                                <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 h-10 md:h-12 text-base">
+                                <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-10 md:h-12 text-base">
                                     <SelectValue placeholder="Pilih wilayah risiko" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -796,7 +813,7 @@ function Step1Form({
                                                 e.target.value
                                             )
                                         }
-                                        className="rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 h-10 md:h-12 text-base"
+                                        className="rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-10 md:h-12 text-base"
                                         placeholder="Masukkan usia diagnosis"
                                     />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
@@ -813,7 +830,7 @@ function Step1Form({
                             variant="outline"
                             onClick={onBack}
                             disabled={true}
-                            className="bg-white text-blue-500 border border-blue-500 hover:bg-blue-50 font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide opacity-50 cursor-not-allowed"
+                            className="bg-white text-rose-500 border border-rose-500 hover:bg-rose-50 font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide opacity-50 cursor-not-allowed"
                         >
                             <ChevronLeft className="h-4 w-4 mr-2" />
                             Sebelumnya
@@ -822,7 +839,7 @@ function Step1Form({
                         <Button
                             onClick={onNext}
                             disabled={!isComplete}
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50"
+                            className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50"
                         >
                             Lanjut
                             <ChevronRight className="h-4 w-4 ml-2" />
@@ -1077,7 +1094,7 @@ function Step2Form({
                         <Button
                             variant="outline"
                             onClick={onBack}
-                            className="bg-white text-blue-500 border border-blue-500 hover:bg-blue-50 font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide"
+                            className="bg-white text-rose-500 border border-rose-500 hover:bg-rose-50 font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer"
                         >
                             <ChevronLeft className="h-4 w-4 mr-2" />
                             Sebelumnya
@@ -1086,7 +1103,7 @@ function Step2Form({
                         <Button
                             onClick={onNext}
                             disabled={!isComplete}
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50"
+                            className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50 cursor-pointer"
                         >
                             Selesai & Lihat Hasil Analisis Saya
                             <Activity className="h-4 w-4 ml-2" />
@@ -1137,11 +1154,14 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
             transition={{ delay: index * 0.1 }}
         >
             <Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl border border-gray-200 overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-emerald-50 border-b border-slate-200/50">
+                <CardHeader className="border-b border-slate-200/50">
                     <div className="flex items-center justify-between">
                         <CardTitle className="text-lg text-slate-800">
                             {parameter.title}
-                            <Badge variant="outline" className="text-xs capitalize">
+                            <Badge
+                                variant="outline"
+                                className="text-xs capitalize ml-2"
+                            >
                                 {data.inputType || "Belum dipilih"}
                             </Badge>
                         </CardTitle>
@@ -1150,7 +1170,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
                                 {index + 1}/{total}
                             </Badge>
                             {data.completed && (
-                                <CheckCircle className="h-5 w-5 text-emerald-500" />
+                                <CheckCircle className="h-5 w-5 text-rose-500" />
                             )}
                         </div>
                     </div>
@@ -1160,22 +1180,25 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
                     {/* Method Selection */}
                     <div className="flex gap-4">
                         <Button
-                            variant={
-                                data.inputType === "manual" ? "default" : "outline"
-                            }
                             onClick={() => handleMethodChange("manual")}
-                            className="flex-1 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide"
+                            className={`flex-1 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer
+                                ${
+                                    data.inputType === "manual"
+                                        ? "bg-rose-500 hover:bg-rose-600 text-white"
+                                        : "bg-white text-rose-500 border border-rose-500 hover:bg-rose-50"
+                                }`}
                         >
                             Saya Tahu Angkanya
                         </Button>
+
                         <Button
-                            variant={
-                                data.inputType === "proxy"
-                                    ? "default"
-                                    : "outline"
-                            }
                             onClick={() => handleMethodChange("proxy")}
-                            className="flex-1 rounded-lg bg-white text-blue-500 border border-blue-500 hover:bg-blue-50 font-medium shadow-md hover:shadow-lg transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide"
+                            className={`flex-1 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer
+                                ${
+                                    data.inputType === "proxy"
+                                        ? "bg-rose-500 hover:bg-rose-600 text-white"
+                                        : "bg-white text-rose-500 border border-rose-500 hover:bg-rose-50"
+                                }`}
                         >
                             Bantu Estimasi
                         </Button>
@@ -1205,7 +1228,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
                                                 e.target.value
                                             )
                                         }
-                                        className="rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 h-10 md:h-12 text-base"
+                                        className="rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-10 md:h-12 text-base"
                                         placeholder="Masukkan nilai"
                                     />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">

@@ -1,18 +1,6 @@
-import { fetchProfile } from "@/hooks/api";
+import { fetchProfile } from "@/hooks/api/auth";
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-
-interface User {
-    age: number;
-    country_of_residence: string;
-    date_of_birth: string;
-    email: string;
-    first_name: string;
-    language: string;
-    last_name: string;
-    risk_region: string;
-    sex: string;
-}
 
 const AuthContext = createContext<
     | {

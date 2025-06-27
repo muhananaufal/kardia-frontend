@@ -1,8 +1,47 @@
+interface User {
+    age: number;
+    country_of_residence: string;
+    date_of_birth: string;
+    email: string;
+    first_name: string;
+    language: string;
+    last_name: string;
+    risk_region: string;
+    sex: string;
+}
+
+interface NavItem {
+    title: string;
+    url: string;
+    icon: React.ComponentType<{ className?: string }>;
+}
+
+interface AppSidebarProps {
+    user: {
+        age: number;
+        country_of_residence: string;
+        date_of_birth: string;
+        email: string;
+        first_name: string;
+        language: string;
+        last_name: string;
+        risk_region: string;
+        sex: string;
+    };
+    handleLogout: () => void;
+}
+
+interface RiwayatDetailModalProps {
+  record: AnalysisRecord | null
+  isOpen: boolean
+  onClose: () => void
+}
+
 interface DashboardLayoutPropsTypes {
     children: React.ReactNode;
 }
 
-interface FormData {
+interface AnalysisFormData {
     age: string;
     gender: string;
     smokingStatus: string;
@@ -64,14 +103,14 @@ interface AnalysisRecord {
         title: string
       }
       executiveSummary: string
+      primaryContributors: {
+        title: string
+        severity: "HIGH" | "MEDIUM" | "LOW"
+        description: string
+      }[]
+      contextualRiskExplanation: string
+      positiveFactors: string[]
     }
-    primaryContributors: {
-      title: string
-      severity: "HIGH" | "MEDIUM" | "LOW"
-      description: string
-    }[]
-    contextualRiskExplanation: string
-    positiveFactors: string[]
     actionPlan: {
       medicalConsultation: {
         recommendationLevel: {
@@ -141,10 +180,10 @@ interface DashboardData {
       riskPercentage: number
       riskCategory: { code: string; title: string }
       executiveSummary: string
+      primaryContributors: { title: string; severity: string; description: string }[]
+      contextualRiskExplanation: string
+      positiveFactors: string[]
     }
-    primaryContributors: { title: string; severity: string; description: string }[]
-    contextualRiskExplanation: string
-    positiveFactors: string[]
   }
 }
 

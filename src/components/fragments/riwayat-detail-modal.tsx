@@ -38,12 +38,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useEffect, useState } from "react"
 
-interface RiwayatDetailModalProps {
-  record: AnalysisRecord | null
-  isOpen: boolean
-  onClose: () => void
-}
-
 const modalVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: { opacity: 1, scale: 1, y: 0 },
@@ -181,14 +175,14 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
           label: riskSummary.riskCategory.title,
         },
         executiveSummary: riskSummary.executiveSummary,
+        primaryContributors: riskSummary.primaryContributors?.map((c) => ({
+          title: c.title,
+          severity: c.severity,
+          explanation: c.description,
+        })),
+        contextualRiskExplanation: riskSummary.contextualRiskExplanation,
+        positiveFactors: riskSummary.positiveFactors,
       },
-      primaryContributors: record.result_details.primaryContributors?.map((c) => ({
-        title: c.title,
-        severity: c.severity,
-        explanation: c.description,
-      })),
-      contextualRiskExplanation: record.result_details.contextualRiskExplanation,
-      positiveFactors: record.result_details.positiveFactors,
       actionPlan: {
         medicalConsultation: {
           recommendationLevel: record.result_details.actionPlan.medicalConsultation.recommendationLevel.code,
@@ -431,7 +425,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
                             <CardContent className="p-4 md:p-6 space-y-4">
                               <h4 className="font-bold text-gray-900 text-base md:text-lg">Faktor Kontributor Utama</h4>
                               <div className="space-y-3">
-                                {detailedAnalysis.primaryContributors?.map((contributor, index) => (
+                                {detailedAnalysis.riskSummary.primaryContributors?.map((contributor, index) => (
                                   <div key={index} className="p-3 rounded-lg bg-gray-50 border border-gray-200">
                                     <div className="flex items-start justify-between gap-3 mb-2">
                                       <h5 className="font-medium text-gray-900 text-sm md:text-base">
@@ -460,7 +454,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
                               Mengapa Tingkat Risiko Ini?
                             </h4>
                             <p className="text-sm md:text-base text-gray-700 leading-relaxed">
-                              {detailedAnalysis.contextualRiskExplanation}
+                              {detailedAnalysis.riskSummary.contextualRiskExplanation}
                             </p>
                           </CardContent>
                         </Card>
@@ -472,7 +466,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
                               Faktor Positif
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                              {(detailedAnalysis.positiveFactors ?? [])?.map((factor, index) => (
+                              {(detailedAnalysis.riskSummary.positiveFactors ?? [])?.map((factor, index) => (
                                 <div key={index} className="flex items-start gap-2">
                                   <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                                   <p className="text-sm md:text-base text-gray-700">{factor}</p>

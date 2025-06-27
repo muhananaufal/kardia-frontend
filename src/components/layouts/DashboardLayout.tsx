@@ -3,7 +3,7 @@ import { AppSidebar } from "../fragments/app-sidebar";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SidebarToggle } from "../fragments/sidebar-toggle";
 import { useAuth } from "@/provider/AuthProvider";
-import { logout } from "@/hooks/api";
+import { logout } from "@/hooks/api/auth";
 
 const DashboardLayout = () => {
     const auth = useAuth();
@@ -25,12 +25,11 @@ const DashboardLayout = () => {
             auth.setToken(null);
             // Redirect to the login page after logout
             navigate("/auth/login");
-
         } catch (error) {
             console.error("Logout failed:", error);
             // Optionally, you can show an error message to the user
         }
-    }
+    };
     return (
         <SidebarProvider>
             <AppSidebar user={user} handleLogout={handleLogout} />
