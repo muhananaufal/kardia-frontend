@@ -1,54 +1,36 @@
-# React + TypeScript + Vite
+# Kardia Web Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Kardia adalah platform self-awareness untuk kesehatan jantung yang dirancang untuk membantu pengguna memahami kondisi jantung mereka dengan lebih baik melalui analisis data dan teknologi AI.
 
-Currently, two official plugins are available:
+## Fitur (V1.0.0)
+- **Dashboard**: Menyediakan tampilan ringkas dan informatif tentang data kesehatan jantung pengguna.  
+- **Analisis & Personalisasi**: Menggunakan teknologi *Gemini* untuk menganalisis data berdasarkan input pengguna dan memberikan rekomendasi yang dipersonalisasi.  
+- **Chat AI**: Fitur percakapan berbasis AI untuk menjawab pertanyaan dan memberikan panduan terkait kesehatan jantung.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Cara Menjalankan Proyek
+Untuk menjalankan proyek frontend Kardia di lokal, ikuti langkah-langkah berikut:
 
-## Expanding the ESLint configuration
+1. Clone repositori ini:
+  ```bash
+  git clone https://github.com/kardia-health/kardia-frontend.git
+  cd kardia-frontend
+  ```
+2. Instal semua dependensi yang dibutuhkan:
+  ```bash
+  npm install
+  ```
+3. Setup Environment Variables: Buat file baru bernama `.env` di root direktori proyek. Salin konten dari file `.env.example` ke dalam file `.env` tersebut, lalu sesuaikan nilainya.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+  Contoh isi file `.env.example`:
+  ```
+  VITE_BASE_URL=
+  ```
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+  Penjelasan variabel:
+  - `VITE_BASE_URL`: URL dasar dari API backend yang digunakan untuk interaksi data.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+4. Jalankan development server:
+  ```bash
+  npm run dev
+  ```
+  Akses aplikasi di `http://localhost:5173` (atau port lain yang ditampilkan di terminal jika 5173 sudah terpakai).
