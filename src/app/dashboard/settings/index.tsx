@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
     User,
-    Bell,
     Shield,
     Palette,
     Globe,
@@ -70,13 +69,13 @@ export default function SettingsPage() {
         }
     );
 
-    const [notifications, setNotifications] = useState({
-        analysisReminder: true,
-        healthTips: true,
-        riskAlerts: true,
-        emailNotifications: false,
-        pushNotifications: true,
-    });
+    // const [notifications, setNotifications] = useState({
+    //     analysisReminder: true,
+    //     healthTips: true,
+    //     riskAlerts: true,
+    //     emailNotifications: false,
+    //     pushNotifications: true,
+    // });
 
     const [preferences, setPreferences] = useState({
         language: "id",

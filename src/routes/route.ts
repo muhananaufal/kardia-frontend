@@ -4,7 +4,7 @@ import Register from "@/app/auth/register";
 import DashboardPage from "@/app/dashboard";
 import AIChatPage from "@/app/dashboard/ai-chat";
 import NewAnalysis from "@/app/dashboard/analysis";
-import HelpPage from "@/app/dashboard/help";
+// import HelpPage from "@/app/dashboard/help";
 import HistoryPage from "@/app/dashboard/history";
 import SettingsPage from "@/app/dashboard/settings";
 import AuthLayout from "@/components/layouts/AuthLayout";
