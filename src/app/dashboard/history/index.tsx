@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RiwayatDetailModal } from '@/components/fragments/riwayat-detail-modal';
 import { useAuth } from '@/provider/AuthProvider';
-import { fetchDashboard } from '@/hooks/api/dashboard';
 
 const pageVariants = {
 	initial: { opacity: 0, y: 20 },
@@ -28,7 +27,7 @@ export default function RiwayatPage() {
 	const [selectedRecord, setSelectedRecord] = useState<AnalysisRecord | null>(null);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filterRisk, setFilterRisk] = useState<string>('all');
-	const [analysisHistory, setAnalysisHistory] = useState<AnalysisRecord[]>([]);
+	const [analysisHistory] = useState<AnalysisRecord[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
