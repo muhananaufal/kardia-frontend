@@ -430,7 +430,7 @@ export default function DashboardPage() {
 
                                 <div className="p-4 rounded-xl bg-white/60 border border-rose-200/50">
                                     <h4 className="font-medium text-slate-800 mb-2">
-                                        Rekomendasi Utama
+                                        Faktor Utama
                                     </h4>
                                     <ul className="text-sm text-slate-600 space-y-1">
                                         {dashboardData?.latest_assessment_details.riskSummary.primaryContributors
