@@ -62,10 +62,15 @@ const bottomNavItems = [
         icon: Home,
     },
     {
-        title: "Help Center",
-        url: "/dashboard/help",
-        icon: HelpCircle,
-    },
+        title: "Profile",
+        url: "/dashboard/profile",
+        icon: Settings,
+    }
+    // {
+    //     title: "Help Center",
+    //     url: "/dashboard/help",
+    //     icon: HelpCircle,
+    // },
 ];
 
 export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
@@ -73,7 +78,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
     const { isMobile } = useSidebar();
 
     return (
-        <Sidebar className="border-r border-slate-200/60" collapsible="icon">
+        <Sidebar className="border-r border-slate-200/60" collapsible="offcanvas">
             <SidebarHeader className="p-6">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -86,10 +91,10 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
                     </div>
                     <div className="group-data-[collapsible=icon]:hidden">
                         <h1 className="text-xl font-bold text-rose-500">
-                            HealthAI
+                            Kardia
                         </h1>
                         <p className="text-xs text-slate-500">
-                            AI Health Monitor
+                            Deteksi Dini, Jaga Jantung Setiap Hari
                         </p>
                     </div>
                 </motion.div>

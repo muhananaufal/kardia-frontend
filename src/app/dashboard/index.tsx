@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { color, motion } from "framer-motion";
 import {
     Heart,
     TrendingUp,
@@ -61,6 +61,19 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return null;
 };
 
+const formatResikoBadge = (code: string, title: string) => {
+    switch(code) {
+        case "LOW_MODERATE" :
+            return <Badge className="bg-green-100 text-green-700 hover:bg-rose-200">{title}</Badge>
+        case "HIGH" :
+            return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-rose-200">{title}</Badge>
+        case "VERY_HIGH" :
+            return <Badge className="bg-red-100 text-red-800 hover:bg-rose-200">{title}</Badge>
+        default:
+            return <Badge className="bg-slate-100 text-slate-700 hover:bg-rose-200">{title}</Badge>;
+    }
+}
+
 export default function DashboardPage() {
     const auth = useAuth();
     const token = auth?.token;
@@ -92,8 +105,10 @@ export default function DashboardPage() {
     const getTrendStatus = (trend: string) => {
         if (trend === "improving") {
             return { text: "Membaik", color: "text-green-600" };
-        } else {
+        } else if (trend === "worsening") {
             return { text: "Memburuk", color: "text-red-600" };
+        } else {
+            return { text: "Stabil", color: "text-sky-600" };
         }
     };
 
@@ -104,13 +119,13 @@ export default function DashboardPage() {
 
               return {
                   date,
-                  risk: risk * 100,
+                  risk: risk,
                   fullDate: date,
               };
           })
         : [];
 
-    if (loading || !dashboardData) {
+    if (loading) {
         // loader spiner
         return (
             <div className="flex items-center justify-center h-screen">
@@ -149,10 +164,10 @@ export default function DashboardPage() {
                     animate="animate"
                     transition={{ delay: 0.2 }}
                 >
-                    <Card className="rounded-2xl shadow-sm border h-full">
-                        <CardHeader className="pb-3">
+                    <Card className="gap-3 rounded-2xl shadow-sm border h-full">
+                        <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg">
+                                <CardTitle className="text-lg text-rose-600">
                                     Status Kesehatan
                                 </CardTitle>
                                 <CheckCircle className="h-6 w-6 text-rose-600" />
@@ -160,16 +175,19 @@ export default function DashboardPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-2">
-                                <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-200">
-                                    {
-                                        dashboardData.summary.latest_status
-                                            .category_title
-                                    }
-                                </Badge>
+                                {dashboardData?.summary.latest_status.category_code ? (
+                                    formatResikoBadge(
+                                        dashboardData?.summary.latest_status.category_code, dashboardData?.summary.latest_status.category_title)
+                                    ) : (
+                                        <Badge className="bg-gray-100 text-gray-600">
+                                            Tidak ada status kesehatan
+                                        </Badge>
+                                    )}
                                 <p className="text-sm">
                                     {
-                                        dashboardData.summary.latest_status
-                                            .description
+                                        dashboardData?.summary.latest_status
+                                            .description ||
+                                        "Tidak ada deskripsi status kesehatan."
                                     }
                                 </p>
                             </div>
@@ -183,24 +201,25 @@ export default function DashboardPage() {
                     animate="animate"
                     transition={{ delay: 0.3 }}
                 >
-                    <Card className="rounded-2xl shadow-sm border h-full">
-                        <CardHeader className="pb-3">
+                    <Card className="gap-3 rounded-2xl shadow-sm border h-full">
+                        <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg">
+                                <CardTitle className="text-lg text-rose-600">
                                     Analisis Terakhir
                                 </CardTitle>
-                                <Clock className="h-6 w-6 text-blue-600" />
+                                <Clock className="h-6 w-6 text-rose-600" />
                             </div>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-2">
-                                <p className="text-xl font-bold text-blue-700">
+                                <p className="text-xl font-bold">
                                     {
-                                        dashboardData.summary
-                                            .last_assessment_date_human
+                                        dashboardData?.summary
+                                            .last_assessment_date_human ||
+                                        "Belum ada analisis"
                                     }
                                 </p>
-                                <p className="text-sm">yang lalu</p>
+                                {/* <p className="text-sm">yang lalu</p> */}
                             </div>
                         </CardContent>
                     </Card>
@@ -212,27 +231,30 @@ export default function DashboardPage() {
                     animate="animate"
                     transition={{ delay: 0.4 }}
                 >
-                    <Card className="rounded-2xl shadow-sm border h-full">
-                        <CardHeader className="pb-3">
+                    <Card className="gap-3 rounded-2xl shadow-sm border h-full">
+                        <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg">
+                                <CardTitle className="text-lg text-rose-600">
                                     Trend Kesehatan
                                 </CardTitle>
-                                <TrendingUp className="h-6 w-6 text-purple-600" />
+                                <TrendingUp className="h-6 w-6 text-rose-600" />
                             </div>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-2">
-                                <p className="text-2xl font-bold text-purple-700">
+                                <p className="text-2xl font-bold">
                                     {
-                                        getTrendStatus(
-                                            dashboardData.summary.health_trend
-                                                .direction
-                                        ).text
+                                        dashboardData?.summary.health_trend.direction ? (
+                                            getTrendStatus(
+                                                dashboardData?.summary.health_trend.direction
+                                            ).text
+                                        ) : (
+                                            "Tidak ada data"
+                                        )
                                     }
                                 </p>
                                 <p className="text-sm">
-                                    {dashboardData.summary.health_trend.text}
+                                    {dashboardData?.summary.health_trend.text || "Tidak ada informasi tren kesehatan."}
                                 </p>
                             </div>
                         </CardContent>
@@ -320,130 +342,133 @@ export default function DashboardPage() {
             </motion.div>
 
             {/* Enhanced Last Analysis Summary */}
-            <motion.div
-                variants={cardVariants}
-                initial="initial"
-                animate="animate"
-                transition={{ delay: 0.6 }}
-            >
-                <Card className="rounded-2xl shadow-md border-0 p-6 hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200">
-                    <CardHeader className="pb-4">
-                        <CardTitle className="text-xl text-slate-800 flex items-center gap-3">
-                            <div className="p-2 rounded-xl bg-yellow-100">
-                                <AlertCircle className="h-6 w-6 text-yellow-600" />
-                            </div>
-                            Ringkasan Analisis Terakhir
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        {/* Time Info */}
-                        <div className="flex items-center gap-3 p-4 rounded-xl bg-white/60 border border-yellow-200/50">
-                            <Clock className="h-5 w-5 text-yellow-600" />
-                            <div>
-                                <p className="font-medium text-yellow-800">
-                                    Terakhir melakukan analisis:{" "}
-                                </p>
-                                <p className="text-sm text-yellow-700">
-                                    {
-                                        dashboardData.summary
-                                            .last_assessment_date_human
-                                    }
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Warning Suggestion */}
-                        <div className="flex items-start gap-3 p-4 rounded-xl bg-yellow-100/60 border border-yellow-200">
-                            <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
-                            <div className="flex-1">
-                                <p className="font-medium text-yellow-800 mb-1">
-                                    Rekomendasi Sistem
-                                </p>
-                                <p className="text-sm text-yellow-700 leading-relaxed">
-                                    Sudah cukup lama sejak analisis terakhir,
-                                    sebaiknya lakukan pengecekan kembali untuk
-                                    mengetahui kondisi terkini Anda. Analisis
-                                    rutin membantu memantau perubahan kesehatan
-                                    secara dini.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Previous Analysis Results */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-4 rounded-xl bg-white/60 border border-yellow-200/50">
-                                <h4 className="font-medium text-slate-800 mb-2">
-                                    Hasil Terakhir
-                                </h4>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-sm text-slate-600">
-                                            Status Risiko
-                                        </span>
-                                        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200">
-                                            {
-                                                dashboardData
-                                                    .latest_assessment_details
-                                                    .riskSummary.riskCategory
-                                                    .title
-                                            }
-                                        </Badge>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-sm text-slate-600">
-                                            Persentase Resiko
-                                        </span>
-                                        <span className="font-semibold text-slate-800">
-                                            {dashboardData
-                                                .latest_assessment_details
-                                                .riskSummary.riskPercentage *
-                                                100}
-                                            %
-                                        </span>
-                                    </div>
+            {dashboardData?.latest_assessment_details && (
+                <motion.div
+                    variants={cardVariants}
+                    initial="initial"
+                    animate="animate"
+                    transition={{ delay: 0.6 }}
+                >
+                    <Card className="rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-300 bg-white border">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="text-xl text-slate-800 flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-rose-100">
+                                    <AlertCircle className="h-6 w-6 text-rose-600" />
+                                </div>
+                                Ringkasan Analisis Terakhir
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {/* Time Info */}
+                            <div className="flex items-center gap-3 p-4 rounded-xl bg-white/60 border border-rose-200/50">
+                                <Clock className="h-5 w-5 text-rose-600" />
+                                <div>
+                                    <p className="font-medium text-rose-800">
+                                        Terakhir melakukan analisis:{" "}
+                                    </p>
+                                    <p className="text-sm text-rose-700">
+                                        {
+                                            dashboardData?.summary
+                                                .last_assessment_date_human
+                                        }
+                                    </p>
                                 </div>
                             </div>
 
-                            <div className="p-4 rounded-xl bg-white/60 border border-yellow-200/50">
-                                <h4 className="font-medium text-slate-800 mb-2">
-                                    Rekomendasi Utama
-                                </h4>
-                                <ul className="text-sm text-slate-600 space-y-1">
-                                    {dashboardData.latest_assessment_details.riskSummary.primaryContributors
-                                        .slice(0, 3)
-                                        .map((item, i) => (
-                                            <li key={i}>• {item.title}</li>
-                                        ))}
-                                </ul>
+                            {/* Warning Suggestion */}
+                            <div className="flex items-start gap-3 p-4 rounded-xl bg-yellow-100/60 border border-yellow-200">
+                                <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                    <p className="font-medium text-yellow-800 mb-1">
+                                        Rekomendasi Sistem
+                                    </p>
+                                    <p className="text-sm text-yellow-700 leading-relaxed">
+                                        Sudah cukup lama sejak analisis terakhir,
+                                        sebaiknya lakukan pengecekan kembali untuk
+                                        mengetahui kondisi terkini Anda. Analisis
+                                        rutin membantu memantau perubahan kesehatan
+                                        secara dini.
+                                    </p>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* CTA Button */}
-                        <motion.div
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="pt-2"
-                        >
-                            <Link to="/dashboard/analysis">
-                                <Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-                                    <CheckCircle className="h-5 w-5 mr-2" />
-                                    Lakukan Analisis Sekarang
-                                    <motion.div
-                                        animate={{ x: [0, 5, 0] }}
-                                        transition={{
-                                            duration: 1.5,
-                                            repeat: Number.POSITIVE_INFINITY,
-                                        }}
-                                        className="ml-2"
-                                    >
-                                        →
-                                    </motion.div>
-                                </Button>
-                            </Link>
-                        </motion.div>
-                    </CardContent>
-                </Card>
-            </motion.div>
+                            {/* Previous Analysis Results */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="p-4 rounded-xl bg-white/60 border border-rose-200/50">
+                                    <h4 className="font-medium text-slate-800 mb-2">
+                                        Hasil Terakhir
+                                    </h4>
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm text-slate-600">
+                                                Status Risiko
+                                            </span>
+                                            {
+                                                formatResikoBadge(
+                                                    dashboardData?.latest_assessment_details
+                                                        .riskSummary.riskCategory
+                                                        .code,
+                                                    dashboardData?.latest_assessment_details
+                                                        .riskSummary.riskCategory
+                                                        .title
+                                                )
+                                            }
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm text-slate-600">
+                                                Persentase Resiko
+                                            </span>
+                                            <span className="font-semibold text-slate-800">
+                                                {dashboardData?.latest_assessment_details
+                                                    .riskSummary.riskPercentage *
+                                                    100}
+                                                %
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-4 rounded-xl bg-white/60 border border-rose-200/50">
+                                    <h4 className="font-medium text-slate-800 mb-2">
+                                        Rekomendasi Utama
+                                    </h4>
+                                    <ul className="text-sm text-slate-600 space-y-1">
+                                        {dashboardData?.latest_assessment_details.riskSummary.primaryContributors
+                                            .slice(0, 3)
+                                            .map((item, i) => (
+                                                <li key={i}>• {item.title}</li>
+                                            ))}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            {/* CTA Button */}
+                            <motion.div
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="pt-2"
+                            >
+                                <Link to="/dashboard/analysis">
+                                    <Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
+                                        <CheckCircle className="h-5 w-5 mr-2" />
+                                        Lakukan Analisis Sekarang
+                                        <motion.div
+                                            animate={{ x: [0, 5, 0] }}
+                                            transition={{
+                                                duration: 1.5,
+                                                repeat: Number.POSITIVE_INFINITY,
+                                            }}
+                                            className="ml-2"
+                                        >
+                                            →
+                                        </motion.div>
+                                    </Button>
+                                </Link>
+                            </motion.div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            )}
         </motion.div>
     );
 }

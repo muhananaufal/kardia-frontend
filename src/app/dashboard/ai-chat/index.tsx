@@ -261,7 +261,7 @@ const AIChatPage = () => {
                                             delay: 0.6,
                                             staggerChildren: 0.1,
                                         }}
-                                        className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto"
+                                        className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto"
                                     >
                                         {[
                                             "Bagaimana cara menjaga kesehatan jantung?",
@@ -284,7 +284,7 @@ const AIChatPage = () => {
                                             >
                                                 <Button
                                                     variant="outline"
-                                                    className="p-4 h-auto text-left justify-start hover:bg-rose-50 hover:border-rose-200 w-full transition-all duration-200"
+                                                    className="p-4 h-auto text-left justify-start hover:bg-rose-50 hover:border-rose-200 w-full transition-all duration-200 cursor-pointer"
                                                     onClick={() =>
                                                         setInput(suggestion)
                                                     }
@@ -514,6 +514,9 @@ const AIChatPage = () => {
                                             value={input}
                                             onChange={(e) =>
                                                 setInput(e.target.value)
+                                            }
+                                            onFocus={() =>
+                                                setIsSidebarOpen(false)
                                             }
                                             placeholder="Ketik pertanyaan kesehatan Anda..."
                                             className="pr-12 h-12 text-base transition-all duration-200"

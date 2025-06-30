@@ -69,38 +69,12 @@ export default function RiwayatPage() {
         fetchAnalysisHistory();
     }, []);
 
-    const getRiskColor = (level: string) => {
-        switch (level) {
-            case "rendah":
-                return "bg-green-50 text-green-600 border-green-200 hover:bg-green-100";
-            case "tinggi":
-                return "bg-yellow-50 text-yellow-600 border-yellow-200 hover:bg-yellow-100";
-            case "sangat tinggi":
-                return "bg-red-50 text-red-600 border-red-200 hover:bg-red-100";
-            default:
-                return "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100";
-        }
-    };
-
-    const getRiskIcon = (level: string) => {
-        switch (level) {
-            case "rendah":
-                return <CheckCircle className="h-4 w-4" />;
-            case "tinggi":
-                return <AlertTriangle className="h-4 w-4" />;
-            case "sangat tinggi":
-                return <AlertTriangle className="h-4 w-4" />;
-            default:
-                return <CheckCircle className="h-4 w-4" />;
-        }
-    };
-
     const getRiskLevel = (
         code?: string
-    ): "rendah" | "tinggi" | "sangat tinggi" | "tidak diketahui" => {
+    ): "rendah-sedang" | "tinggi" | "sangat tinggi" | "tidak diketahui" => {
         switch (code) {
             case "LOW_MODERATE":
-                return "rendah";
+                return "rendah-sedang";
             case "HIGH":
                 return "tinggi";
             case "VERY_HIGH":
@@ -109,6 +83,19 @@ export default function RiwayatPage() {
                 return "tidak diketahui";
         }
     };
+
+    const formatResikoBadge = (code: string, title: string) => {
+        switch(code) {
+            case "LOW_MODERATE" :
+                return <Badge className="bg-green-100 text-green-700 hover:bg-rose-200">{title}</Badge>
+            case "HIGH" :
+                return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-rose-200">{title}</Badge>
+            case "VERY_HIGH" :
+                return <Badge className="bg-red-100 text-red-800 hover:bg-rose-200">{title}</Badge>
+            default:
+                return <Badge className="bg-slate-100 text-slate-700 hover:bg-rose-200">{title}</Badge>;
+        }
+    }
 
     const filteredHistory = analysisHistory
         .filter((record) => {
@@ -138,8 +125,6 @@ export default function RiwayatPage() {
             </div>
         );
     }
-
-    console.log("Filtered History:", filteredHistory);
 
     return (
         <div className="min-h-screen bg-white">
@@ -174,8 +159,8 @@ export default function RiwayatPage() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="grid grid-cols-1 md:grid-cols-2 gap-6"
                 >
-                    <Card className="rounded-2xl shadow-sm border border-gray-200 bg-white transition-all duration-300">
-                        <CardHeader className="pb-3">
+                    <Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white transition-all duration-300">
+                        <CardHeader>
                             <CardTitle className="text-base md:text-lg font-bold">
                                 Total Analisis
                             </CardTitle>
@@ -190,25 +175,25 @@ export default function RiwayatPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="rounded-2xl shadow-sm border border-gray-200 bg-white transition-all duration-300">
-                        <CardHeader className="pb-3">
+                    <Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white transition-all duration-300">
+                        <CardHeader>
                             <CardTitle className="text-base md:text-lg font-bold">
                                 Rata-rata Risiko
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p className="text-2xl md:text-3xl font-bold text-gray-900">
-                                {Math.round(
+                                {(
                                     analysisHistory.reduce(
                                         (acc, record) =>
                                             acc + record?.risk_percentage,
                                         0
-                                    ) / analysisHistory.length
-                                )}
+                                    ) / 30
+                                ).toFixed(2)}
                                 %
                             </p>
                             <p className="text-sm md:text-base text-gray-600">
-                                dalam 3 bulan terakhir
+                                dalam 1 bulan terakhir
                             </p>
                         </CardContent>
                     </Card>
@@ -287,7 +272,12 @@ export default function RiwayatPage() {
                                         }, 100); // Delay to allow card click animation
                                     }}
                                 >
-                                    <CardContent className="p-4 md:p-6">
+                                    <CardHeader className="border-b border-gray-200">
+                                        <CardTitle className="text-lg md:text-xl font-bold text-gray-900">
+                                            Analisis Resiko
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="flex-1 space-y-3 max-w-4xl">
                                                 <div className="flex items-center gap-3">
@@ -301,38 +291,24 @@ export default function RiwayatPage() {
                                                 </div>
 
                                                 <div className="flex items-center gap-3">
-                                                    <Badge
-                                                        className={`${getRiskColor(
-                                                            record
-                                                                ?.result_details
-                                                                .riskSummary
-                                                                .riskCategory
-                                                                .title
-                                                        )} text-xs font-medium uppercase tracking-wide border`}
-                                                    >
-                                                        {getRiskIcon(
-                                                            record
-                                                                ?.result_details
-                                                                .riskSummary
-                                                                .riskCategory
-                                                                .title
-                                                        )}
-                                                        <span className="ml-1">
-                                                            {
-                                                                record
-                                                                    ?.result_details
-                                                                    .riskSummary
-                                                                    .riskCategory
-                                                                    .title
-                                                            }
-                                                        </span>
-                                                    </Badge>
+                                                    {
+                                                        formatResikoBadge(
+                                                            record?.result_details
+                                                                ?.riskSummary
+                                                                ?.riskCategory
+                                                                ?.code,
+                                                            record?.result_details
+                                                                ?.riskSummary
+                                                                ?.riskCategory
+                                                                ?.title ||
+                                                                "Tidak diketahui"
+                                                        )
+                                                    }
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-xl md:text-2xl font-bold text-gray-900">
-                                                            {(
-                                                                record?.risk_percentage *
-                                                                100
-                                                            ).toFixed(1)}
+                                                            {(record?.risk_percentage).toFixed(
+                                                                1
+                                                            )}
                                                             %
                                                         </span>
                                                         {/* {getTrendIcon(record.trend)} */}

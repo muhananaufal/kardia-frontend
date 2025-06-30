@@ -21,7 +21,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
     Select,
     SelectContent,
@@ -102,12 +101,25 @@ export default function SettingsPage() {
         }
     };
 
-    const handleNotificationChange = (key: string, value: boolean) => {
-        setNotifications((prev) => ({ ...prev, [key]: value }));
-    };
+    // const handleNotificationChange = (key: string, value: boolean) => {
+    //     setNotifications((prev) => ({ ...prev, [key]: value }));
+    // };
 
     const handlePreferenceChange = (key: string, value: string) => {
         setPreferences((prev) => ({ ...prev, [key]: value }));
+    };
+
+    const formatDateForInput = (dateString: any) => {
+        if (!dateString) return ''; // Kembalikan string kosong jika tidak ada tanggal
+
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return ''; // Kembalikan string kosong jika tanggal tidak valid
+
+        const year = date.getFullYear();
+        const month = String(date.getDate()).padStart(2, '0'); // padStart untuk menambahkan '0'
+        const day = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() 0-indexed, jadi +1 dan padStart
+
+        return `${year}-${month}-${day}`;
     };
 
     // set language ke profile data ketika preferences berubah
@@ -158,11 +170,11 @@ export default function SettingsPage() {
                     animate="animate"
                     transition={{ delay: 0.2 }}
                 >
-                    <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+                    <Card className="gap-3 rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
                         <CardHeader className="pb-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <User className="h-6 w-6 text-blue-500" />
+                                    <User className="h-6 w-6 text-rose-500" />
                                     <div>
                                         <CardTitle className="text-base md:text-lg font-bold text-gray-900">
                                             Profil Pengguna
@@ -175,7 +187,7 @@ export default function SettingsPage() {
                                 <Button
                                     onClick={() => setIsEditing(!isEditing)}
                                     variant="outline"
-                                    className="bg-white text-blue-500 border border-blue-500 hover:bg-blue-50 rounded-lg text-sm font-medium uppercase tracking-wide"
+                                    className="bg-white text-rose-500 border border-rose-500 hover:bg-rose-50 rounded-lg text-sm font-medium uppercase tracking-wide"
                                 >
                                     <Edit3 className="h-4 w-4 mr-2" />
                                     {isEditing ? "Batal" : "Edit"}
@@ -189,7 +201,7 @@ export default function SettingsPage() {
                                         src="/placeholder.svg?height=80&width=80"
                                         alt="Profile"
                                     />
-                                    <AvatarFallback className="bg-blue-500 text-white text-xl font-bold">
+                                    <AvatarFallback className="bg-rose-500 text-white text-xl font-bold">
                                         {profileData.first_name?.charAt(0) ||
                                             "U"}
                                         {profileData.last_name?.charAt(0) || ""}
@@ -203,7 +215,7 @@ export default function SettingsPage() {
                                     <p className="text-sm md:text-base text-gray-600">
                                         {profileData.email}
                                     </p>
-                                    <Badge className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 text-xs font-medium uppercase tracking-wide mt-2">
+                                    <Badge className="bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 text-xs font-medium uppercase tracking-wide mt-2">
                                         Pengguna Aktif
                                     </Badge>
                                 </div>
@@ -229,7 +241,7 @@ export default function SettingsPage() {
                                             }))
                                         }
                                         disabled={!isEditing}
-                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base"
                                     />
                                 </div>
 
@@ -250,7 +262,7 @@ export default function SettingsPage() {
                                             }))
                                         }
                                         disabled={!isEditing}
-                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base"
                                     />
                                 </div>
 
@@ -272,7 +284,7 @@ export default function SettingsPage() {
                                             }))
                                         }
                                         disabled={!isEditing}
-                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base"
                                     />
                                 </div>
 
@@ -286,9 +298,7 @@ export default function SettingsPage() {
                                     <Input
                                         id="date_of_birth"
                                         type="date"
-                                        value={new Date(
-                                            profileData.date_of_birth
-                                        ).toLocaleDateString("en-CA")}
+                                        value={formatDateForInput(profileData.date_of_birth)}
                                         onChange={(e) =>
                                             setProfileData((prev) => ({
                                                 ...prev,
@@ -296,7 +306,7 @@ export default function SettingsPage() {
                                             }))
                                         }
                                         disabled={!isEditing}
-                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+                                        className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base"
                                     />
                                 </div>
 
@@ -318,7 +328,7 @@ export default function SettingsPage() {
                                         }
                                         disabled={!isEditing}
                                     >
-                                        <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
                                             <SelectValue placeholder="Pilih jenis kelamin" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -350,7 +360,7 @@ export default function SettingsPage() {
                                         }
                                         disabled={!isEditing}
                                     >
-                                        <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <SelectTrigger className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
                                             <SelectValue placeholder="Pilih negara" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -398,7 +408,7 @@ export default function SettingsPage() {
                                 >
                                     <Button
                                         onClick={handleSaveProfile}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium uppercase tracking-wide"
+                                        className="bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-sm font-medium uppercase tracking-wide"
                                     >
                                         <Save className="h-4 w-4 mr-2" />
                                         Simpan Perubahan
@@ -410,7 +420,7 @@ export default function SettingsPage() {
                 </motion.div>
 
                 {/* Notifications Section */}
-                <motion.div
+                {/* <motion.div
                     variants={cardVariants}
                     initial="initial"
                     animate="animate"
@@ -419,7 +429,7 @@ export default function SettingsPage() {
                     <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
                         <CardHeader className="pb-4">
                             <div className="flex items-center gap-3">
-                                <Bell className="h-6 w-6 text-blue-500" />
+                                <Bell className="h-6 w-6 text-rose-500" />
                                 <div>
                                     <CardTitle className="text-base md:text-lg font-bold text-gray-900">
                                         Notifikasi
@@ -542,7 +552,7 @@ export default function SettingsPage() {
                             </div>
                         </CardContent>
                     </Card>
-                </motion.div>
+                </motion.div> */}
 
                 {/* Preferences Section */}
                 <motion.div
@@ -551,10 +561,10 @@ export default function SettingsPage() {
                     animate="animate"
                     transition={{ delay: 0.4 }}
                 >
-                    <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
-                        <CardHeader className="pb-4">
+                    <Card className="gap-3 rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+                        <CardHeader>
                             <div className="flex items-center gap-3">
-                                <Palette className="h-6 w-6 text-blue-500" />
+                                <Palette className="h-6 w-6 text-rose-500" />
                                 <div>
                                     <CardTitle className="text-base md:text-lg font-bold text-gray-900">
                                         Preferensi
@@ -565,7 +575,7 @@ export default function SettingsPage() {
                                 </div>
                             </div>
                         </CardHeader>
-                        <CardContent className="space-y-6">
+                        <CardContent className="space-y-1">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label className="text-sm font-medium text-gray-700">
@@ -580,7 +590,7 @@ export default function SettingsPage() {
                                             )
                                         }
                                     >
-                                        <SelectTrigger className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <SelectTrigger className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 w-full">
                                             <Globe className="h-4 w-4 mr-2" />
                                             <SelectValue />
                                         </SelectTrigger>
@@ -608,7 +618,7 @@ export default function SettingsPage() {
                                             )
                                         }
                                     >
-                                        <SelectTrigger className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <SelectTrigger className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 w-full">
                                             <Palette className="h-4 w-4 mr-2" />
                                             <SelectValue />
                                         </SelectTrigger>
@@ -637,10 +647,10 @@ export default function SettingsPage() {
                     animate="animate"
                     transition={{ delay: 0.5 }}
                 >
-                    <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
-                        <CardHeader className="pb-4">
+                    <Card className="gap-3 rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+                        <CardHeader>
                             <div className="flex items-center gap-3">
-                                <Shield className="h-6 w-6 text-blue-500" />
+                                <Shield className="h-6 w-6 text-rose-500" />
                                 <div>
                                     <CardTitle className="text-base md:text-lg font-bold text-gray-900">
                                         Keamanan & Privasi

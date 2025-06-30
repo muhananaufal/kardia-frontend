@@ -67,10 +67,10 @@ export const router = createBrowserRouter([
                 path: "profile",
                 Component: SettingsPage
             },
-            {
-                path: "help",
-                Component: HelpPage
-            }
+            // {
+            //     path: "help",
+            //     Component: HelpPage
+            // }
         ]
     }
 ])

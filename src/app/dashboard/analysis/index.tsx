@@ -29,6 +29,7 @@ import { regionMap } from "@/lib/data";
 import { formatCountryName, formatGroupLabel } from "@/lib/utils";
 import { set } from "zod";
 import { newAnalysis, personalizeAnalysis } from "@/hooks/api/analysis";
+import ProfileCompletionModal from "@/components/fragments/profile-completion-modal";
 
 // Types
 
@@ -84,6 +85,7 @@ export default function AnalisisPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("");
     const [progress, setProgress] = useState(0);
+    const [isProfileCompleted, setIsProfileCompleted] = useState(true);
 
     useEffect(() => {
         let interval: any;
@@ -98,7 +100,10 @@ export default function AnalisisPage() {
     // initial age and gender and risk region set from user.date_of_birth and user.gender and user.country_of_residence
     useEffect(() => {
         if (user?.date_of_birth) {
-            const birthDate = new Date(user.date_of_birth);
+            console.log("User Date of Birth:", user.date_of_birth);
+            const [day, month, year] = user.date_of_birth.split("/");
+            const birthDate = new Date(`${year}-${month}-${day}`);
+            console.log("Birth Date:", birthDate);
             const today = new Date();
             const age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -110,6 +115,8 @@ export default function AnalisisPage() {
             } else {
                 setFormData((prev) => ({ ...prev, age: age.toString() }));
             }
+        } else {
+            setIsProfileCompleted(false);
         }
 
         if (user?.sex) {
@@ -117,6 +124,8 @@ export default function AnalisisPage() {
                 ...prev,
                 gender: user.sex,
             }));
+        } else {
+            setIsProfileCompleted(false);
         }
 
         if (user?.country_of_residence) {
@@ -124,6 +133,8 @@ export default function AnalisisPage() {
                 ...prev,
                 region: user.country_of_residence.toLowerCase(),
             }));
+        } else {
+            setIsProfileCompleted(false);
         }
 
         // categorise in risiko rendah, sedang, tinggi, sangat tinggi didapat dari regionMap
@@ -155,8 +166,10 @@ export default function AnalisisPage() {
                     riskRegion: "Risiko Rendah",
                 }));
             }
+        } else {
+            setIsProfileCompleted(false);
         }
-    }, [user?.date_of_birth, user?.sex, user?.country_of_residence]);
+    }, [user]);
 
     useEffect(() => {
         if (formData.diabetesHistory === "Ya") {
@@ -407,6 +420,12 @@ export default function AnalisisPage() {
         }));
     };
 
+    if(isProfileCompleted === false) {
+        return (
+            <ProfileCompletionModal />
+        )
+    }
+
     if (currentStep === 3) {
         return (
             <motion.div
@@ -632,6 +651,14 @@ function Step1Form({
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Region */}
+                        <div className="space-y-3 col-span-1 md:col-span-2 mx-auto">
+                            {/* image risk map */}
+                            <img
+                                src="/images/risk_map.jpeg"
+                                alt="Peta Risiko Geografis"
+                                className="rounded-lg shadow-sm mb-4"
+                            />
+                        </div>
                         <div className="space-y-3 w-full">
                             <Label
                                 htmlFor="country_of_residence"
@@ -805,7 +832,7 @@ function Step1Form({
                                         id="diabetesAge"
                                         type="number"
                                         min="1"
-                                        max="100"
+                                        max={formData.age}
                                         value={formData.diabetesAge}
                                         onChange={(e) =>
                                             updateFormData(
