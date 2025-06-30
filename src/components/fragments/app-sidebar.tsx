@@ -1,5 +1,4 @@
-import React from "react";
-import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
     Sidebar,
@@ -12,7 +11,6 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarSeparator,
     useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -22,13 +20,11 @@ import {
     Bell,
     ChevronRight,
     Heart,
-    HelpCircle,
     History,
     Home,
     LogOut,
     MessageSquare,
     Settings,
-    Stethoscope,
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 

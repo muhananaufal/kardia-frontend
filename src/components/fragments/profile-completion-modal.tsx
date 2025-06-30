@@ -1,5 +1,4 @@
-import { Heart, Calendar, Phone, X, TriangleAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { TriangleAlert } from "lucide-react";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";

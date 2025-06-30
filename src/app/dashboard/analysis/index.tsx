@@ -27,7 +27,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/provider/AuthProvider";
 import { regionMap } from "@/lib/data";
 import { formatCountryName, formatGroupLabel } from "@/lib/utils";
-import { set } from "zod";
 import { newAnalysis, personalizeAnalysis } from "@/hooks/api/analysis";
 import ProfileCompletionModal from "@/components/fragments/profile-completion-modal";
 
