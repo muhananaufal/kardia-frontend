@@ -108,7 +108,6 @@ export default function RiwayatPage() {
 	}
 
 	const totalRisk = analysisHistory.reduce((acc, record) => acc + parseFloat(record?.risk_percentage || '0'), 0);
-	const averageRisk = analysisHistory.length > 0 ? totalRisk / analysisHistory.length : 0;
 
 	return (
 		<div className="min-h-screen bg-white">
