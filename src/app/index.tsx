@@ -6,8 +6,6 @@ import {
   Users,
   BarChart3,
   MessageSquare,
-  Stethoscope,
-  Bell,
   History,
   ChevronDown,
   ChevronRight,
@@ -40,7 +38,7 @@ const scaleIn = {
 }
 
 const Homepage = () => {
-    const [openFaq, setOpenFaq] = useState<number | null>(null)
+    // const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
