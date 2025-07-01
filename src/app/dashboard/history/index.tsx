@@ -32,24 +32,34 @@ export default function RiwayatPage() {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchAnalysisHistory = async () => {
+		const loadDashboardData = async () => {
+			if (!token) {
+				setIsLoading(false);
+				return;
+			}
+
 			setIsLoading(true);
 			try {
-				if (!token) {
-					console.error('No authentication token found');
-					return;
-				}
-				// Contoh pemanggilan API (sesuaikan dengan endpoint Anda)
-				const response = await fetchDashboard(token);
+				const responseData = await fetchDashboard(token);
 
-				setAnalysisHistory(response.data); // Simpan data ke state
+				// 1. Akses properti 'history' yang berisi array
+				if (responseData && Array.isArray(responseData.history)) {
+					setAnalysisHistory(responseData.history);
+				} else {
+					console.error("Properti 'history' tidak ditemukan atau bukan array:", responseData);
+					setAnalysisHistory([]); // Set ke array kosong jika ada masalah
+				}
 			} catch (error) {
-				console.error('Error fetching history data:', error);
+				console.error('Gagal mengambil data dashboard:', error);
+				setAnalysisHistory([]);
+			} finally {
+				// 2. Pastikan loading SELALU berhenti
+				setIsLoading(false);
 			}
 		};
 
-		fetchAnalysisHistory();
-	}, []); // <-- Tambahkan `token` sebagai dependensi
+		loadDashboardData();
+	}, [token]); // 3. Tambahkan token sebagai dependensi
 
 	const getRiskLevel = (code?: string): 'rendah-sedang' | 'tinggi' | 'sangat tinggi' | 'tidak diketahui' => {
 		switch (code) {
