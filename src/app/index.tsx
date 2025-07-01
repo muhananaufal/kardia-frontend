@@ -53,21 +53,21 @@ const Homepage = () => {
 								</motion.h1>
 
 								<motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-xl text-slate-600 leading-relaxed">
-									With Kardia, monitor your heart health effortlessly through smart AI analysis and simple, guided steps.
+									Dengan Kardia, kamu bisa pantau kesehatan jantung tanpa ribet lewat analisis AI pintar dan panduan langkah demi langkah yang mudah diikuti.
 								</motion.p>
 							</div>
 
 							<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="flex flex-col sm:flex-row gap-4">
-								<a href="/analisis-baru">
+								<a href="/dashboard/analysis">
 									<Button size="lg" className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group">
 										<Heart className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-										Start Analysis Now
+										Mulai Analisis Sekarang
 										<ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
 									</Button>
 								</a>
 
-								<Button variant="outline" size="lg" onClick={() => scrollToSection('how-it-works')} className="border-slate-300 text-slate-700 hover:bg-slate-50 px-8 py-4 rounded-xl group">
-									How It Works
+								<Button variant="outline" size="lg" onClick={() => scrollToSection('cara')} className="border-slate-300 text-slate-700 hover:bg-slate-50 px-8 py-4 rounded-xl group">
+									Cara Kerjanya
 									<ChevronDown className="h-4 w-4 ml-2 group-hover:translate-y-1 transition-transform" />
 								</Button>
 							</motion.div>
@@ -105,37 +105,37 @@ const Homepage = () => {
 			</section>
 
 			{/* Why Choose Kardia */}
-			<section id="features" className="py-20 bg-white">
+			<section id="alasan" className="py-20 bg-white">
 				<div className="max-w-7xl mx-auto px-6">
 					<motion.div variants={fadeInUp} initial="initial" whileInView="animate" viewport={{ once: true }} className="text-center mb-16">
-						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Why Choose Kardia?</h2>
-						<p className="text-xl text-slate-600 max-w-2xl mx-auto">Advanced AI technology meets compassionate healthcare to protect what matters most</p>
+						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Kenapa Harus Kardia?</h2>
+						<p className="text-xl text-slate-600 max-w-2xl mx-auto">Teknologi AI canggih bertemu perawatan yang penuh kepedulian demi melindungi hal yang paling penting dalam hidupmu.</p>
 					</motion.div>
 
 					<motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 						{[
 							{
 								icon: Zap,
-								title: 'Fast & Accurate AI Analysis',
-								description: 'Kardia uses machine learning to predict heart risks from your answers in just seconds.',
+								title: 'Analisis AI Cepat & Akurat',
+								description: 'Kardia memanfaatkan machine learning untuk memprediksi risiko jantung dari jawabanmu hanya dalam hitungan detik.',
 								color: 'from-yellow-400 to-orange-500',
 							},
 							{
 								icon: Shield,
-								title: 'Private & Secure',
-								description: 'Your data is encrypted and stored safely. Only you can access your heart health insights.',
+								title: 'Privasi & Keamanan Terjamin',
+								description: 'Data kamu terenkripsi dan disimpan dengan aman. Hanya kamu yang bisa mengakses hasil analisis kesehatan jantungmu.',
 								color: 'from-emerald-400 to-teal-500',
 							},
 							{
 								icon: Heart,
-								title: 'Free & Easy to Use',
-								description: 'No medical devices required. Just answer 15 quick questions about your lifestyle and health.',
+								title: 'Gratis & Mudah Digunakan',
+								description: 'Tanpa alat medis, cukup jawab beberapa pertanyaan teknis atau non-teknis.',
 								color: 'from-red-400 to-pink-500',
 							},
 							{
 								icon: Users,
-								title: 'Built by Medical Professionals',
-								description: 'Kardia is built in collaboration with cardiologists and AI engineers to ensure reliability.',
+								title: 'Dikembangkan bersama Profesional Medis',
+								description: 'Kardia dibuat bersama dokter spesialis jantung dan insinyur AI untuk menjamin keandalan hasilnya.',
 								color: 'from-blue-400 to-indigo-500',
 							},
 						].map((feature, index) => (
@@ -156,29 +156,29 @@ const Homepage = () => {
 			</section>
 
 			{/* Core Features */}
-			<section className="py-20 bg-gradient-to-br from-slate-50 to-sky-50/30">
+			<section id="fitur" className="py-20 bg-gradient-to-br from-slate-50 to-sky-50/30">
 				<div className="max-w-7xl mx-auto px-6">
 					<motion.div variants={fadeInUp} initial="initial" whileInView="animate" viewport={{ once: true }} className="text-center mb-16">
-						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Core Features</h2>
-						<p className="text-xl text-slate-600 max-w-2xl mx-auto">Everything you need to monitor and maintain your heart health in one place</p>
+						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Fitur Utama</h2>
+						<p className="text-xl text-slate-600 max-w-2xl mx-auto">Semua yang kamu butuhkan untuk memantau dan menjaga kesehatan jantung, ada dalam satu tempat.</p>
 					</motion.div>
 
 					<motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
 						{[
 							{
 								icon: History,
-								title: 'Complete Analysis History',
-								description: 'Track all your heart health assessments over time',
+								title: 'Riwayat Analisis Lengkap',
+								description: 'Pantau hasil evaluasi kesehatan jantungmu dari waktu ke waktu.',
 							},
 							{
 								icon: BarChart3,
-								title: 'Interactive Risk Chart (30 Days)',
-								description: 'Visualize your heart risk trends with detailed charts',
+								title: 'Grafik Risiko Interaktif (30 Hari)',
+								description: 'Lihat tren risiko jantung dalam bentuk visual yang mudah dipahami.',
 							},
 							{
 								icon: MessageSquare,
-								title: 'AI Chat Assistant for Heart Health',
-								description: 'Get instant answers to your heart health questions',
+								title: 'Asisten Chat AI Seputar Jantung',
+								description: 'Dapatkan jawaban instan untuk pertanyaan seputar kesehatan jantungmu.',
 							},
 							// {
 							//   icon: Stethoscope,
@@ -187,8 +187,8 @@ const Homepage = () => {
 							// },
 							{
 								icon: Heart,
-								title: 'Personalized Recommendations',
-								description: 'Receive tailored advice based on your health profile',
+								title: 'Rekomendasi Pribadi.',
+								description: 'Terima saran gaya hidup yang disesuaikan dengan profil kesehatanmu.',
 							},
 							// {
 							//   icon: Bell,
@@ -213,33 +213,33 @@ const Homepage = () => {
 			</section>
 
 			{/* How Kardia Works */}
-			<section id="how-it-works" className="py-20 bg-white">
+			<section id="cara" className="py-20 bg-white">
 				<div className="max-w-7xl mx-auto px-6">
 					<motion.div variants={fadeInUp} initial="initial" whileInView="animate" viewport={{ once: true }} className="text-center mb-16">
-						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">How Kardia Works</h2>
-						<p className="text-xl text-slate-600 max-w-2xl mx-auto">Simple steps to better heart health monitoring</p>
+						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Cara Kerja Kardia</h2>
+						<p className="text-xl text-slate-600 max-w-2xl mx-auto">Langkah sederhana untuk memantau kesehatan jantung dengan lebih baik.</p>
 					</motion.div>
 
 					<motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid lg:grid-cols-3 gap-12">
 						{[
 							{
 								step: '1',
-								title: 'Answer 15 Quick Questions',
-								description: 'Covering your habits, symptoms, and basic health data.',
+								title: 'Jawab Pertanyaan Teknis atau Non-Teknis',
+								description: 'Kamu dapat memilih tipe pertanyaan sesuai dengan informasi yang kamu miliki.',
 								icon: MessageSquare,
 								color: 'from-blue-500 to-indigo-600',
 							},
 							{
 								step: '2',
-								title: 'AI Analyzes Instantly',
-								description: 'Get your heart risk insights based on the latest medical models.',
+								title: 'Analisis Instan oleh AI',
+								description: 'Hasil wawasan risiko jantung langsung muncul berdasarkan model medis terkini.',
 								icon: Zap,
 								color: 'from-yellow-500 to-orange-600',
 							},
 							{
 								step: '3',
-								title: 'Track Progress & Get Recommendations',
-								description: 'Follow-up when needed and talk to professionals directly.',
+								title: 'Pantau Perkembangan & Dapatkan Rekomendasi',
+								description: 'Lanjutkan jika perlu, dan konsultasikan langsung dengan tenaga medis.',
 								icon: BarChart3,
 								color: 'from-emerald-500 to-teal-600',
 							},
@@ -267,34 +267,34 @@ const Homepage = () => {
 			</section>
 
 			{/* Designed for Everyone */}
-			<section className="py-20 bg-gradient-to-br from-slate-50 to-sky-50/30">
+			<section id="untukmu" className="py-20 bg-gradient-to-br from-slate-50 to-sky-50/30">
 				<div className="max-w-7xl mx-auto px-6">
 					<motion.div variants={fadeInUp} initial="initial" whileInView="animate" viewport={{ once: true }} className="text-center mb-16">
-						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Designed for Everyone Who Cares About Their Heart</h2>
-						<p className="text-xl text-slate-600 max-w-3xl mx-auto">Whether you're active, busy, or simply cautious — Kardia fits right into your lifestyle.</p>
+						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Untuk Siapa Saja yang Peduli dengan Kesehatan Jantung</h2>
+						<p className="text-xl text-slate-600 max-w-3xl mx-auto">Aktif, sibuk, atau waspada — Kardia menyatu dengan gaya hidupmu.</p>
 					</motion.div>
 
 					<motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 						{[
 							{
 								emoji: '👨‍💼',
-								title: 'Busy Professionals',
-								description: 'Quick daily check-ins without disrupting your workday.',
+								title: 'Profesional Sibuk',
+								description: 'Cek harian yang cepat tanpa ganggu jam kerja.',
 							},
 							{
 								emoji: '👵',
-								title: 'Aging Parents',
-								description: 'Simple enough for non-tech-savvy users. Peace of mind for the family.',
+								title: 'Orang Tua',
+								description: 'Simpel dan mudah digunakan, bikin tenang seluruh keluarga.',
 							},
 							{
 								emoji: '💪',
-								title: 'Fitness Enthusiasts',
-								description: 'Track how your workouts affect your heart health.',
+								title: 'Pecinta Olahraga',
+								description: 'Lihat dampak latihanmu terhadap kesehatan jantung.',
 							},
 							{
 								emoji: '❤️',
-								title: 'At-Risk Individuals',
-								description: 'Early warnings help you stay ahead of potential issues.',
+								title: 'Orang dengan Risiko',
+								description: 'Peringatan dini membantu kamu tetap selangkah lebih maju.',
 							},
 						].map((persona, index) => (
 							<motion.div key={index} variants={fadeInUp}>
@@ -312,11 +312,11 @@ const Homepage = () => {
 			</section>
 
 			{/* Best When Combined */}
-			<section id="collaboration" className="py-20 bg-white">
+			<section id="sinergi" className="py-20 bg-white">
 				<div className="max-w-6xl mx-auto px-6">
 					<motion.div variants={fadeInUp} initial="initial" whileInView="animate" viewport={{ once: true }} className="text-center mb-16">
-						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Best When Combined — Not Competing</h2>
-						<p className="text-xl text-slate-600 max-w-3xl mx-auto">Kardia doesn't replace professional checkups — it enhances them with daily context.</p>
+						<h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Lebih Kuat Saat Dipadukan, Bukan Untuk Bersaing</h2>
+						<p className="text-xl text-slate-600 max-w-3xl mx-auto">Kardia bukan pengganti check-up dokter, tapi pelengkap harian yang memberi konteks lebih dalam.</p>
 					</motion.div>
 
 					<motion.div variants={fadeInUp} initial="initial" whileInView="animate" viewport={{ once: true }} className="overflow-x-auto">
@@ -325,9 +325,9 @@ const Homepage = () => {
 								<thead>
 									<tr className="bg-gradient-to-r from-slate-50 to-blue-50">
 										<th className="px-6 py-4 text-lg font-semibold text-slate-800 text-center">x</th>
-										<th className="px-6 py-4 text-left text-lg font-semibold text-slate-800">🩺 Annual Medical Check-up</th>
-										<th className="px-6 py-4 text-left text-lg font-semibold text-slate-800">💡 Kardia (Daily Prevention)</th>
-										<th className="px-6 py-4 text-left text-lg font-semibold text-slate-800">🤝 Duo Kombo</th>
+										<th className="px-6 py-4 text-left text-lg font-semibold text-slate-800">🩺 Cek Tahunan</th>
+										<th className="px-6 py-4 text-left text-lg font-semibold text-slate-800">💡 Kardia (Pencegahan Harian)</th>
+										<th className="px-6 py-4 text-left text-lg font-semibold text-slate-800">🤝 Gabungan Keduanya</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -378,7 +378,7 @@ const Homepage = () => {
 							<div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
 								<span className="text-xs text-blue-600">🛈</span>
 							</div>
-							<p>Kardia is not a diagnostic tool. Always consult your results with a medical professional.</p>
+							<p>Kardia bukan alat diagnosis. Selalu konsultasikan hasilmu ke tenaga medis profesional.</p>
 						</motion.div>
 					</motion.div>
 				</div>
@@ -480,15 +480,15 @@ const Homepage = () => {
 								<Heart className="h-12 w-12 text-white" fill="currentColor" />
 							</motion.div>
 
-							<h2 className="text-3xl lg:text-5xl font-bold leading-tight">Your Heart Deserves Attention. Take the First Step Today.</h2>
+							<h2 className="text-3xl lg:text-5xl font-bold leading-tight">Jantungmu Layak Diperhatikan. Mulai Sekarang.</h2>
 
-							<p className="text-xl lg:text-2xl text-red-100 max-w-3xl mx-auto leading-relaxed">Don't wait for symptoms. Use Kardia to monitor and protect your heart — starting now.</p>
+							<p className="text-xl lg:text-2xl text-red-100 max-w-3xl mx-auto leading-relaxed">Jangan tunggu gejala muncul. Lindungi jantungmu sejak dini dengan Kardia.</p>
 						</div>
 
 						<a href="/dashboard/analysis">
 							<Button size="lg" className="bg-white text-red-600 hover:bg-red-50 px-12 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 text-lg font-semibold group">
 								<Heart className="h-6 w-6 mr-3 group-hover:scale-110 transition-transform" />
-								Start Free Analysis Now
+								Mulai Analisis Gratis Sekarang
 								<ArrowRight className="h-5 w-5 ml-3 group-hover:translate-x-1 transition-transform" />
 							</Button>
 						</a>
@@ -586,28 +586,28 @@ const Homepage = () => {
 								</div>
 								<div>
 									<h3 className="text-xl font-bold">Kardia</h3>
-									<p className="text-sm text-slate-400">AI Heart Health Monitor</p>
+									<p className="text-sm text-slate-400">Deteksi Dini, Jaga Jantung Setiap Hari</p>
 								</div>
 							</div>
-							<p className="text-slate-400 leading-relaxed">Protecting hearts through intelligent monitoring and early detection.</p>
+							<p className="text-slate-400 leading-relaxed">Melindungi jantung dengan pemantauan cerdas dan deteksi dini.</p>
 						</div>
 
 						<div>
-							<h4 className="font-semibold mb-4">Product</h4>
+							<h4 className="font-semibold mb-4">Produk</h4>
 							<ul className="space-y-2 text-slate-400">
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Features
+										Fitur
 									</a>
 								</li>
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										How it Works
+										Cara Kerja
 									</a>
 								</li>
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Pricing
+										Harga
 									</a>
 								</li>
 								<li>
@@ -619,37 +619,37 @@ const Homepage = () => {
 						</div>
 
 						<div>
-							<h4 className="font-semibold mb-4">Support</h4>
+							<h4 className="font-semibold mb-4">Dukungan</h4>
 							<ul className="space-y-2 text-slate-400">
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Help Center
+										Pusat Bantuan
 									</a>
 								</li>
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Contact
+										Kontak
 									</a>
 								</li>
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Privacy Policy
+										Kebijakan Privasi
 									</a>
 								</li>
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Terms of Service
+										Syarat & Ketentuan
 									</a>
 								</li>
 							</ul>
 						</div>
 
 						<div>
-							<h4 className="font-semibold mb-4">Company</h4>
+							<h4 className="font-semibold mb-4">Perusahaan</h4>
 							<ul className="space-y-2 text-slate-400">
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										About
+										Tentang Kami
 									</a>
 								</li>
 								<li>
@@ -659,12 +659,12 @@ const Homepage = () => {
 								</li>
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Careers
+										Karier
 									</a>
 								</li>
 								<li>
 									<a href="#" className="hover:text-white transition-colors">
-										Press
+										Media
 									</a>
 								</li>
 							</ul>
@@ -672,9 +672,9 @@ const Homepage = () => {
 					</div>
 
 					<div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-						<p className="text-slate-400 text-sm">© 2024 Kardia. All rights reserved.</p>
+						<p className="text-slate-400 text-sm">© 2025 Kardia. All rights reserved.</p>
 						<div className="flex items-center gap-4 mt-4 md:mt-0">
-							<p className="text-slate-400 text-sm">Made with ❤️ for better heart health</p>
+							<p className="text-slate-400 text-sm">Dibuat dengan ❤️ untuk kesehatan jantung yang lebih baik.</p>
 						</div>
 					</div>
 				</div>

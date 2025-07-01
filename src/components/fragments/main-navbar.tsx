@@ -4,11 +4,11 @@ import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
-	{ name: 'Features', href: '#features' },
-	{ name: 'How It Works', href: '#how-it-works' },
-	{ name: 'Collaboration', href: '#collaboration' },
-	{ name: 'Team', href: '#team' },
-	{ name: 'FAQ', href: '#faq' },
+	{ name: 'Alasan', href: '#alasan' },
+	{ name: 'Fitur', href: '#fitur' },
+	{ name: 'Cara', href: '#cara' },
+	{ name: 'Untukmu', href: '#untukmu' },
+	{ name: 'Sinergi', href: '#sinergi' },
 ];
 
 const MainNavbar = () => {
@@ -87,13 +87,13 @@ const MainNavbar = () => {
 								<motion.button
 									key={item.name}
 									onClick={() => scrollToSection(item.href)}
-									className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${activeSection === item.href.substring(1) ? 'text-blue-600' : 'text-slate-700 hover:text-blue-600'}`}
+									className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${activeSection === item.href.substring(1) ? 'text-rose-600' : 'text-slate-700 hover:text-rose-600'}`}
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
 								>
 									{item.name}
 									{activeSection === item.href.substring(1) && (
-										<motion.div layoutId="activeIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 300, damping: 30 }} />
+										<motion.div layoutId="activeIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-rose-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 300, damping: 30 }} />
 									)}
 								</motion.button>
 							))}
@@ -106,14 +106,14 @@ const MainNavbar = () => {
 									onClick={handleTryKardia}
 									className={`bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 ${isScrolled ? 'px-4 py-2 text-sm' : 'px-6 py-3'}`}
 								>
-									🚀 Try Kardia Free
+									🚀 Coba Gratis Sekarang
 								</Button>
 							</motion.div>
 						</div>
 
 						{/* Mobile Menu Button */}
 						<div className="md:hidden">
-							<motion.button whileTap={{ scale: 0.95 }} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 rounded-lg text-slate-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200">
+							<motion.button whileTap={{ scale: 0.95 }} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 rounded-lg text-slate-700 hover:text-rose-600 hover:bg-rose-50 transition-colors duration-200">
 								{isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
 							</motion.button>
 						</div>
@@ -139,7 +139,7 @@ const MainNavbar = () => {
 										transition={{ delay: index * 0.1 }}
 										onClick={() => scrollToSection(item.href)}
 										className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 ${
-											activeSection === item.href.substring(1) ? 'text-blue-600 bg-blue-50' : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50'
+											activeSection === item.href.substring(1) ? 'text-rose-600 bg-rose-50' : 'text-slate-700 hover:text-rose-600 hover:bg-rose-50'
 										}`}
 									>
 										{item.name}
@@ -147,8 +147,11 @@ const MainNavbar = () => {
 								))}
 
 								<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: navItems.length * 0.1 }} className="pt-4 border-t border-slate-200">
-									<Button onClick={handleTryKardia} className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300">
-										🚀 Try Kardia Free
+									<Button
+										onClick={handleTryKardia}
+										className={`bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 ${isScrolled ? 'px-4 py-2 text-sm' : 'px-6 py-3'}`}
+									>
+										🚀 Coba Gratis Sekarang
 									</Button>
 								</motion.div>
 							</div>
