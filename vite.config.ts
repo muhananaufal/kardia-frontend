@@ -12,4 +12,14 @@ export default defineConfig({
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
+	server: {
+		proxy: {
+			// Permintaan yang dimulai dengan /api akan diarahkan ke target
+			'/api': {
+				target: 'http://api.kardia.my.id', // Ganti dengan URL API backend Anda
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, ''), // Hapus /api dari path
+			},
+		},
+	},
 });
