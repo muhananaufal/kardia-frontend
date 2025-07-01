@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RiwayatDetailModal } from '@/components/fragments/riwayat-detail-modal';
 import { useAuth } from '@/provider/AuthProvider';
+import { fetchDashboard } from '@/hooks/api/dashboard';
 
 const pageVariants = {
 	initial: { opacity: 0, y: 20 },
@@ -35,30 +36,20 @@ export default function RiwayatPage() {
 			setIsLoading(true);
 			try {
 				if (!token) {
-					setIsLoading(false); // Berhenti loading jika tidak ada token
+					console.error('No authentication token found');
 					return;
 				}
 				// Contoh pemanggilan API (sesuaikan dengan endpoint Anda)
-				const response = await fetch('https://api.example.com/analysis/history', {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				const data = await response.json();
-				setAnalysisHistory(data); // Simpan data ke state
+				const response = await fetchDashboard(token);
+
+				setAnalysisHistory(response.data); // Simpan data ke state
 			} catch (error) {
-				console.error('Gagal mengambil data riwayat:', error);
-				setAnalysisHistory([]); // Set ke array kosong jika gagal
-			} finally {
-				setIsLoading(false);
+				console.error('Error fetching history data:', error);
 			}
 		};
 
 		fetchAnalysisHistory();
-	}, [token]); // <-- Tambahkan `token` sebagai dependensi
+	}, []); // <-- Tambahkan `token` sebagai dependensi
 
 	const getRiskLevel = (code?: string): 'rendah-sedang' | 'tinggi' | 'sangat tinggi' | 'tidak diketahui' => {
 		switch (code) {
