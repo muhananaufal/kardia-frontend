@@ -43,8 +43,8 @@ export default function RiwayatPage() {
 				const responseData = await fetchDashboard(token);
 
 				// 1. Akses properti 'history' yang berisi array
-				if (responseData && Array.isArray(responseData.history)) {
-					setAnalysisHistory(responseData.history);
+				if (responseData && Array.isArray(responseData.assessment_history)) {
+					setAnalysisHistory(responseData.assessment_history);
 				} else {
 					console.error("Properti 'history' tidak ditemukan atau bukan array:", responseData);
 					setAnalysisHistory([]); // Set ke array kosong jika ada masalah
