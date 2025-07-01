@@ -480,9 +480,9 @@ const Homepage = () => {
 								<Heart className="h-12 w-12 text-white" fill="currentColor" />
 							</motion.div>
 
-							<h2 className="text-3xl lg:text-5xl font-bold leading-tight">Jantungmu Layak Diperhatikan. Mulai Sekarang.</h2>
+							<h2 className="text-3xl lg:text-5xl font-bold leading-tight">Jantungmu Layak Diperhatikan.</h2>
 
-							<p className="text-xl lg:text-2xl text-red-100 max-w-3xl mx-auto leading-relaxed">Jangan tunggu gejala muncul. Lindungi jantungmu sejak dini dengan Kardia.</p>
+							<p className="text-xl lg:text-2xl text-red-100 max-w-3xl mx-auto leading-relaxed">Kesehatan jantung itu penting. Jangan tunggu gejala muncul. Lindungi jantungmu sejak dini dengan Kardia.</p>
 						</div>
 
 						<a href="/dashboard/analysis">
