@@ -255,7 +255,7 @@ const Homepage = () => {
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid md:grid-cols-2 lg:grid-cols-2 gap-8"
           >
             {[
               {
@@ -273,21 +273,21 @@ const Homepage = () => {
                 title: "AI Chat Assistant for Heart Health",
                 description: "Get instant answers to your heart health questions",
               },
-              {
-                icon: Stethoscope,
-                title: "Live Consultation with Doctors",
-                description: "Connect with certified cardiologists when needed",
-              },
+              // {
+              //   icon: Stethoscope,
+              //   title: "Live Consultation with Doctors",
+              //   description: "Connect with certified cardiologists when needed",
+              // },
               {
                 icon: Heart,
                 title: "Personalized Recommendations",
                 description: "Receive tailored advice based on your health profile",
               },
-              {
-                icon: Bell,
-                title: "Smart Reminders to Re-analyze",
-                description: "Never miss important health check-ups",
-              },
+              // {
+              //   icon: Bell,
+              //   title: "Smart Reminders to Re-analyze",
+              //   description: "Never miss important health check-ups",
+              // },
             ].map((feature, index) => (
               <motion.div key={index} variants={scaleIn}>
                 <Card className="h-full hover:shadow-lg transition-all duration-300 group cursor-pointer border-0 bg-white">
@@ -533,7 +533,7 @@ const Homepage = () => {
       </section>
 
       {/* Created by Professionals */}
-      <section id="team" className="py-20 bg-gradient-to-br from-blue-50/30 to-emerald-50/30">
+      {/* <section id="team" className="py-20 bg-gradient-to-br from-blue-50/30 to-emerald-50/30">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             variants={fadeInUp}
@@ -616,7 +616,7 @@ const Homepage = () => {
             ))}
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* Emotional CTA */}
       <section className="py-20 bg-gradient-to-br from-red-500 via-pink-500 to-red-600 text-white relative overflow-hidden">
@@ -662,7 +662,7 @@ const Homepage = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-20 bg-white">
+      {/* <section id="faq" className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             variants={fadeInUp}
@@ -738,7 +738,7 @@ const Homepage = () => {
             ))}
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-16">
