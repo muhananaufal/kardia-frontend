@@ -8,8 +8,8 @@ export const newAnalysis = async (token: string, analysisData: any) => {
 	try {
 		const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/risk-assessments`, analysisData, {
 			headers: {
-				Authorization: `Bearer ${token}`,
-				Accept: 'application/json',
+				'Authorization': `Bearer ${token}`,
+				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
 			data: analysisData,
