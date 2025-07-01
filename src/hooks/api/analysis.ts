@@ -33,8 +33,8 @@ export const personalizeAnalysis = async (token: string, slug: string) => {
 			},
 			{
 				headers: {
-					Authorization: `Bearer ${token}`,
-					Accept: 'application/json',
+					'Authorization': `Bearer ${token}`,
+					'Accept': 'application/json',
 					'Content-Type': 'application/json',
 				},
 			}
