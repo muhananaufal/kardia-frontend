@@ -133,7 +133,7 @@ export default function RiwayatPage() {
 							<CardTitle className="text-base md:text-lg font-bold">Rata-rata Risiko</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<p className="text-2xl md:text-3xl font-bold text-gray-900">{(analysisHistory.reduce((acc, record) => acc + record?.risk_percentage, 0) / 30).toFixed(2)}%</p>
+							<p className="text-2xl md:text-3xl font-bold text-gray-900">{(analysisHistory.reduce((acc, record) => acc + (record?.risk_percentage || 0), 0) / 30).toFixed(2)}%</p>{' '}
 							<p className="text-sm md:text-base text-gray-600">dalam 1 bulan terakhir</p>
 						</CardContent>
 					</Card>
@@ -203,8 +203,7 @@ export default function RiwayatPage() {
 												<div className="flex items-center gap-3">
 													{formatResikoBadge(record?.result_details?.riskSummary?.riskCategory?.code, record?.result_details?.riskSummary?.riskCategory?.title || 'Tidak diketahui')}
 													<div className="flex items-center gap-2">
-														<span className="text-xl md:text-2xl font-bold text-gray-900">{(record?.risk_percentage).toFixed(1)}%</span>
-														{/* {getTrendIcon(record.trend)} */}
+														<span className="text-xl md:text-2xl font-bold text-gray-900">{(record?.risk_percentage || 0).toFixed(1)}%</span> {/* {getTrendIcon(record.trend)} */}
 													</div>
 												</div>
 
