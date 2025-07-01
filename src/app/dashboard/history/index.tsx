@@ -107,8 +107,23 @@ export default function RiwayatPage() {
 		);
 	}
 
-	const totalRisk = analysisHistory.reduce((acc, record) => acc + (record?.risk_percentage || 0), 0);
-	const averageRisk = analysisHistory.length > 0 ? totalRisk / analysisHistory.length : 0;
+	const totalRisk = analysisHistory.reduce((acc, record) => acc + parseFloat(String(record?.risk_percentage || 0)), 0);
+
+	const formatRiskPercentage = (value: any): string => {
+		// 1. Membersihkan data: mengatasi undefined, null, string, dan number
+		const numericValue = parseFloat(String(value || 0));
+
+		// 2. Jika hasilnya bukan angka (NaN), kembalikan '0.0'
+		if (isNaN(numericValue)) {
+			return '0.0';
+		}
+
+		// 3. Format menggunakan Intl.NumberFormat
+		return new Intl.NumberFormat('id-ID', {
+			minimumFractionDigits: 1, // Minimal 1 angka di belakang koma
+			maximumFractionDigits: 2, // Maksimal 2 angka di belakang koma
+		}).format(numericValue);
+	};
 
 	return (
 		<div className="min-h-screen bg-white">
@@ -136,7 +151,7 @@ export default function RiwayatPage() {
 							<CardTitle className="text-base md:text-lg font-bold">Rata-rata Risiko</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<p className="text-2xl md:text-3xl font-bold text-gray-900">{averageRisk.toFixed(2)}%</p>
+							<p className="text-2xl md:text-3xl font-bold text-gray-900">{formatRiskPercentage(totalRisk / 30)}%</p>
 							<p className="text-sm md:text-base text-gray-600">dalam 1 bulan terakhir</p>
 						</CardContent>
 					</Card>
@@ -206,7 +221,7 @@ export default function RiwayatPage() {
 												<div className="flex items-center gap-3">
 													{formatResikoBadge(record?.result_details?.riskSummary?.riskCategory?.code, record?.result_details?.riskSummary?.riskCategory?.title || 'Tidak diketahui')}
 													<div className="flex items-center gap-2">
-														<span className="text-xl md:text-2xl font-bold text-gray-900">{(record?.risk_percentage || 0).toFixed(1)}%</span> {/* {getTrendIcon(record.trend)} */}
+														<span className="text-xl md:text-2xl font-bold text-gray-900">{formatRiskPercentage(record?.risk_percentage)}%</span> {/* {getTrendIcon(record.trend)} */}
 													</div>
 												</div>
 
