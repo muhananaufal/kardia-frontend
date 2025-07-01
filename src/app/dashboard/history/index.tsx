@@ -107,7 +107,11 @@ export default function RiwayatPage() {
 		);
 	}
 
-	const totalRisk = analysisHistory.reduce((acc, record) => acc + parseFloat(record?.risk_percentage || '0'), 0);
+	const totalRisk = analysisHistory.reduce((acc, record) => {
+		const riskValue = parseFloat(record?.risk_percentage || '0');
+		return acc + riskValue;
+	}, 0);
+	const averageRisk = analysisHistory.length > 0 ? totalRisk / analysisHistory.length : 0;
 
 	return (
 		<div className="min-h-screen bg-white">
@@ -135,7 +139,7 @@ export default function RiwayatPage() {
 							<CardTitle className="text-base md:text-lg font-bold">Rata-rata Risiko</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<p className="text-2xl md:text-3xl font-bold text-gray-900">{(totalRisk / 30).toFixed(2)}%</p>
+							<p className="text-2xl md:text-3xl font-bold text-gray-900">{averageRisk.toFixed(2)}%</p>
 							<p className="text-sm md:text-base text-gray-600">dalam 1 bulan terakhir</p>
 						</CardContent>
 					</Card>
