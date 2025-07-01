@@ -42,24 +42,23 @@ export default function RiwayatPage() {
 			try {
 				const responseData = await fetchDashboard(token);
 
-				// 1. Akses properti 'history' yang berisi array
-				if (responseData && Array.isArray(responseData.assessment_history)) {
-					setAnalysisHistory(responseData.assessment_history);
+				// PERBAIKAN FINAL: Tambahkan .data di sini
+				if (responseData && responseData.data && Array.isArray(responseData.data.assessment_history)) {
+					setAnalysisHistory(responseData.data.assessment_history);
 				} else {
-					console.error("Properti 'history' tidak ditemukan atau bukan array:", responseData);
-					setAnalysisHistory([]); // Set ke array kosong jika ada masalah
+					console.error("Path 'data.assessment_history' tidak ditemukan atau bukan array:", responseData);
+					setAnalysisHistory([]);
 				}
 			} catch (error) {
 				console.error('Gagal mengambil data dashboard:', error);
 				setAnalysisHistory([]);
 			} finally {
-				// 2. Pastikan loading SELALU berhenti
 				setIsLoading(false);
 			}
 		};
 
 		loadDashboardData();
-	}, [token]); // 3. Tambahkan token sebagai dependensi
+	}, [token]);
 
 	const getRiskLevel = (code?: string): 'rendah-sedang' | 'tinggi' | 'sangat tinggi' | 'tidak diketahui' => {
 		switch (code) {
