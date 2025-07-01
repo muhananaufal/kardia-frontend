@@ -34,26 +34,31 @@ export default function RiwayatPage() {
 		const fetchAnalysisHistory = async () => {
 			setIsLoading(true);
 			try {
-				if (!token) return;
-				const res = await fetch(`${import.meta.env.VITE_BASE_URL}/history`, {
+				if (!token) {
+					setIsLoading(false); // Berhenti loading jika tidak ada token
+					return;
+				}
+				// Contoh pemanggilan API (sesuaikan dengan endpoint Anda)
+				const response = await fetch('https://api.example.com/analysis/history', {
 					headers: {
 						Authorization: `Bearer ${token}`,
-						Accept: 'application/json',
 					},
 				});
-				const data = await res.json();
-
-				console.log('✅ Riwayat berhasil diambil:', data); // Debug log
-				setAnalysisHistory(data.data); // 👈 penting!
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				const data = await response.json();
+				setAnalysisHistory(data); // Simpan data ke state
 			} catch (error) {
 				console.error('Gagal mengambil data riwayat:', error);
+				setAnalysisHistory([]); // Set ke array kosong jika gagal
 			} finally {
 				setIsLoading(false);
 			}
 		};
 
 		fetchAnalysisHistory();
-	}, []);
+	}, [token]); // <-- Tambahkan `token` sebagai dependensi
 
 	const getRiskLevel = (code?: string): 'rendah-sedang' | 'tinggi' | 'sangat tinggi' | 'tidak diketahui' => {
 		switch (code) {
@@ -152,7 +157,7 @@ export default function RiwayatPage() {
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">Semua Risiko</SelectItem>
-							<SelectItem value="rendah">Risiko Rendah-Sedang</SelectItem>
+							<SelectItem value="rendah-sedang">Risiko Rendah-Sedang</SelectItem>
 							<SelectItem value="tinggi">Risiko Tinggi</SelectItem>
 							<SelectItem value="sangat tinggi">Risiko Sangat Tinggi</SelectItem>
 						</SelectContent>
