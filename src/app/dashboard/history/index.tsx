@@ -107,6 +107,9 @@ export default function RiwayatPage() {
 		);
 	}
 
+	const totalRisk = analysisHistory.reduce((acc, record) => acc + parseFloat(record?.risk_percentage || '0'), 0);
+	const averageRisk = analysisHistory.length > 0 ? totalRisk / analysisHistory.length : 0;
+
 	return (
 		<div className="min-h-screen bg-white">
 			<motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.5 }} className="max-w-full mx-auto px-6 md:px-8 py-6 md:py-10 space-y-6 md:space-y-8">
@@ -133,7 +136,7 @@ export default function RiwayatPage() {
 							<CardTitle className="text-base md:text-lg font-bold">Rata-rata Risiko</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<p className="text-2xl md:text-3xl font-bold text-gray-900">{(analysisHistory.reduce((acc, record) => acc + (record?.risk_percentage || 0), 0) / 30).toFixed(2)}%</p>{' '}
+							<p className="text-2xl md:text-3xl font-bold text-gray-900">{(totalRisk / 30).toFixed(2)}%</p>
 							<p className="text-sm md:text-base text-gray-600">dalam 1 bulan terakhir</p>
 						</CardContent>
 					</Card>
@@ -203,7 +206,7 @@ export default function RiwayatPage() {
 												<div className="flex items-center gap-3">
 													{formatResikoBadge(record?.result_details?.riskSummary?.riskCategory?.code, record?.result_details?.riskSummary?.riskCategory?.title || 'Tidak diketahui')}
 													<div className="flex items-center gap-2">
-														<span className="text-xl md:text-2xl font-bold text-gray-900">{(record?.risk_percentage || 0).toFixed(1)}%</span> {/* {getTrendIcon(record.trend)} */}
+														<span className="text-xl md:text-2xl font-bold text-gray-900">{parseFloat(record?.risk_percentage || '0').toFixed(1)}%</span> {/* {getTrendIcon(record.trend)} */}
 													</div>
 												</div>
 
