@@ -107,10 +107,7 @@ export default function RiwayatPage() {
 		);
 	}
 
-	const totalRisk = analysisHistory.reduce((acc, record) => {
-		const riskValue = parseFloat(record?.risk_percentage || '0');
-		return acc + riskValue;
-	}, 0);
+	const totalRisk = analysisHistory.reduce((acc, record) => acc + (record?.risk_percentage || 0), 0);
 	const averageRisk = analysisHistory.length > 0 ? totalRisk / analysisHistory.length : 0;
 
 	return (
@@ -209,7 +206,7 @@ export default function RiwayatPage() {
 												<div className="flex items-center gap-3">
 													{formatResikoBadge(record?.result_details?.riskSummary?.riskCategory?.code, record?.result_details?.riskSummary?.riskCategory?.title || 'Tidak diketahui')}
 													<div className="flex items-center gap-2">
-														<span className="text-xl md:text-2xl font-bold text-gray-900">{parseFloat(record?.risk_percentage || '0').toFixed(1)}%</span> {/* {getTrendIcon(record.trend)} */}
+														<span className="text-xl md:text-2xl font-bold text-gray-900">{(record?.risk_percentage || 0).toFixed(1)}%</span> {/* {getTrendIcon(record.trend)} */}
 													</div>
 												</div>
 
