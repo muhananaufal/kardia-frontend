@@ -27,7 +27,7 @@ export default function RiwayatPage() {
 	const [selectedRecord, setSelectedRecord] = useState<AnalysisRecord | null>(null);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filterRisk, setFilterRisk] = useState<string>('all');
-	const [analysisHistory] = useState<AnalysisRecord[]>([]);
+	const [analysisHistory, setAnalysisHistory] = useState<AnalysisRecord[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -35,6 +35,16 @@ export default function RiwayatPage() {
 			setIsLoading(true);
 			try {
 				if (!token) return;
+				const res = await fetch(`${import.meta.env.VITE_BASE_URL}/history`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: 'application/json',
+					},
+				});
+				const data = await res.json();
+
+				console.log('✅ Riwayat berhasil diambil:', data); // Debug log
+				setAnalysisHistory(data.data); // 👈 penting!
 			} catch (error) {
 				console.error('Gagal mengambil data riwayat:', error);
 			} finally {
