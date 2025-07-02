@@ -88,9 +88,9 @@ export default function RiwayatPage() {
 
 	const filteredHistory = analysisHistory
 		.filter((record) => {
-			const matchesSearch = record.result_details?.riskSummary?.executiveSummary.toLowerCase().includes(searchTerm.toLowerCase()) || record.date.toLowerCase().includes(searchTerm.toLowerCase());
+			const matchesSearch = record?.result_details?.riskSummary?.executiveSummary.toLowerCase().includes(searchTerm.toLowerCase()) || record.date.toLowerCase().includes(searchTerm.toLowerCase());
 
-			const matchesFilter = filterRisk === 'all' || getRiskLevel(record.result_details?.riskSummary?.riskCategory?.code) === filterRisk;
+			const matchesFilter = filterRisk === 'all' || getRiskLevel(record?.result_details?.riskSummary?.riskCategory?.code) === filterRisk;
 			return matchesSearch && matchesFilter;
 		})
 		.sort((a, b) => {
@@ -225,7 +225,7 @@ export default function RiwayatPage() {
 													</div>
 												</div>
 
-												<p className="text-sm md:text-base text-gray-600 leading-relaxed">{record?.result_details.riskSummary.executiveSummary}</p>
+												<p className="text-sm md:text-base text-gray-600 leading-relaxed">{record?.result_details?.riskSummary?.executiveSummary}</p>
 											</div>
 
 											<div className="flex items-center gap-3">
