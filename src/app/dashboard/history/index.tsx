@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RiwayatDetailModal } from '@/components/fragments/riwayat-detail-modal';
 import { useAuth } from '@/provider/AuthProvider';
+import { fetchDashboard } from '@/hooks/api/dashboard';
 
 const pageVariants = {
 	initial: { opacity: 0, y: 20 },
@@ -27,23 +28,37 @@ export default function RiwayatPage() {
 	const [selectedRecord, setSelectedRecord] = useState<AnalysisRecord | null>(null);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filterRisk, setFilterRisk] = useState<string>('all');
-	const [analysisHistory] = useState<AnalysisRecord[]>([]);
+	const [analysisHistory, setAnalysisHistory] = useState<AnalysisRecord[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchAnalysisHistory = async () => {
+		const loadDashboardData = async () => {
+			if (!token) {
+				setIsLoading(false);
+				return;
+			}
+
 			setIsLoading(true);
 			try {
-				if (!token) return;
+				const responseData = await fetchDashboard(token);
+
+				// PERBAIKAN FINAL: Tambahkan .data di sini
+				if (responseData && responseData.data && Array.isArray(responseData.data.assessment_history)) {
+					setAnalysisHistory(responseData.data.assessment_history);
+				} else {
+					console.error("Path 'data.assessment_history' tidak ditemukan atau bukan array:", responseData);
+					setAnalysisHistory([]);
+				}
 			} catch (error) {
-				console.error('Gagal mengambil data riwayat:', error);
+				console.error('Gagal mengambil data dashboard:', error);
+				setAnalysisHistory([]);
 			} finally {
 				setIsLoading(false);
 			}
 		};
 
-		fetchAnalysisHistory();
-	}, []);
+		loadDashboardData();
+	}, [token]);
 
 	const getRiskLevel = (code?: string): 'rendah-sedang' | 'tinggi' | 'sangat tinggi' | 'tidak diketahui' => {
 		switch (code) {
@@ -73,9 +88,9 @@ export default function RiwayatPage() {
 
 	const filteredHistory = analysisHistory
 		.filter((record) => {
-			const matchesSearch = record.result_details?.riskSummary?.executiveSummary.toLowerCase().includes(searchTerm.toLowerCase()) || record.date.toLowerCase().includes(searchTerm.toLowerCase());
+			const matchesSearch = record?.result_details?.riskSummary?.executiveSummary.toLowerCase().includes(searchTerm.toLowerCase()) || record.date.toLowerCase().includes(searchTerm.toLowerCase());
 
-			const matchesFilter = filterRisk === 'all' || getRiskLevel(record.result_details?.riskSummary?.riskCategory?.code) === filterRisk;
+			const matchesFilter = filterRisk === 'all' || getRiskLevel(record?.result_details?.riskSummary?.riskCategory?.code) === filterRisk;
 			return matchesSearch && matchesFilter;
 		})
 		.sort((a, b) => {
@@ -91,6 +106,24 @@ export default function RiwayatPage() {
 			</div>
 		);
 	}
+
+	const totalRisk = analysisHistory.reduce((acc, record) => acc + parseFloat(String(record?.risk_percentage || 0)), 0);
+
+	const formatRiskPercentage = (value: any): string => {
+		// 1. Membersihkan data: mengatasi undefined, null, string, dan number
+		const numericValue = parseFloat(String(value || 0));
+
+		// 2. Jika hasilnya bukan angka (NaN), kembalikan '0.0'
+		if (isNaN(numericValue)) {
+			return '0.0';
+		}
+
+		// 3. Format menggunakan Intl.NumberFormat
+		return new Intl.NumberFormat('id-ID', {
+			minimumFractionDigits: 1, // Minimal 1 angka di belakang koma
+			maximumFractionDigits: 2, // Maksimal 2 angka di belakang koma
+		}).format(numericValue);
+	};
 
 	return (
 		<div className="min-h-screen bg-white">
@@ -118,7 +151,7 @@ export default function RiwayatPage() {
 							<CardTitle className="text-base md:text-lg font-bold">Rata-rata Risiko</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<p className="text-2xl md:text-3xl font-bold text-gray-900">{(analysisHistory.reduce((acc, record) => acc + record?.risk_percentage, 0) / 30).toFixed(2)}%</p>
+							<p className="text-2xl md:text-3xl font-bold text-gray-900">{formatRiskPercentage(totalRisk / 30)}%</p>
 							<p className="text-sm md:text-base text-gray-600">dalam 1 bulan terakhir</p>
 						</CardContent>
 					</Card>
@@ -142,7 +175,7 @@ export default function RiwayatPage() {
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">Semua Risiko</SelectItem>
-							<SelectItem value="rendah">Risiko Rendah-Sedang</SelectItem>
+							<SelectItem value="rendah-sedang">Risiko Rendah-Sedang</SelectItem>
 							<SelectItem value="tinggi">Risiko Tinggi</SelectItem>
 							<SelectItem value="sangat tinggi">Risiko Sangat Tinggi</SelectItem>
 						</SelectContent>
@@ -188,12 +221,11 @@ export default function RiwayatPage() {
 												<div className="flex items-center gap-3">
 													{formatResikoBadge(record?.result_details?.riskSummary?.riskCategory?.code, record?.result_details?.riskSummary?.riskCategory?.title || 'Tidak diketahui')}
 													<div className="flex items-center gap-2">
-														<span className="text-xl md:text-2xl font-bold text-gray-900">{(record?.risk_percentage).toFixed(1)}%</span>
-														{/* {getTrendIcon(record.trend)} */}
+														<span className="text-xl md:text-2xl font-bold text-gray-900">{formatRiskPercentage(record?.risk_percentage)}%</span> {/* {getTrendIcon(record.trend)} */}
 													</div>
 												</div>
 
-												<p className="text-sm md:text-base text-gray-600 leading-relaxed">{record?.result_details.riskSummary.executiveSummary}</p>
+												<p className="text-sm md:text-base text-gray-600 leading-relaxed">{record?.result_details?.riskSummary?.executiveSummary}</p>
 											</div>
 
 											<div className="flex items-center gap-3">
