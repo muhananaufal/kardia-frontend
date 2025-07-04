@@ -86,7 +86,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 											className="group relative overflow-hidden rounded-md transition-all duration-200 hover:bg-rose-50 data-[active=true]:bg-rose-100 data-[active=true]:text-rose-700"
 										>
 											<Link to={item.url} className="flex items-center gap-3 w-full">
-												<item.icon className="h-5 w-5 transition-transform group-hover:scale-110" as />
+												<item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
 												<span className="font-medium">{item.title}</span>
 												{location.pathname === item.url && (
 													<motion.div

@@ -107,7 +107,7 @@ export default function RiwayatPage() {
 		);
 	}
 
-	const totalRisk = analysisHistory.reduce((acc, record) => acc + parseFloat(String(record?.risk_percentage || 0)), 0);
+	// const totalRisk = analysisHistory.reduce((acc, record) => acc + parseFloat(String(record?.risk_percentage || 0)), 0);
 
 	const formatRiskPercentage = (value: any): string => {
 		// 1. Membersihkan data: mengatasi undefined, null, string, dan number
