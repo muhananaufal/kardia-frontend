@@ -253,7 +253,7 @@ const Login = () => {
                                     )}
                                 </div>
 
-                                {/* Remember Me & Forgot Password */}
+                                {/*
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-2">
                                         <Checkbox
@@ -278,7 +278,7 @@ const Login = () => {
                                     >
                                         Forgot password?
                                     </Link>
-                                </div>
+                                </div> */}
 
                                 {/* Submit Button */}
                                 <Button

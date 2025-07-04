@@ -76,13 +76,13 @@ export default function RiwayatPage() {
 	const formatResikoBadge = (code: string, title: string) => {
 		switch (code) {
 			case 'LOW_MODERATE':
-				return <Badge className="bg-green-100 text-green-700 hover:bg-rose-200">{title}</Badge>;
+				return <Badge className="bg-green-100 text-green-700 hover:bg-green-200">{title}</Badge>;
 			case 'HIGH':
-				return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-rose-200">{title}</Badge>;
+				return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200">{title}</Badge>;
 			case 'VERY_HIGH':
-				return <Badge className="bg-red-100 text-red-800 hover:bg-rose-200">{title}</Badge>;
+				return <Badge className="bg-red-100 text-red-800 hover:bg-red-200">{title}</Badge>;
 			default:
-				return <Badge className="bg-slate-100 text-slate-700 hover:bg-rose-200">{title}</Badge>;
+				return <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200">{title}</Badge>;
 		}
 	};
 
@@ -133,9 +133,44 @@ export default function RiwayatPage() {
 					<h1 className="text-2xl md:text-3xl font-bold text-gray-900">Riwayat Analisis</h1>
 					<p className="text-base md:text-lg text-gray-600 leading-relaxed">Pantau perkembangan kesehatan jantung Anda dari waktu ke waktu</p>
 				</motion.div>
-
-				{/* Summary Stats */}
 				<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white transition-all duration-300">
+						<CardHeader>
+							<CardTitle className="text-base md:text-lg font-bold">Total Analisis</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<p className="text-2xl md:text-3xl font-bold text-gray-900">{analysisHistory.length}</p>
+							<p className="text-sm md:text-base text-gray-600">kali pemeriksaan</p>
+						</CardContent>
+					</Card>
+
+					<Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white transition-all duration-300">
+						<CardHeader>
+							<CardTitle className="text-base md:text-lg font-bold">Rata-rata Risiko</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<p className="text-2xl md:text-3xl font-bold text-gray-900">
+								{(() => {
+									const monthlyRisks: { [key: string]: number[] } = {};
+									analysisHistory.forEach((record) => {
+										const month = new Date(record.date).toLocaleString('default', { month: 'long', year: 'numeric' });
+										if (!monthlyRisks[month]) monthlyRisks[month] = [];
+										monthlyRisks[month].push(record.risk_percentage || 0);
+									});
+
+									const totalMonthlyRisk = Object.values(monthlyRisks).reduce((acc, risks) => acc + risks.reduce((sum, risk) => sum + risk, 0), 0);
+									const totalMonthlyCount = Object.values(monthlyRisks).reduce((acc, risks) => acc + risks.length, 0);
+
+									return totalMonthlyCount > 0 ? formatRiskPercentage(totalMonthlyRisk / totalMonthlyCount) : '0.0';
+								})()}
+								%
+							</p>
+							<p className="text-sm md:text-base text-gray-600">dalam 1 bulan terakhir</p>
+						</CardContent>
+					</Card>
+				</motion.div>
+
+				{/* <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white transition-all duration-300">
 						<CardHeader>
 							<CardTitle className="text-base md:text-lg font-bold">Total Analisis</CardTitle>
@@ -155,7 +190,7 @@ export default function RiwayatPage() {
 							<p className="text-sm md:text-base text-gray-600">dalam 1 bulan terakhir</p>
 						</CardContent>
 					</Card>
-				</motion.div>
+				</motion.div> */}
 
 				{/* Search and Filter */}
 				<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="flex flex-col md:flex-row gap-4">
@@ -169,11 +204,11 @@ export default function RiwayatPage() {
 						/>
 					</div>
 					<Select value={filterRisk} onValueChange={setFilterRisk}>
-						<SelectTrigger className="w-full md:w-48 rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-50 focus:border-rose-50 h-10 md:h-12">
+						<SelectTrigger className="w-full md:w-48 rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-50 focus:border-rose-50 h-[48px] md:h-[48px]">
 							<Filter className="h-4 w-4 mr-2" />
 							<SelectValue placeholder="Filter Risiko" />
 						</SelectTrigger>
-						<SelectContent>
+						<SelectContent >
 							<SelectItem value="all">Semua Risiko</SelectItem>
 							<SelectItem value="rendah-sedang">Risiko Rendah-Sedang</SelectItem>
 							<SelectItem value="tinggi">Risiko Tinggi</SelectItem>
@@ -181,7 +216,6 @@ export default function RiwayatPage() {
 						</SelectContent>
 					</Select>
 				</motion.div>
-
 				{/* Analysis History List */}
 				<div className="space-y-4">
 					{filteredHistory.length === 0 ? (
@@ -237,7 +271,7 @@ export default function RiwayatPage() {
 															setSelectedRecord(record);
 														}, 100); // Delay to allow card click animation
 													}}
-													className="bg-rose-500 text-white hover:bg-rose-600 rounded-lg text-sm font-medium uppercase tracking-wide h-10 md:h-12 transition-all duration-300"
+													className="bg-rose-500 text-white hover:bg-rose-600 rounded-lg text-sm font-medium uppercase tracking-wide h-10 md:h-12 transition-all duration-300 cursor-pointer"
 												>
 													<Eye className="h-4 w-4 mr-2" />
 													Detail

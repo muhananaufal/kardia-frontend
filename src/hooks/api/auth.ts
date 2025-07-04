@@ -95,3 +95,43 @@ export const updateProfile = async (token: string, userData: any) => {
         throw new Error("Failed to update profile. Please try again later.");
     }
 }
+
+export const resetPassword = async (token: string, email:string, password: string, passwordConf: string) => {
+    try {
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/reset-password`, {
+            email,
+            password: password,
+            password_confirmation: passwordConf
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("Password reset successful:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to reset password:", error);
+        throw new Error("Failed to reset password. Please check your details.");
+    }
+}
+
+export const deleteAccount = async (token: string, password: string) => {
+    try {
+        const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/delete-account`, {
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            data: {
+                password
+            }
+        });
+        console.log("Account deleted successfully:", response.data);
+    } catch (error) {
+        console.error("Failed to delete account:", error);
+        throw new Error("Failed to delete account. Please try again later.");
+    }
+}

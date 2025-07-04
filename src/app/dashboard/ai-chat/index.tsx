@@ -42,6 +42,7 @@ const AIChatPage = () => {
     >([]);
     const [currentChatId, setCurrentChatId] = useState<string | null>(null);
     const [searchHistory, setSearchHistory] = useState("");
+    const [refreshHistory, setRefreshHistory] = useState(0);
 
     useEffect(() => {
         const loadChatHistory = async () => {
@@ -66,7 +67,7 @@ const AIChatPage = () => {
         };
 
         loadChatHistory();
-    }, []);
+    }, [refreshHistory]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -91,6 +92,7 @@ const AIChatPage = () => {
             if (!currentChatId) {
                 res = await newConversation(token, { message: input });
                 setCurrentChatId(res.conversation.slug);
+                setRefreshHistory((prev) => prev + 1);
             } else {
                 res = await continueConversation(token, currentChatId, input);
             }
@@ -186,7 +188,7 @@ const AIChatPage = () => {
                                     variant="outline"
                                     size="sm"
                                     onClick={handleNewChat}
-                                    className="text-rose-600 border-rose-200 hover:bg-rose-50"
+                                    className="text-rose-600 border-rose-200 hover:bg-rose-50 cursor-pointer"
                                 >
                                     <MessageSquare className="h-4 w-4 mr-2" />
                                     Chat Baru
@@ -197,7 +199,7 @@ const AIChatPage = () => {
                                     onClick={() =>
                                         setIsSidebarOpen(!isSidebarOpen)
                                     }
-                                    className="text-gray-600 hover:bg-gray-100"
+                                    className="text-gray-600 hover:bg-gray-100 cursor-pointer"
                                 >
                                     {isSidebarOpen ? (
                                         <ChevronRight className="h-4 w-4" />
@@ -533,7 +535,7 @@ const AIChatPage = () => {
                                             disabled={
                                                 !input.trim() || isLoading
                                             }
-                                            className="absolute right-2 top-2 h-8 w-8 p-0 bg-rose-500 hover:bg-rose-600 transition-all duration-200"
+                                            className="absolute right-2 top-2 h-8 w-8 p-0 bg-rose-500 hover:bg-rose-600 transition-all duration-200 cursor-pointer"
                                         >
                                             <motion.div
                                                 animate={
@@ -595,7 +597,7 @@ const AIChatPage = () => {
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => setIsSidebarOpen(false)}
-                                        className="h-8 w-8 p-0"
+                                        className="h-8 w-8 p-0 cursor-pointer"
                                     >
                                         <ChevronRight className="h-4 w-4" />
                                     </Button>
@@ -719,7 +721,7 @@ const AIChatPage = () => {
                                     variant="outline"
                                     size="sm"
                                     onClick={handleNewChat}
-                                    className="w-full text-rose-600 border-rose-200 hover:bg-rose-50 transition-all duration-200"
+                                    className="w-full text-rose-600 border-rose-200 hover:bg-rose-50 transition-all duration-200 cursor-pointer"
                                 >
                                     <MessageSquare className="h-4 w-4 mr-2" />
                                     Mulai Chat Baru

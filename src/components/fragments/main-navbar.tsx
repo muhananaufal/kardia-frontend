@@ -52,16 +52,16 @@ const MainNavbar = () => {
 	};
 
 	// Handle waitlist modal (placeholder for now)
-	const handleTryKardia = () => {
-		// For now, scroll to get-started section or show alert
-		const getStartedSection = document.getElementById('get-started');
-		if (getStartedSection) {
-			getStartedSection.scrollIntoView({ behavior: 'smooth' });
-		} else {
-			// Fallback: scroll to hero section with CTA
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		}
-	};
+	// const handleTryKardia = () => {
+	// 	// For now, scroll to get-started section or show alert
+	// 	const getStartedSection = document.getElementById('get-started');
+	// 	if (getStartedSection) {
+	// 		getStartedSection.scrollIntoView({ behavior: 'smooth' });
+	// 	} else {
+	// 		// Fallback: scroll to hero section with CTA
+	// 		window.scrollTo({ top: 0, behavior: 'smooth' });
+	// 	}
+	// };
 
 	return (
 		<>
@@ -87,7 +87,7 @@ const MainNavbar = () => {
 								<motion.button
 									key={item.name}
 									onClick={() => scrollToSection(item.href)}
-									className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${activeSection === item.href.substring(1) ? 'text-rose-600' : 'text-slate-700 hover:text-rose-600'}`}
+									className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer ${activeSection === item.href.substring(1) ? 'text-rose-600' : 'text-slate-700 hover:text-rose-600'}`}
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
 								>
@@ -102,18 +102,21 @@ const MainNavbar = () => {
 						{/* CTA Button */}
 						<div className="hidden md:block">
 							<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-								<Button
-									onClick={handleTryKardia}
-									className={`bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 ${isScrolled ? 'px-4 py-2 text-sm' : 'px-6 py-3'}`}
-								>
-									🚀 Coba Gratis Sekarang
-								</Button>
+								<a href="/dashboard/analysis">
+									<Button
+										className={`bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ${
+											isScrolled ? 'px-4 py-2 text-sm' : 'px-6 py-3'
+										}`}
+									>
+										🚀 Coba Gratis Sekarang
+									</Button>
+								</a>
 							</motion.div>
 						</div>
 
 						{/* Mobile Menu Button */}
 						<div className="md:hidden">
-							<motion.button whileTap={{ scale: 0.95 }} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 rounded-lg text-slate-700 hover:text-rose-600 hover:bg-rose-50 transition-colors duration-200">
+							<motion.button whileTap={{ scale: 0.95 }} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 rounded-lg text-slate-700 hover:text-rose-600 hover:bg-rose-50 transition-colors duration-200 cursor-pointer">
 								{isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
 							</motion.button>
 						</div>
@@ -138,7 +141,7 @@ const MainNavbar = () => {
 										animate={{ opacity: 1, x: 0 }}
 										transition={{ delay: index * 0.1 }}
 										onClick={() => scrollToSection(item.href)}
-										className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 ${
+										className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 cursor-pointer ${
 											activeSection === item.href.substring(1) ? 'text-rose-600 bg-rose-50' : 'text-slate-700 hover:text-rose-600 hover:bg-rose-50'
 										}`}
 									>
@@ -147,12 +150,15 @@ const MainNavbar = () => {
 								))}
 
 								<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: navItems.length * 0.1 }} className="pt-4 border-t border-slate-200">
-									<Button
-										onClick={handleTryKardia}
-										className={`bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 ${isScrolled ? 'px-4 py-2 text-sm' : 'px-6 py-3'}`}
-									>
-										🚀 Coba Gratis Sekarang
-									</Button>
+									<a href="/dashboard/analysis">
+										<Button
+											className={`bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ${
+												isScrolled ? 'px-4 py-2 text-sm' : 'px-6 py-3'
+											}`}
+										>
+											🚀 Coba Gratis Sekarang
+										</Button>
+									</a>
 								</motion.div>
 							</div>
 						</motion.div>

@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SidebarToggle } from "../fragments/sidebar-toggle";
 import { useAuth } from "@/provider/AuthProvider";
 import { logout } from "@/hooks/api/auth";
+import { Toaster } from "sonner";
 
 const DashboardLayout = () => {
     const auth = useAuth();
@@ -39,6 +40,7 @@ const DashboardLayout = () => {
                     <main className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 to-blue-50/30">
                         <div className=" bg-white dark:bg-slate-900">
                             <Outlet />
+                            <Toaster richColors/>
                         </div>
                     </main>
                 </div>
