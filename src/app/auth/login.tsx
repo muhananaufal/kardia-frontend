@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -12,7 +13,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "@/hooks/api/auth";
@@ -49,7 +49,7 @@ const Login = () => {
         email: "",
         password: "",
     });
-    const [remember, setRemember] = useState(false);
+    // const [remember, setRemember] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<Partial<LoginFormData>>({});
