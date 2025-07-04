@@ -97,7 +97,7 @@ export default function DashboardPage() {
 						fullDate: date,
 					};
 				})
-				.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+				.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 		: [];
 
 	if (loading) {
