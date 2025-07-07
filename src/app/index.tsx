@@ -59,14 +59,14 @@ const Homepage = () => {
 
 							<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="flex flex-col sm:flex-row gap-4">
 								<a href="/dashboard/analysis">
-									<Button size="lg" className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+									<Button size="lg" className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer">
 										<Heart className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
 										Mulai Analisis Sekarang
 										<ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
 									</Button>
 								</a>
 
-								<Button variant="outline" size="lg" onClick={() => scrollToSection('cara')} className="border-slate-300 text-slate-700 hover:bg-slate-50 px-8 py-4 rounded-xl group">
+								<Button variant="outline" size="lg" onClick={() => scrollToSection('cara')} className="border-slate-300 text-slate-700 hover:bg-slate-50 px-8 py-4 rounded-xl group cursor-pointer">
 									Cara Kerjanya
 									<ChevronDown className="h-4 w-4 ml-2 group-hover:translate-y-1 transition-transform" />
 								</Button>
@@ -197,7 +197,7 @@ const Homepage = () => {
 							// },
 						].map((feature, index) => (
 							<motion.div key={index} variants={scaleIn}>
-								<Card className="h-full hover:shadow-lg transition-all duration-300 group cursor-pointer border-0 bg-white">
+								<Card className="h-full hover:shadow-lg transition-all duration-300 group border-0 bg-white">
 									<CardContent className="p-6 space-y-4">
 										<div className="w-12 h-12 rounded-xl bg-gradient-to-r from-red-100 to-pink-100 flex items-center justify-center group-hover:scale-110 transition-transform">
 											<feature.icon className="h-6 w-6 text-red-600" />
@@ -486,7 +486,7 @@ const Homepage = () => {
 						</div>
 
 						<a href="/dashboard/analysis">
-							<Button size="lg" className="bg-white text-red-600 hover:bg-red-50 px-12 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 text-lg font-semibold group">
+							<Button size="lg" className="bg-white text-red-600 hover:bg-red-50 px-12 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 text-lg font-semibold group cursor-pointer">
 								<Heart className="h-6 w-6 mr-3 group-hover:scale-110 transition-transform" />
 								Mulai Analisis Gratis Sekarang
 								<ArrowRight className="h-5 w-5 ml-3 group-hover:translate-x-1 transition-transform" />

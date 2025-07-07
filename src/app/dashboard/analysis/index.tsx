@@ -85,10 +85,8 @@ export default function AnalisisPage() {
 	// initial age and gender and risk region set from user.date_of_birth and user.gender and user.country_of_residence
 	useEffect(() => {
 		if (user?.date_of_birth) {
-			console.log('User Date of Birth:', user.date_of_birth);
 			const [day, month, year] = user.date_of_birth.split('/');
 			const birthDate = new Date(`${year}-${month}-${day}`);
-			console.log('Birth Date:', birthDate);
 			const today = new Date();
 			const age = today.getFullYear() - birthDate.getFullYear();
 			const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -304,7 +302,6 @@ export default function AnalisisPage() {
 		const payload = buildPayload();
 		setProgress(20);
 		setLoadingText('Mempersiapkan data untuk dikirim...');
-		console.log('Submitting to API:', payload);
 
 		try {
 			if (!token) {
@@ -313,7 +310,6 @@ export default function AnalisisPage() {
 
 			const response = await newAnalysis(token, payload);
 
-			console.log('Analysis response:', response);
 			setProgress(30);
 			setLoadingText('Mengirim analisis Anda...');
 			if (response) {
@@ -321,7 +317,6 @@ export default function AnalisisPage() {
 				setLoadingText('Analisis berhasil dikirim. Menyiapkan personalisasi...');
 				const personalize = await personalizeAnalysis(token, response.assessment_slug);
 
-				console.log('Personalization response:', personalize);
 				if (personalize) {
 					setProgress(90);
 					setLoadingText('Analisis berhasil dipersonalisasi. Anda akan diarahkan ke halaman riwayat.');
@@ -424,7 +419,7 @@ export default function AnalisisPage() {
 				</motion.div>
 
 				{/* Progress Indicator */}
-				<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center justify-center space-x-4">
+				<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center justify-center">
 					{[1, 2, 3].map((step) => (
 						<div key={step} className="flex items-center">
 							<div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${step <= currentStep ? 'bg-rose-500 text-white shadow-md' : 'bg-gray-200 text-gray-500'}`}>
@@ -543,13 +538,13 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 						<Label className="text-sm font-medium text-gray-700">Status Merokok Anda Saat Ini</Label>
 						<RadioGroup value={formData.smokingStatus} onValueChange={(value) => updateFormData('smokingStatus', value)} className="space-y-3">
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="Perokok aktif" id="smoker" />
+								<RadioGroupItem value="Perokok aktif" id="smoker" className="cursor-pointer" />
 								<Label htmlFor="smoker" className="cursor-pointer text-sm font-medium text-gray-700">
 									Perokok aktif (termasuk vape)
 								</Label>
 							</div>
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="Bukan perokok saat ini" id="nonsmoker" />
+								<RadioGroupItem value="Bukan perokok saat ini" id="nonsmoker" className="cursor-pointer" />
 								<Label htmlFor="nonsmoker" className="cursor-pointer text-sm font-medium text-gray-700">
 									Bukan perokok saat ini
 								</Label>
@@ -562,13 +557,13 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 						<Label className="text-sm font-medium text-gray-700">Apakah Anda memiliki riwayat Diabetes?</Label>
 						<RadioGroup value={formData.diabetesHistory} onValueChange={(value) => updateFormData('diabetesHistory', value)} className="flex gap-6">
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="Ya" id="diabetes-yes" />
+								<RadioGroupItem value="Ya" id="diabetes-yes" className="cursor-pointer" />
 								<Label htmlFor="diabetes-yes" className="cursor-pointer text-sm font-medium text-gray-700">
 									Ya
 								</Label>
 							</div>
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="Tidak" id="diabetes-no" />
+								<RadioGroupItem value="Tidak" id="diabetes-no" className="cursor-pointer" />
 								<Label htmlFor="diabetes-no" className="cursor-pointer text-sm font-medium text-gray-700">
 									Tidak
 								</Label>
@@ -805,6 +800,52 @@ function Step2Form({ formData, updateHealthParameter, onNext, onBack, isComplete
 		);
 	}
 
+	const handleParamUpdate = (paramKey: string, updates: Partial<HealthParameter>) => {
+		updateHealthParameter(paramKey, updates);
+
+		const keysToSync = ['familyHistory', 'cookingOil', 'exerciseType', 'fishConsumption'];
+		const isSyncableParam = paramKey === 'totalCholesterol' || paramKey === 'hdlCholesterol';
+
+		if (isSyncableParam && updates.proxyAnswers) {
+			const oldAnswers = formData.healthProfile[paramKey as keyof typeof formData.healthProfile]?.proxyAnswers || {};
+			const newAnswers = updates.proxyAnswers;
+
+			const allKeys = new Set([...Object.keys(oldAnswers), ...Object.keys(newAnswers)]);
+			let changedKey: string | null = null;
+			for (const key of allKeys) {
+				if (JSON.stringify(oldAnswers[key]) !== JSON.stringify(newAnswers[key])) {
+					changedKey = key;
+					break;
+				}
+			}
+
+			if (changedKey && keysToSync.includes(changedKey)) {
+				const targetParamKey = paramKey === 'totalCholesterol' ? 'hdlCholesterol' : 'totalCholesterol';
+				const valueToSync = newAnswers[changedKey as keyof typeof newAnswers];
+
+				const targetParamData = formData.healthProfile[targetParamKey as keyof typeof formData.healthProfile];
+
+				if (targetParamData && targetParamData.inputType === 'proxy') {
+					const newTargetProxyAnswers = {
+						...targetParamData.proxyAnswers,
+						[changedKey]: valueToSync,
+					};
+
+					const targetParamDefinition = healthParameters.find((p) => p.key === targetParamKey);
+					const allAnswered =
+						targetParamDefinition?.proxyQuestions.every(
+							(q: any) => newTargetProxyAnswers[q.key] !== undefined && newTargetProxyAnswers[q.key] !== '' && (Array.isArray(newTargetProxyAnswers[q.key]) ? newTargetProxyAnswers[q.key].length > 0 : true)
+						) ?? false;
+
+					updateHealthParameter(targetParamKey, {
+						proxyAnswers: newTargetProxyAnswers,
+						completed: allAnswered,
+					});
+				}
+			}
+		}
+	};
+
 	return (
 		<motion.div key="step2" variants={cardVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }} className="space-y-6">
 			{healthParameters.map((param, index) => (
@@ -812,7 +853,7 @@ function Step2Form({ formData, updateHealthParameter, onNext, onBack, isComplete
 					key={param.key}
 					parameter={param}
 					data={formData.healthProfile[param.key as keyof typeof formData.healthProfile]}
-					onUpdate={(updates: Partial<HealthParameter>) => updateHealthParameter(param.key, updates)}
+					onUpdate={(updates: Partial<HealthParameter>) => handleParamUpdate(param.key, updates)}
 					index={index}
 					total={healthParameters.length}
 				/>
@@ -866,6 +907,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
 
 	const handleProxyAnswerChange = (questionKey: string, value: any) => {
 		const newProxyAnswers = { ...data.proxyAnswers, [questionKey]: value };
+
 		const allAnswered = parameter.proxyQuestions.every((q: any) => newProxyAnswers[q.key] !== undefined && newProxyAnswers[q.key] !== '');
 
 		onUpdate({
@@ -961,7 +1003,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
 											<RadioGroup value={data.proxyAnswers[question.key] || ''} onValueChange={(value) => handleProxyAnswerChange(question.key, value)} className="space-y-2">
 												{question.options.map((option: string) => (
 													<div key={option} className="flex items-center space-x-2">
-														<RadioGroupItem value={option} id={`${parameter.key}-${question.key}-${option}`} />
+														<RadioGroupItem value={option} id={`${parameter.key}-${question.key}-${option}`} className="cursor-pointer" />
 														<Label htmlFor={`${parameter.key}-${question.key}-${option}`} className="cursor-pointer text-sm">
 															{option}
 														</Label>
