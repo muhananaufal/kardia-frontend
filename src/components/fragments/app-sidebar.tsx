@@ -6,26 +6,31 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const mainNavItems = [
-	{
-		title: 'Dashboard',
-		url: '/dashboard',
-		icon: BarChart3,
-	},
-	{
-		title: 'Analisis Baru',
-		url: '/dashboard/analysis',
-		icon: Activity,
-	},
-	{
-		title: 'Riwayat',
-		url: '/dashboard/history',
-		icon: History,
-	},
-	{
-		title: 'Chat AI',
-		url: '/dashboard/ai-chat',
-		icon: MessageSquare,
-	},
+    {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: BarChart3,
+    },
+    {
+        title: "Analisis Baru",
+        url: "/dashboard/analysis",
+        icon: Activity,
+    },
+    {
+        title: "Riwayat",
+        url: "/dashboard/history",
+        icon: History,
+    },
+    {
+        title: "Chat AI",
+        url: "/dashboard/ai-chat",
+        icon: MessageSquare,
+    },
+    {
+        title: "Langkah Sehat",
+        url: "/dashboard/program",
+        icon: Heart,
+    }
 ];
 
 const bottomNavItems = [
