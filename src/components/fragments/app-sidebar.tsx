@@ -49,6 +49,11 @@ const mainNavItems = [
         url: "/dashboard/ai-chat",
         icon: MessageSquare,
     },
+    {
+        title: "Langkah Sehat",
+        url: "/dashboard/program",
+        icon: Heart,
+    }
 ];
 
 const bottomNavItems = [
