@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Heart, TrendingUp, Clock, AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react';
+import { Heart, TrendingUp, Clock, AlertTriangle, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -97,14 +97,14 @@ export default function DashboardPage() {
 						fullDate: date,
 					};
 				})
-				.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+				.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 		: [];
 
 	if (loading) {
 		// loader spiner
 		return (
 			<div className="flex items-center justify-center h-screen">
-				<div className="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500"></div>
+				<Loader2 className="animate-spin h-8 w-8 text-rose-500" />
 			</div>
 		);
 	}
@@ -177,25 +177,25 @@ export default function DashboardPage() {
 
 			{/* Main Chart */}
 			<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.5 }}>
-				<Card className="rounded-2xl shadow-md border-0 p-6 hover:shadow-lg transition-all duration-300">
+				<Card className="rounded-2xl bg-white border px-0 py-6 md:px-6 md:py-6  transition-all duration-300">
 					<CardHeader className="pb-6">
 						<div className="flex items-center gap-3">
-							<Heart className="h-6 w-6 text-red-500" />
+							<Heart className="h-6 w-6 text-red-500 hidden md:block" />
 							<div>
-								<CardTitle className="text-xl text-slate-800">Potensi Serangan Jantung dalam 30 Hari Terakhir</CardTitle>
-								<CardDescription className="text-slate-600">Analisis risiko berdasarkan data kesehatan Anda</CardDescription>
+								<CardTitle className="text-lg md:text-xl text-slate-800">Potensi Serangan Jantung dalam 30 Hari Terakhir</CardTitle>
+								<CardDescription className="text-slate-600 text-sm md:text-base">Analisis risiko berdasarkan data kesehatan Anda</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="h-80">
+						<div className="h-40 md:h-60 w-full">
 							<ResponsiveContainer width="100%" height="100%">
 								<LineChart
 									data={heartRiskData}
 									margin={{
 										top: 5,
 										right: 30,
-										left: 20,
+										left: 0,
 										bottom: 5,
 									}}
 								>
@@ -230,10 +230,10 @@ export default function DashboardPage() {
 			{/* Enhanced Last Analysis Summary */}
 			{dashboardData?.latest_assessment_details && (
 				<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.6 }}>
-					<Card className="rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-300 bg-white border">
+					<Card className="rounded-2xl shadow-md px-0 py-6 md:px-6 md:py-6 hover:shadow-lg transition-all duration-300 bg-white border">
 						<CardHeader className="pb-4">
-							<CardTitle className="text-xl text-slate-800 flex items-center gap-3">
-								<div className="p-2 rounded-xl bg-rose-100">
+							<CardTitle className="text-lg md:text-xl text-slate-800 flex items-center gap-3">
+								<div className="p-2 rounded-xl bg-rose-100 hidden md:block">
 									<AlertCircle className="h-6 w-6 text-rose-600" />
 								</div>
 								Ringkasan Analisis Terakhir
@@ -289,7 +289,7 @@ export default function DashboardPage() {
 							{/* CTA Button */}
 							<motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} className="pt-2">
 								<Link to="/dashboard/analysis">
-									<Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
+									<Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
 										<CheckCircle className="h-5 w-5 mr-2" />
 										Lakukan Analisis Sekarang
 										<motion.div

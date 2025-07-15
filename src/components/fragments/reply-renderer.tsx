@@ -17,6 +17,7 @@ const ReplyRenderer = ({ components }: { components: ReplyComponent[] }) => (
               {comp.content}
             </h3>
           )
+        case "string":
         case "paragraph":
           return <div key={idx}>{renderMarkdown(comp.content)}</div>
         case "quote":

@@ -6,6 +6,8 @@ import AIChatPage from "@/app/dashboard/ai-chat";
 import NewAnalysis from "@/app/dashboard/analysis";
 // import HelpPage from "@/app/dashboard/help";
 import HistoryPage from "@/app/dashboard/history";
+import CoachingDashboard from "@/app/dashboard/program";
+import ChatPage from "@/app/dashboard/program/chat";
 import SettingsPage from "@/app/dashboard/settings";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -67,6 +69,19 @@ export const router = createBrowserRouter([
                 path: "profile",
                 Component: SettingsPage
             },
+            {
+                path: "program",
+                Component: CoachingDashboard
+            },
+            {
+                path: "program/:slug",
+                Component: CoachingDashboard
+            },
+            {
+                path: "program/chat/:threadId",
+                Component: ChatPage,
+                
+            }
             // {
             //     path: "help",
             //     Component: HelpPage

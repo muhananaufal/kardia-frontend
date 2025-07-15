@@ -53,6 +53,12 @@ const bottomNavItems = [
 
 export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 	const location = useLocation();
+	let userPath = location.pathname;
+
+	if(location.pathname.startsWith('/dashboard/program/')) {
+		userPath = '/dashboard/program';
+	}
+
 	const { isMobile } = useSidebar();
 
 	return (
@@ -86,14 +92,14 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 									>
 										<SidebarMenuButton
 											asChild
-											isActive={location.pathname === item.url}
+											isActive={userPath === item.url}
 											tooltip={item.title}
 											className="group relative overflow-hidden rounded-md transition-all duration-200 hover:bg-rose-50 data-[active=true]:bg-rose-100 data-[active=true]:text-rose-700"
 										>
 											<Link to={item.url} className="flex items-center gap-3 w-full">
 												<item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
 												<span className="font-medium">{item.title}</span>
-												{location.pathname === item.url && (
+												{userPath === item.url && (
 													<motion.div
 														layoutId="activeIndicator"
 														className="absolute right-2 h-2 w-2 rounded-full bg-rose-500 group-data-[collapsible=icon]:hidden"
@@ -131,7 +137,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 									>
 										<SidebarMenuButton
 											asChild
-											isActive={location.pathname === item.url}
+											isActive={userPath === item.url}
 											tooltip={item.title}
 											className="group rounded-xl transition-all duration-200 hover:bg-slate-100 text-slate-600 hover:text-slate-800 data-[active=true]:bg-slate-100 data-[active=true]:text-slate-800"
 										>

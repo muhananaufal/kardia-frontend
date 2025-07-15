@@ -311,15 +311,15 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 
 					{/* Modal */}
 					<motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit" transition={{ type: 'spring', damping: 25, stiffness: 300 }} className="relative w-full max-w-4xl md:max-w-6xl my-8">
-						<Card className="rounded-2xl shadow-xl border border-gray-200 bg-white">
+						<Card className="rounded-2xl shadow-xl border border-gray-200 bg-white pt-0">
 							{/* Header */}
-							<CardHeader className="relative p-4 md:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-2xl">
+							<CardHeader className="relative p-6 md:p-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-2xl">
 								<Button variant="ghost" size="icon" onClick={onClose} className="absolute top-4 right-4 h-8 w-8 rounded-full hover:bg-white/80 transition-all duration-300 cursor-pointer">
 									<X className="h-4 w-4" />
 								</Button>
 
 								<div className="flex items-start gap-4 pr-12">
-									<div className="p-3 rounded-xl bg-blue-100">
+									<div className="p-3 rounded-xl bg-blue-100 hidden md:block">
 										<Heart className="h-6 w-6 text-blue-600" />
 									</div>
 									<div className="flex-1">
@@ -340,11 +340,11 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 									<TabsList className="grid w-full grid-cols-2 mb-6 md:mb-8 bg-gray-100 rounded-xl p-1 pb-[40px]">
 										<TabsTrigger value="analysis" className="flex items-center gap-2 rounded-lg text-sm md:text-base font-medium transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-sm cursor-pointer">
 											<Brain className="h-4 w-4" />
-											Hasil Analisis AI
+											Analisis AI
 										</TabsTrigger>
 										<TabsTrigger value="input" className="flex items-center gap-2 rounded-lg text-sm md:text-base font-medium transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-sm cursor-pointer">
 											<FileText className="h-4 w-4" />
-											History Input User 
+											Input User 
 										</TabsTrigger>
 									</TabsList>
 
