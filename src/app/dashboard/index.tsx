@@ -412,7 +412,7 @@ export default function DashboardPage() {
 								<LineChart data={heartRiskData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
 									<CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
 									<XAxis dataKey="date" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-									<YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} domain={['dataMin - 1', 'dataMax + 1']} tickFormatter={(value) => `${Math.round(value as number)}%`} />
+									<YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} domain={([dataMin, dataMax]) => [Math.max(0, dataMin - 1), dataMax + 1]} tickFormatter={(value) => `${Math.round(value as number)}%`} />
 									<Tooltip content={<CustomTooltip />} />
 									<Line type="monotone" dataKey="risk" stroke="#ef4444" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
 								</LineChart>
