@@ -617,7 +617,7 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 						<Button
 							onClick={onNext}
 							disabled={!isComplete}
-							className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50"
+							className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50 cursor-pointer"
 						>
 							Lanjut
 							<ChevronRight className="h-4 w-4 ml-2" />

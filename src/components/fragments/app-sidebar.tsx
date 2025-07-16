@@ -35,12 +35,12 @@ const mainNavItems = [
 
 const bottomNavItems = [
 	{
-		title: 'Landing Page',
+		title: 'Halaman Utama',
 		url: '/',
 		icon: Home,
 	},
 	{
-		title: 'Profile',
+		title: 'Profil Pengguna',
 		url: '/dashboard/profile',
 		icon: Settings,
 	},

@@ -29,7 +29,7 @@ export default function ChatPage() {
 
     const isNewChat = params.threadId === "new";
     const programParam = new URLSearchParams(window.location.search).get("program");
-    const readOnly = new URLSearchParams(window.location.search).get("readOnly") === "true" || true;
+    const readOnly = new URLSearchParams(window.location.search).get("readOnly") === "true";
 
     useEffect(() => {
         if (isNewChat && !programParam) {

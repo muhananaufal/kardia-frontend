@@ -161,7 +161,7 @@ export default function SettingsPage() {
 			setIsDialogOpen(false); // Tutup dialog
             setPasswordForm({ password: '', confirmPassword: '' });
             toast.success('Password berhasil direset!');
-		} catch (error) {
+		} catch {
 			setIsLoading(false);
 			// Optionally, you can set a generic error message
             setErrors({ password: 'Gagal mereset password. Silakan coba lagi.' });
@@ -278,7 +278,7 @@ export default function SettingsPage() {
 											}))
 										}
 										disabled={!isEditing}
-										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base"
+										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base h-[48px]"
 									/>
 								</div>
 
@@ -296,7 +296,7 @@ export default function SettingsPage() {
 											}))
 										}
 										disabled={!isEditing}
-										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base"
+										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base h-[48px]"
 									/>
 								</div>
 
@@ -315,7 +315,7 @@ export default function SettingsPage() {
 											}))
 										}
 										disabled={!isEditing}
-										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base"
+										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base h-[48px]"
 									/>
 								</div>
 
@@ -334,7 +334,7 @@ export default function SettingsPage() {
 											}))
 										}
 										disabled={!isEditing}
-										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base  cursor-pointer"
+										className="rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base  cursor-pointer h-[48px]"
 									/>
 								</div>
 
@@ -409,7 +409,7 @@ export default function SettingsPage() {
 
 							{isEditing && (
 								<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end">
-									<Button onClick={handleSaveProfile} className="bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-sm font-medium uppercase tracking-wide">
+									<Button onClick={handleSaveProfile} className="bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-sm font-medium uppercase tracking-wide cursor-pointer">
 										<Save className="h-4 w-4 mr-2" />
 										Simpan Perubahan
 									</Button>

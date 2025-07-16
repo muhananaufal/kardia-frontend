@@ -1,16 +1,12 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import {
-    User,
-    Send,
     Loader2,
     History,
-    ChevronLeft,
     ChevronRight,
     MessageSquare,
     Clock,
     Search,
     EllipsisVertical,
-    CircleChevronLeft,
     Edit,
     Trash2,
 } from "lucide-react";
@@ -27,7 +23,7 @@ import {
     updateConversationTitle,
 } from "@/hooks/api/ai-chat";
 import { useAuth } from "@/provider/AuthProvider";
-import ReplyRenderer from "@/components/fragments/reply-renderer";
+// import ReplyRenderer from "@/components/fragments/reply-renderer";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -200,7 +196,7 @@ const AIChatPage = () => {
             }
 
             const response = updateConversationTitle(token, editTitle, editingChat.id);
-            response.then((res) => {
+            response.then(() => {
                 setChatHistory((prev) =>
                     prev.map((chat) =>
                         chat.id === editingChat.id

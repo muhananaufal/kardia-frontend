@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -44,11 +45,11 @@ const pageVariants = {
     exit: { opacity: 0, y: -20 },
 };
 
-const cardVariants = {
-    initial: { opacity: 0, scale: 0.95 },
-    animate: { opacity: 1, scale: 1 },
-    transition: { duration: 0.3 },
-};
+// const cardVariants = {
+//     initial: { opacity: 0, scale: 0.95 },
+//     animate: { opacity: 1, scale: 1 },
+//     transition: { duration: 0.3 },
+// };
 
 export default function RiwayatPage() {
     const auth = useAuth();
@@ -286,13 +287,13 @@ export default function RiwayatPage() {
         }
     };
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("id-ID", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-    };
+    // const formatDate = (dateString: string) => {
+    //     return new Date(dateString).toLocaleDateString("id-ID", {
+    //         year: "numeric",
+    //         month: "long",
+    //         day: "numeric",
+    //     });
+    // };
 
     return (
         <div className="min-h-screen bg-white">
@@ -417,20 +418,20 @@ export default function RiwayatPage() {
                             className="pl-10 rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-base h-10 md:h-12"
                         />
                     </div>
-                    <Select value={filterRisk} onValueChange={setFilterRisk}>
-                        <SelectTrigger className="w-full md:w-48 rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-50 focus:border-rose-50 h-[48px] md:h-[48px]">
+                    <Select value={filterRisk} onValueChange={setFilterRisk} >
+                        <SelectTrigger className="w-full md:w-48 rounded-lg border-gray-300 focus:ring-2 focus:ring-rose-50 focus:border-rose-50 h-[48px] md:h-[48px] cursor-pointer">
                             <Filter className="h-4 w-4 mr-2" />
                             <SelectValue placeholder="Filter Risiko" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Semua Risiko</SelectItem>
-                            <SelectItem value="rendah-sedang">
+                            <SelectItem className="cursor-pointer" value="all">Semua Risiko</SelectItem>
+                            <SelectItem className="cursor-pointer" value="rendah-sedang">
                                 Risiko Rendah-Sedang
                             </SelectItem>
-                            <SelectItem value="tinggi">
+                            <SelectItem className="cursor-pointer" value="tinggi">
                                 Risiko Tinggi
                             </SelectItem>
-                            <SelectItem value="sangat tinggi">
+                            <SelectItem className="cursor-pointer" value="sangat tinggi">
                                 Risiko Sangat Tinggi
                             </SelectItem>
                         </SelectContent>
@@ -708,13 +709,13 @@ export default function RiwayatPage() {
                                 <SelectValue placeholder="Pilih Tingkat Kesulitan" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Santai & Bertahap">
+                                <SelectItem className="cursor-pointer" value="Santai & Bertahap">
                                     Santai & Bertahap
                                 </SelectItem>
-                                <SelectItem value="Standar & Konsisten">
+                                <SelectItem className="cursor-pointer" value="Standar & Konsisten">
                                     Standar & Konsisten
                                 </SelectItem>
-                                <SelectItem value="Intensif & Menantang">
+                                <SelectItem className="cursor-pointer" value="Intensif & Menantang">
                                     Intensif & Menantang
                                 </SelectItem>
                             </SelectContent>
@@ -723,10 +724,10 @@ export default function RiwayatPage() {
                         <div className="flex justify-end pt-4">
                             <Button
                                 onClick={() => handleNewProgram(programSlug!)}
-                                className={`bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-md transition-all duration-300 ${
+                                className={`bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-md transition-all duration-300  ${
                                     isNewProgramLoading
                                         ? "cursor-not-allowed opacity-50"
-                                        : ""
+                                        : "cursor-pointer"
                                 }`}
                             >
                                 {isNewProgramLoading ? (

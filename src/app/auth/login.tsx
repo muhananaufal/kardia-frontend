@@ -134,10 +134,10 @@ const Login = () => {
                     className="mb-8 text-center"
                 >
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                        Welcome Back
+                        Selamat Datang Kembali!
                     </h2>
                     <p className="text-gray-600">
-                        Sign in to continue your health journey
+                        Masuk ke akun Kamu untuk melanjutkan perjalananmu.
                     </p>
                 </motion.div>
 
@@ -161,7 +161,7 @@ const Login = () => {
                                         htmlFor="email"
                                         className="text-sm font-medium text-gray-700"
                                     >
-                                        Email Address
+                                        Alamat Email
                                     </Label>
                                     <div className="relative">
                                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -306,7 +306,7 @@ const Login = () => {
                                     </div>
                                     <div className="relative flex justify-center text-sm">
                                         <span className="px-2 bg-white text-gray-500">
-                                            Don't have an account?
+                                            Belum punya akun?
                                         </span>
                                     </div>
                                 </div>
@@ -317,7 +317,7 @@ const Login = () => {
                                         to="/auth/register"
                                         className="text-rose-600 hover:text-rose-700 font-semibold transition-colors"
                                     >
-                                        Create a new account
+                                        Daftar Sekarang
                                     </Link>
                                 </div>
                             </form>
