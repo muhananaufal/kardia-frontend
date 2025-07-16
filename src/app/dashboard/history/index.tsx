@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useMemo, useState } from 'react';
-import type { AnalysisRecord } from '@/types/index';
 import { motion } from 'framer-motion';
 import {
 	AlertTriangle,
