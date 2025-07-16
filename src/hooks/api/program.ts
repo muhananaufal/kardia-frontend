@@ -20,7 +20,7 @@ export const getProgramDetails = async (slug: string, token: string) => {
 export const startNewProgram = async (token: string, slug: string, difficulty: string) => {
     try {
         console.log("Starting new program with slug:", slug, "and difficulty:", difficulty);
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/coaching/programs/`, {
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/coaching/programs`, {
             risk_assessment_slug: slug,
             difficulty: difficulty
         }, {
