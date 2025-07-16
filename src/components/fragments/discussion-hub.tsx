@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -84,7 +83,14 @@ export function DiscussionHub({ programSlug, discussions, isReadOnly = false, on
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end">
-											<Dialog>
+											<Dialog
+												open={editingId === discussion.slug}
+												onOpenChange={(isOpen) => {
+													if (!isOpen) {
+														setEditingId(null);
+													}
+												}}
+											>
 												<DialogTrigger asChild>
 													<DropdownMenuItem
 														onSelect={(e) => {
