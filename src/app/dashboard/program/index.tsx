@@ -122,8 +122,7 @@ export default function CoachingDashboard() {
 	}, [token, params.slug, activeProgram]);
 
 	// Dapatkan data minggu yang dipilih dari array 'weeks'
-	const currentWeekData = programData?.weeks?.find((week) => week.week_number === selectedWeek);
-
+	const currentWeekData = programData?.weeks?.find((week) => Number(week.week_number) === selectedWeek);
 	const isProgramInactive = programData?.status !== 'active';
 	// const isProgramCompleted = programData?.status === "completed";
 	const isProgramPaused = programData?.status === 'paused';
@@ -331,8 +330,8 @@ export default function CoachingDashboard() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<h3 className="font-semibold text-slate-900 mb-2">{currentWeekData.title}</h3>
-						<p className="text-slate-600">{currentWeekData.description}</p>
+						<h3 className="font-semibold text-slate-900 mb-2">{currentWeekData?.title}</h3>
+						<p className="text-slate-600">{currentWeekData?.description}</p>
 					</CardContent>
 				</Card>
 
