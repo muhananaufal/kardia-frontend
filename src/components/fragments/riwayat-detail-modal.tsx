@@ -361,7 +361,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 												</div>
 
 												<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-													<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+													<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 														<CardContent className="p-4 md:p-6 space-y-4">
 															<div className="text-center space-y-3">
 																<Badge className={`${getRiskColor(detailedAnalysis.riskSummary.riskCategory.level)} text-sm font-medium uppercase tracking-wide`}>{detailedAnalysis.riskSummary.riskCategory.label}</Badge>
@@ -372,7 +372,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 														</CardContent>
 													</Card>
 
-													<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+													<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 														<CardContent className="p-4 md:p-6 space-y-4">
 															<h4 className="font-bold text-gray-900 text-base md:text-lg">Faktor Kontributor Utama</h4>
 															<div className="space-y-3">
@@ -390,7 +390,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 													</Card>
 												</div>
 
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<h4 className="font-bold text-gray-900 text-base md:text-lg flex items-center gap-2">
 															<Info className="h-5 w-5 text-blue-600" />
@@ -400,7 +400,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 													</CardContent>
 												</Card>
 
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<h4 className="font-bold text-gray-900 text-base md:text-lg flex items-center gap-2">
 															<CheckCircle className="h-5 w-5 text-green-600" />
@@ -430,7 +430,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 												</div>
 
 												{/* Medical Consultation */}
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<div className="flex items-center gap-3">
 															<Stethoscope className="h-5 w-5 text-blue-600" />
@@ -459,7 +459,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 												</Card>
 
 												{/* Lifestyle Actions */}
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<div className="flex items-center gap-3">
 															<Activity className="h-5 w-5 text-green-600" />
@@ -496,7 +496,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 												</Card>
 
 												{/* Impact Simulation */}
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50">
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<div className="flex items-center gap-3">
 															<Zap className="h-5 w-5 text-purple-600" />
@@ -530,7 +530,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 												</div>
 
 												{/* Key Health Metrics */}
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<h4 className="font-bold text-gray-900 text-base md:text-lg">Metrik Kesehatan Utama</h4>
 														<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -555,7 +555,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 												</Card>
 
 												{/* Myths vs Facts */}
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<h4 className="font-bold text-gray-900 text-base md:text-lg">Mitos vs Fakta</h4>
 														<div className="space-y-3">
@@ -603,7 +603,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 												</div>
 
 												<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-													<Card className="rounded-2xl shadow-md border border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+													<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50">
 														<CardContent className="p-4 md:p-6 space-y-3">
 															<div className="flex items-center gap-2">
 																<MessageCircle className="h-5 w-5 text-blue-600" />
@@ -613,7 +613,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 														</CardContent>
 													</Card>
 
-													<Card className="rounded-2xl shadow-md border border-gray-200 bg-gradient-to-br from-green-50 to-emerald-50">
+													<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-gradient-to-br from-green-50 to-emerald-50">
 														<CardContent className="p-4 md:p-6 space-y-3">
 															<div className="flex items-center gap-2">
 																<Award className="h-5 w-5 text-green-600" />
@@ -623,7 +623,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 														</CardContent>
 													</Card>
 
-													<Card className="rounded-2xl shadow-md border border-gray-200 bg-gradient-to-br from-purple-50 to-pink-50">
+													<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-gradient-to-br from-purple-50 to-pink-50">
 														<CardContent className="p-4 md:p-6 space-y-3">
 															<div className="flex items-center gap-2">
 																<MapPin className="h-5 w-5 text-purple-600" />
@@ -649,7 +649,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 													<h3 className="text-xl md:text-2xl font-bold text-gray-900">Data Dasar</h3>
 												</div>
 
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 													<CardContent className="p-4 md:p-6">
 														<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 															<div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
@@ -707,7 +707,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 													<h3 className="text-xl md:text-2xl font-bold text-gray-900">Metrik Kesehatan</h3>
 												</div>
 
-												<Card className="rounded-2xl shadow-md border border-gray-200 bg-white">
+												<Card className="rounded-2xl shadow-sm hover:shadow-md border border-gray-200 bg-white">
 													<CardContent className="p-4 md:p-6">
 														<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 															<div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
@@ -778,7 +778,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 
 													<div className="space-y-4">
 														{userInputData.estimatedParameters?.map((param, index) => (
-															<Card key={index} className="rounded-2xl shadow-md border border-orange-200 bg-white">
+															<Card key={index} className="rounded-2xl shadow-sm hover:shadow-md border border-orange-200 bg-white">
 																<Collapsible>
 																	<CollapsibleTrigger onClick={() => toggleEstimation(index)} className="w-full p-4 md:p-6 text-left hover:bg-orange-50/50 transition-all duration-300 rounded-2xl cursor-pointer">
 																		<div className="flex items-center justify-between">
@@ -839,7 +839,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 											{/* General Estimation Note */}
 											{userInputData.estimatedValues.length > 0 && (
 												<motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-													<Card className="rounded-2xl shadow-md border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+													<Card className="rounded-2xl shadow-sm hover:shadow-md border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
 														<CardContent className="p-4 md:p-6">
 															<div className="flex items-start gap-3">
 																<Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />

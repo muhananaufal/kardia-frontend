@@ -364,7 +364,7 @@ export default function RiwayatPage() {
 								return (
 									<motion.div key={record.slug} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: index * 0.15 }} className="relative">
 										<div className={`absolute left-[-22px] md:left-[-26px] top-5 w-4 h-4 rounded-full ${styling.timeline} border-4 border-slate-50`}></div>
-										<Card className={`transition-all duration-300 rounded-2xl shadow-lg hover:shadow-xl border-l-4 ${styling.border} bg-white ml-8 md:ml-12`}>
+										<Card className={`transition-all duration-300 rounded-2xl shadow-sm hover:shadow-md border-l-4 ${styling.border} bg-white ml-8 md:ml-12`}>
 											<CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 												<div className="md:col-span-2 space-y-4">
 													<div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
@@ -399,7 +399,7 @@ export default function RiwayatPage() {
 																		e.stopPropagation();
 																		navigate('/dashboard/program');
 																	}}
-																	className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg hover:shadow-xl h-11 transition-all duration-300 rounded-lg cursor-pointer"
+																	className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-sm hover:shadow-md h-11 transition-all duration-300 rounded-lg cursor-pointer"
 																>
 																	<ArrowRight className="w-4 h-4 mr-2" />
 																	Lanjutkan Program
@@ -411,7 +411,7 @@ export default function RiwayatPage() {
 																		e.stopPropagation();
 																		navigate(`/dashboard/program/${record.program_slug}`);
 																	}}
-																	className="flex-1 bg-gradient-to-r bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-lg hover:shadow-xl h-11 transition-all duration-300 rounded-lg cursor-pointer"
+																	className="flex-1 bg-gradient-to-r bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-sm hover:shadow-md h-11 transition-all duration-300 rounded-lg cursor-pointer"
 																>
 																	<BookOpen className="w-4 h-4 mr-2" />
 																	Lihat Laporan Program

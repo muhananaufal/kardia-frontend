@@ -370,7 +370,7 @@ export default function AnalisisPage() {
 	if (currentStep === 3) {
 		return (
 			<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-white flex items-center justify-center p-4 md:p-8">
-				<Card className="max-w-md w-full bg-white shadow-md rounded-2xl border border-gray-200">
+				<Card className="max-w-md w-full bg-white shadow-sm rounded-2xl border border-gray-200">
 					<CardContent className="p-4 md:p-6 lg:p-8 text-center space-y-6">
 						<motion.div
 							animate={{
@@ -429,7 +429,7 @@ export default function AnalisisPage() {
 				<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center justify-center">
 					{[1, 2, 3].map((step) => (
 						<div key={step} className="flex items-center">
-							<div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${step <= currentStep ? 'bg-rose-500 text-white shadow-md' : 'bg-gray-200 text-gray-500'}`}>
+							<div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${step <= currentStep ? 'bg-rose-500 text-white shadow-sm' : 'bg-gray-200 text-gray-500'}`}>
 								{step < currentStep ? <CheckCircle className="h-5 w-5" /> : step}
 							</div>
 							{step < 3 && <div className={`w-16 h-1 mx-2 transition-all duration-300 ${step < currentStep ? 'bg-gradient-to-r from-rose-400 to-rose-600' : 'bg-slate-200'}`} />}
@@ -451,7 +451,7 @@ export default function AnalisisPage() {
 function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any) {
 	return (
 		<motion.div key="step1" variants={cardVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
-			<Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl border border-gray-200">
+			<Card className="bg-white shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl border border-gray-200">
 				<CardContent className="p-4 md:p-6 lg:p-8 space-y-6">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{/* Age */}
@@ -608,7 +608,7 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 							variant="outline"
 							onClick={onBack}
 							disabled={true}
-							className="bg-white text-rose-500 border border-rose-500 hover:bg-rose-50 font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide opacity-50 cursor-not-allowed"
+							className="bg-white text-rose-500 border border-rose-500 hover:bg-rose-50 font-medium shadow-sm hover:shadow-md transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide opacity-50 cursor-not-allowed"
 						>
 							<ChevronLeft className="h-4 w-4 mr-2" />
 							Sebelumnya
@@ -617,7 +617,7 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 						<Button
 							onClick={onNext}
 							disabled={!isComplete}
-							className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50 cursor-pointer"
+							className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-sm hover:shadow-md transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50 cursor-pointer"
 						>
 							Lanjut
 							<ChevronRight className="h-4 w-4 ml-2" />
@@ -867,13 +867,13 @@ function Step2Form({ formData, updateHealthParameter, onNext, onBack, isComplete
 			))}
 
 			{/* Navigation */}
-			<Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl border border-gray-200">
+			<Card className="bg-white shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl border border-gray-200">
 				<CardContent className="p-4 md:p-6 lg:p-8">
 					<div className="flex flex-col md:flex-row gap-3 justify-between">
 						<Button
 							variant="outline"
 							onClick={onBack}
-							className="bg-white text-rose-500 border border-rose-500 hover:bg-rose-50 font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer"
+							className="bg-white text-rose-500 border border-rose-500 hover:bg-rose-50 font-medium shadow-sm hover:shadow-md transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer"
 						>
 							<ChevronLeft className="h-4 w-4 mr-2" />
 							Sebelumnya
@@ -882,7 +882,7 @@ function Step2Form({ formData, updateHealthParameter, onNext, onBack, isComplete
 						<Button
 							onClick={onNext}
 							disabled={!isComplete}
-							className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50 cursor-pointer"
+							className="bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-sm hover:shadow-md transition-all duration-300 rounded-lg h-10 md:h-12 px-6 text-sm uppercase tracking-wide disabled:opacity-50 cursor-pointer"
 						>
 							Selesai & Lihat Hasil Analisis Saya
 							<Activity className="h-4 w-4 ml-2" />
@@ -925,7 +925,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
 
 	return (
 		<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
-			<Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl border border-gray-200 overflow-hidden">
+			<Card className="bg-white shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl border border-gray-200 overflow-hidden">
 				<CardHeader className="border-b border-slate-200/50">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-lg text-slate-800">
@@ -948,7 +948,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<Button
 							onClick={() => handleMethodChange('manual')}
-							className={`flex-1 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer
+							className={`flex-1 rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer
                                 ${data.inputType === 'manual' ? 'bg-rose-500 hover:bg-rose-600 text-white' : 'bg-white text-rose-500 border border-rose-500 hover:bg-rose-50'}`}
 						>
 							Saya Tahu Angkanya
@@ -956,7 +956,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
 
 						<Button
 							onClick={() => handleMethodChange('proxy')}
-							className={`flex-1 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer
+							className={`flex-1 rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer
                                 ${data.inputType === 'proxy' ? 'bg-rose-500 hover:bg-rose-600 text-white' : 'bg-white text-rose-500 border border-rose-500 hover:bg-rose-50'}`}
 						>
 							Bantu Estimasi

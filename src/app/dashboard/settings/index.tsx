@@ -229,7 +229,7 @@ export default function SettingsPage() {
 
 				{/* Profile Section */}
 				<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.2 }}>
-					<Card className="gap-3 rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+					<Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white hover:shadow-md transition-all duration-300">
 						<CardHeader className="pb-4">
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-3">
@@ -426,7 +426,7 @@ export default function SettingsPage() {
                     animate="animate"
                     transition={{ delay: 0.3 }}
                 >
-                    <Card className="rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+                    <Card className="rounded-2xl shadow-sm border border-gray-200 bg-white hover:shadow-md transition-all duration-300">
                         <CardHeader className="pb-4">
                             <div className="flex items-center gap-3">
                                 <Bell className="h-6 w-6 text-rose-500" />
@@ -556,7 +556,7 @@ export default function SettingsPage() {
 
 				{/* Preferences Section */}
 				<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.4 }}>
-					<Card className="gap-3 rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+					<Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white hover:shadow-md transition-all duration-300">
 						<CardHeader>
 							<div className="flex items-center gap-3">
 								<Palette className="h-6 w-6 text-rose-500" />
@@ -623,7 +623,7 @@ export default function SettingsPage() {
 
 				{/* Security & Privacy Section */}
 				<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.5 }}>
-					<Card className="gap-3 rounded-2xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
+					<Card className="gap-3 rounded-2xl shadow-sm border border-gray-200 bg-white hover:shadow-md transition-all duration-300">
 						<CardHeader>
 							<div className="flex items-center gap-3">
 								<Shield className="h-6 w-6 text-rose-500" />

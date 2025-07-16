@@ -133,7 +133,7 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 		// Tampilan jika tidak ada program aktif/data program
 		return (
 			<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.2 }}>
-				<Card className="rounded-2xl shadow-md border bg-white overflow-hidden">
+				<Card className="rounded-2xl shadow-sm border bg-white overflow-hidden">
 					<CardContent className="p-6 flex flex-col md:flex-row items-center gap-6">
 						<div className="p-3 rounded-full bg-rose-100">
 							<Sparkles className="h-8 w-8 text-rose-500" />
@@ -186,7 +186,7 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 
 	return (
 		<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.2 }}>
-			<Card className={`rounded-2xl shadow-md border ${currentConfig.bgColor} ${currentConfig.borderColor} overflow-hidden transition-all duration-300`}>
+			<Card className={`rounded-2xl shadow-sm border ${currentConfig.bgColor} ${currentConfig.borderColor} overflow-hidden transition-all duration-300`}>
 				<CardContent className="p-6">
 					<div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
 						{/* Icon & Title */}
@@ -330,7 +330,7 @@ export default function DashboardPage() {
 				<h2 className="text-2xl font-bold text-slate-800">Selamat Datang!</h2>
 				<p className="text-slate-600 max-w-md mt-2 mb-6">Sepertinya Anda belum melakukan analisis kesehatan. Mulailah perjalanan Anda untuk memahami kesehatan jantung Anda lebih baik.</p>
 				<Link to="/dashboard/analysis">
-					<Button className="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+					<Button className="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:shadow-sm transition-all duration-300">
 						<CheckCircle className="h-5 w-5 mr-2" />
 						Lakukan Analisis Pertama Sekarang
 					</Button>
