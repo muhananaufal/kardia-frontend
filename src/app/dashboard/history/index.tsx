@@ -120,6 +120,7 @@ export default function RiwayatPage() {
 		);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const formatRiskPercentage = (value: any): string => {
 		const numericValue = parseFloat(String(value || 0));
 
