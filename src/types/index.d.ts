@@ -67,6 +67,8 @@ interface HealthParameter {
 
 interface AnalysisRecord {
   slug: string
+  program_slug: string
+  program_status: "active" | "completed" | "paused" | null;
   date: string
   model_used: string
   risk_percentage: number
@@ -200,7 +202,7 @@ interface ChatHistoryItem {
 
 // Reply Components
 type ReplyComponent =
-  | { type: "header" | "paragraph" | "quote"; content: string }
+  | { type: "header" | "paragraph" | "quote" | "string"; content: string }
   | { type: "list"; items: string[] }
 
 // Message

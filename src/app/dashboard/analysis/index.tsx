@@ -14,7 +14,7 @@ import { useAuth } from '@/provider/AuthProvider';
 import { regionMap } from '@/lib/data';
 import { formatCountryName, formatGroupLabel } from '@/lib/utils';
 import { newAnalysis, personalizeAnalysis } from '@/hooks/api/analysis';
-import ProfileCompletionModal from '@/components/fragments/profile-completion-modal';
+import WarningCard from '@/components/fragments/warning-card';
 
 // Types
 
@@ -357,7 +357,14 @@ export default function AnalisisPage() {
 	};
 
 	if (isProfileCompleted === false) {
-		return <ProfileCompletionModal />;
+		return (
+			<WarningCard
+				title="Lengkapi Profil Anda"
+				description="Untuk mendapatkan rekomendasi kesehatan yang lebih akurat, silakan lengkapi profil Anda. Ini akan membantu kami memahami kebutuhan kesehatan Anda dengan lebih baik."
+				btnText="Lengkapi Profil"
+				btnHref="/dashboard/profile"
+			/>
+		)
 	}
 
 	if (currentStep === 3) {
@@ -452,7 +459,7 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 							<Label htmlFor="age" className="text-sm font-medium text-gray-700">
 								Usia Anda
 							</Label>
-							<div className="relative">
+							<div className="relative h-10 md:h-12">
 								<Input
 									id="age"
 									type="number"
@@ -461,7 +468,7 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 									max="100"
 									value={formData.age}
 									onChange={(e) => updateFormData('age', e.target.value)}
-									className="rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-8 md:h-9 text-base"
+									className="rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-10 md:h-12 text-base"
 									placeholder="Masukkan usia"
 								/>
 								<span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">tahun</span>
@@ -596,7 +603,7 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 					</AnimatePresence>
 
 					{/* Navigation */}
-					<div className="flex justify-between pt-6">
+					<div className="flex flex-col md:flex-row gap-3 justify-between pt-6">
 						<Button
 							variant="outline"
 							onClick={onBack}
@@ -862,7 +869,7 @@ function Step2Form({ formData, updateHealthParameter, onNext, onBack, isComplete
 			{/* Navigation */}
 			<Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl border border-gray-200">
 				<CardContent className="p-4 md:p-6 lg:p-8">
-					<div className="flex justify-between">
+					<div className="flex flex-col md:flex-row gap-3 justify-between">
 						<Button
 							variant="outline"
 							onClick={onBack}
@@ -938,7 +945,7 @@ function HealthParameterCard({ parameter, data, onUpdate, index, total }: any) {
 
 				<CardContent className="p-4 md:p-6 lg:p-8 space-y-6">
 					{/* Method Selection */}
-					<div className="flex gap-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<Button
 							onClick={() => handleMethodChange('manual')}
 							className={`flex-1 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 h-10 md:h-12 px-6 text-sm uppercase tracking-wide cursor-pointer

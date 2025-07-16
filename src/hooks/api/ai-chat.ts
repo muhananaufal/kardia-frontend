@@ -73,3 +73,39 @@ export const continueConversation = async (token: string, slug: string, message:
         throw new Error("Failed to continue conversation. Please try again later.");
     }
 }
+
+export const updateConversationTitle = async (token: string, title: string, slug: string) => {
+    try {
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/chat/conversations/${slug}`, {
+            title: title
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("Conversation title updated successfully:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to update conversation title:", error);
+        throw new Error("Failed to update conversation title. Please try again later.");
+    }
+}
+
+export const deleteConversation = async (token: string, slug: string) => {
+    try {
+        const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/chat/conversations/${slug}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("Conversation deleted successfully:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to delete conversation:", error);
+        throw new Error("Failed to delete conversation. Please try again later.");
+    }
+}

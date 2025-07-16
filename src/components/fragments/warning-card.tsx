@@ -3,7 +3,14 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-export default function ProfileCompletionCard() {
+export default function WarningCard(props: any) {
+    const {
+        title,
+        description,
+        btnText,
+        btnHref
+    } = props;
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -19,22 +26,20 @@ export default function ProfileCompletionCard() {
 
                     {/* Header */}
                     <h2 className="text-2xl font-bold text-gray-900">
-                        Lengkapi Profil Anda
+                        {title}
                     </h2>
 
                     {/* Description */}
                     <p className="text-gray-600 text-base leading-relaxed px-2">
-                        Untuk mendapatkan rekomendasi kesehatan yang lebih
-                        akurat, silakan lengkapi profil Anda. Ini akan membantu
-                        kami memahami kebutuhan kesehatan Anda dengan lebih baik.
+                        {description}
                     </p>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3">
-                        <Link to="/dashboard/profile" className=" text-center rounded-lg flex-1 bg-rose-600 hover:bg-rose-700 text-white font-medium py-2.5">
-                            Lengkapi Sekarang
+                        <Link to={btnHref} className=" text-center rounded-lg flex-1 bg-rose-600 hover:bg-rose-700 text-white font-medium py-2.5">
+                            {btnText}
                         </Link>
                     </div>
                 </CardContent>
