@@ -330,7 +330,7 @@ export default function DashboardPage() {
 				<h2 className="text-2xl font-bold text-slate-800">Selamat Datang!</h2>
 				<p className="text-slate-600 max-w-md mt-2 mb-6">Sepertinya Anda belum melakukan analisis kesehatan. Mulailah perjalanan Anda untuk memahami kesehatan jantung Anda lebih baik.</p>
 				<Link to="/dashboard/analysis">
-					<Button className="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:shadow-sm transition-all duration-300">
+					<Button className="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:shadow-sm transition-all duration-300 cursor-pointer">
 						<CheckCircle className="h-5 w-5 mr-2" />
 						Lakukan Analisis Pertama Sekarang
 					</Button>
