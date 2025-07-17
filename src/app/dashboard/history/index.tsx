@@ -350,7 +350,7 @@ export default function RiwayatPage() {
 							</div>
 							<h3 className="text-xl font-bold text-gray-900 mb-2">Riwayat Anda Masih Kosong</h3>
 							<p className="text-base text-gray-600 mb-6">Lakukan analisis pertama Anda untuk memulai perjalanan kesehatan ini.</p>
-							<Button onClick={() => navigate('/dashboard/analysis')} className="bg-rose-500 hover:bg-rose-600 text-white font-semibold">
+							<Button onClick={() => navigate('/dashboard/analysis')} className="bg-rose-500 hover:bg-rose-600 text-white font-semibold cursor-pointer">
 								<Sparkles className="w-4 h-4 mr-2" />
 								Lakukan Analisis Sekarang
 							</Button>
