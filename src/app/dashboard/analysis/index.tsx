@@ -411,7 +411,7 @@ export default function AnalisisPage() {
 	}
 
 	return (
-		<motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.5 }} className="min-h-screen bg-white px-6 md:px-8">
+		<motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.5 }} className="min-h-screen bg-white px-6 md:px-8 mt-[48px]">
 			<div className="max-w-full mx-auto space-y-6 md:space-y-10">
 				{/* Header */}
 				<motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="text-center space-y-4">
@@ -432,7 +432,7 @@ export default function AnalisisPage() {
 							<div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${step <= currentStep ? 'bg-rose-500 text-white shadow-sm' : 'bg-gray-200 text-gray-500'}`}>
 								{step < currentStep ? <CheckCircle className="h-5 w-5" /> : step}
 							</div>
-							{step < 3 && <div className={`w-16 h-1 mx-2 transition-all duration-300 ${step < currentStep ? 'bg-gradient-to-r from-rose-400 to-rose-600' : 'bg-slate-200'}`} />}
+							{step < 3 && <div className={`w-25 h-1 mx-2 transition-all duration-300 ${step < currentStep ? 'bg-gradient-to-r from-rose-400 to-rose-600' : 'bg-slate-200'}`} />}
 						</div>
 					))}
 				</motion.div>
@@ -468,7 +468,7 @@ function Step1Form({ formData, updateFormData, onNext, onBack, isComplete }: any
 									max="100"
 									value={formData.age}
 									onChange={(e) => updateFormData('age', e.target.value)}
-									className="rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-10 md:h-12 text-base"
+									className="rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 h-10 md:h-12 text-base cursor-not-allowed"
 									placeholder="Masukkan usia"
 								/>
 								<span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">tahun</span>

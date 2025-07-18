@@ -280,7 +280,7 @@ export default function CoachingDashboard() {
 
 	return (
 		<div className="min-h-screen">
-			<div className="container mx-auto px-4 md:px-6 py-8 ">
+			<div className="container mx-auto px-4 md:px-6 pb-8 mt-[48px]">
 				{/* Header */}
 				<div className="">
 					<div>
@@ -295,7 +295,7 @@ export default function CoachingDashboard() {
 				</div>
 
 				{/* Program Progress Card */}
-				<Card className="my-6 border border-slate-200 shadow-sm bg-white">
+				<Card className="mb-6 mt-15 border border-slate-200 shadow-sm bg-white ">
 					<CardHeader>
 						<CardTitle className="text-lg font-semibold text-slate-900">
 							<div className="flex items-center justify-between">
