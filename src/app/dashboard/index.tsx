@@ -1,26 +1,5 @@
 import { motion } from 'framer-motion';
-import {
-	Heart,
-	Clock,
-	AlertTriangle,
-	CheckCircle,
-	AlertCircle,
-	Loader2,
-	Zap,
-	PartyPopper,
-	PauseCircle,
-	Star,
-	Target,
-	ShieldCheck,
-	Stethoscope,
-	Lightbulb,
-	ThumbsUp,
-	MapPin,
-	ArrowRight,
-	Minus,
-	ArrowUp,
-	ArrowDown,
-} from 'lucide-react';
+import { Heart, Clock, AlertTriangle, CheckCircle, AlertCircle, Loader2, Zap, PartyPopper, PauseCircle, Star, Target, ShieldCheck, Stethoscope, Lightbulb, ThumbsUp, MapPin, ArrowRight, Minus, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -338,6 +317,16 @@ export default function DashboardPage() {
 
 	const { summary, latest_assessment_details: details } = dashboardData;
 
+	// --- [BARU] Logika untuk konfigurasi status risiko ---
+	const riskCategoryConfig = {
+		LOW_MODERATE: { text: 'Risiko Rendah - Sedang', color: 'text-green-600' },
+		HIGH: { text: 'Risiko Tinggi', color: 'text-yellow-600' },
+		VERY_HIGH: { text: 'Risiko Sangat Tinggi', color: 'text-red-600' },
+	};
+
+	const riskCode = details.riskSummary.riskCategory.code as keyof typeof riskCategoryConfig;
+	const currentRiskConfig = riskCategoryConfig[riskCode] || { text: 'Status Tidak Diketahui', color: 'text-slate-600' };
+
 	return (
 		<motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="px-4 md:px-8 py-8 md:py-12 space-y-8 bg-slate-50 min-h-screen">
 			<motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="space-y-2">
@@ -361,8 +350,10 @@ export default function DashboardPage() {
 							<ShieldCheck className="h-5 w-5 text-slate-400" />
 						</CardHeader>
 						<CardContent>
-							<div className="text-3xl font-bold text-rose-600">{details.riskSummary.riskPercentage}%</div>
-							<p className="text-xs text-slate-500 mt-1">{details.riskSummary.riskCategory.title}</p>
+							{/* [DIUBAH] Warna persentase sekarang dinamis */}
+							<div className={`text-3xl font-bold ${currentRiskConfig.color}`}>{details.riskSummary.riskPercentage}%</div>
+							{/* [DIUBAH] Teks status mengambil dari konfigurasi */}
+							<p className="text-xs text-slate-500 mt-1">{currentRiskConfig.text}</p>
 						</CardContent>
 					</Card>
 				</motion.div>
