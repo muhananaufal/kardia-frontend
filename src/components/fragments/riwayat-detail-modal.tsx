@@ -326,8 +326,8 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 	};
 
 	// 1. Konversi string ke angka secara eksplisit menggunakan parseFloat()
-	const percentage = parseFloat(detailedAnalysis.riskSummary.riskPercentage);
-	const reduction = parseFloat(detailedAnalysis.actionPlan.impactSimulation.predictedRiskReduction);
+	const percentage = parseFloat(detailedAnalysis.riskSummary.riskPercentage.toString());
+	const reduction = parseFloat(detailedAnalysis.actionPlan.impactSimulation.predictedRiskReduction.toString());
 
 	// 2. Lakukan perhitungan. Jika salah satu konversi gagal, hasilnya akan NaN.
 	const riskValue = percentage - reduction;
