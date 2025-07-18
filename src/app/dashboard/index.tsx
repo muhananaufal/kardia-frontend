@@ -9,7 +9,6 @@ import {
 	Zap,
 	PartyPopper,
 	PauseCircle,
-	Sparkles,
 	Star,
 	Target,
 	ShieldCheck,
@@ -21,7 +20,6 @@ import {
 	Minus,
 	ArrowUp,
 	ArrowDown,
-	ChartColumn,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -136,14 +134,14 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 				<Card className="rounded-2xl shadow-sm border bg-white overflow-hidden">
 					<CardContent className="p-6 flex flex-col md:flex-row items-center gap-6">
 						<div className="p-3 rounded-full bg-rose-100">
-							<Sparkles className="h-8 w-8 text-rose-500" />
+							<Heart className="h-8 w-8 text-rose-500" />
 						</div>
 						<div className="flex-1 text-center md:text-left">
 							<h3 className="text-lg font-bold text-slate-800">Mulai Perjalanan Sehat Anda</h3>
 							<p className="text-slate-600 text-sm mt-1">Jelajahi program kesehatan terpandu yang dirancang khusus untuk Anda.</p>
 						</div>
 						<Link to="/dashboard/programs" className="w-full md:w-auto">
-							<Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold">Jelajahi Program</Button>
+							<Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold cursor-pointer">Jelajahi Program</Button>
 						</Link>
 					</CardContent>
 				</Card>
@@ -152,25 +150,24 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 	}
 
 	const { status, title, progress, slug } = program;
-	const progressValue = (progress.current_day_in_program / progress.total_days_in_program) * 100;
-
+	const progressValue = (Math.max(0, progress.current_day_in_program) / progress.total_days_in_program) * 100;
 	// Konfigurasi untuk setiap status
 	const statusConfig = {
 		active: {
-			icon: <Zap className="h-7 w-7 text-sky-600" />,
-			bgColor: 'bg-sky-100/60',
-			borderColor: 'border-sky-200',
-			titleColor: 'text-sky-800',
+			icon: <Zap className="h-7 w-7 text-violet-600" />,
+			bgColor: 'bg-violet-100/60 ',
+			borderColor: 'border-violet-200',
+			titleColor: 'text-violet-800',
 			ctaText: 'Lanjutkan Program',
-			ctaColor: 'bg-sky-500 hover:bg-sky-600',
+			ctaColor: 'bg-violet-500 hover:bg-violet-600',
 		},
 		completed: {
-			icon: <PartyPopper className="h-7 w-7 text-emerald-600" />,
-			bgColor: 'bg-gradient-to-br from-green-50 to-emerald-100', // Paling meriah!
-			borderColor: 'border-emerald-200',
-			titleColor: 'text-emerald-800',
+			icon: <PartyPopper className="h-7 w-7 text-sky-600" />,
+			bgColor: 'bg-gradient-to-br from-sky-50 to-sky-100', // Paling meriah!
+			borderColor: 'border-sky-200',
+			titleColor: 'text-sky-800',
 			ctaText: 'Lihat Ringkasan',
-			ctaColor: 'bg-emerald-500 hover:bg-emerald-600',
+			ctaColor: 'bg-sky-500 hover:bg-sky-600',
 		},
 		paused: {
 			icon: <PauseCircle className="h-7 w-7 text-amber-600" />,
@@ -194,9 +191,9 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 							<div className="p-2 rounded-full bg-white">{currentConfig.icon}</div>
 							<div>
 								<h3 className={`text-lg font-bold ${currentConfig.titleColor}`}>{title}</h3>
-								{status === 'completed' && <p className="text-sm font-medium text-emerald-700">Selamat! Program telah selesai.</p>}
+								{status === 'completed' && <p className="text-sm font-medium text-sky-700">Selamat! Program telah selesai.</p>}
 								{status === 'paused' && <p className="text-sm font-medium text-amber-700">Program sedang dijeda.</p>}
-								{status === 'active' && <p className="text-sm font-medium text-sky-700">{`Minggu ${progress.current_week} dari ${progress.total_weeks} sedang berjalan`}</p>}
+								{status === 'active' && <p className="text-sm font-medium text-violet-700">{`Minggu ${progress.current_week} dari ${progress.total_weeks} sedang berjalan`}</p>}
 							</div>
 						</div>
 
@@ -205,14 +202,14 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 							{status === 'active' && (
 								<div className="w-full md:w-48">
 									<div className="flex justify-between mb-1">
-										<span className="text-xs font-semibold text-sky-700">Progress Hari</span>
-										<span className="text-xs font-semibold text-sky-700">{Math.round(progressValue)}%</span>
+										<span className="text-xs font-semibold text-violet-700">Progress Hari</span>
+										<span className="text-xs font-semibold text-violet-700">{Math.round(progressValue)}%</span>
 									</div>
-									<Progress value={progressValue} className="h-2 [&>div]:bg-sky-500" />
+									<Progress value={progressValue} className="h-2 [&>div]:bg-violet-500" />
 								</div>
 							)}
 							{status === 'completed' && (
-								<Badge className="bg-green-200 text-green-800 text-sm py-1 px-3 border border-green-300">
+								<Badge className="bg-sky-200 text-sky-800 text-sm py-1 px-3 border border-sky-300">
 									<Star className="h-4 w-4 mr-2" /> Graduasi
 								</Badge>
 							)}
@@ -281,7 +278,7 @@ export default function DashboardPage() {
 		const { direction, change_value } = dashboardData.summary.health_trend;
 
 		if (dashboardData.summary.total_assessments <= 1) {
-			return { icon: <Star className="h-5 w-5" />, text: 'Analisis Pertama', value: 'Selamat Datang!', color: 'text-sky-600' };
+			return { icon: <Star className="h-5 w-5" />, text: 'Analisis Pertama', value: 'Tidak Ada Trend', color: 'text-sky-600' };
 		}
 
 		switch (direction) {
@@ -344,10 +341,10 @@ export default function DashboardPage() {
 	return (
 		<motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="px-4 md:px-8 py-8 md:py-12 space-y-8 bg-slate-50 min-h-screen">
 			<motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="space-y-2">
-				<div className="flex items-center gap-3">
-					<ChartColumn className="w-8 h-8 text-rose-500" />
-					<div>
-						<h1 className="text-2xl md:text-4xl font-bold text-gray-900">Dashboard Kesehatan</h1>
+				<div className="flex items-center gap-3 justify-center">
+					{/* <ChartColumn className="w-8 h-8 text-rose-500" /> */}
+					<div className="justify-items-center items-center mb-5">
+						<h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-[15px]">Dashboard Kesehatan</h1>
 						<p className="text-md md:text-lg text-gray-600">Ringkasan, wawasan, dan rencana aksi personal untuk Anda.</p>
 					</div>
 				</div>
@@ -400,10 +397,10 @@ export default function DashboardPage() {
 			{/* Main Chart */}
 			<motion.div variants={cardVariants}>
 				<Card className="rounded-xl bg-white border shadow-sm">
-					<CardHeader>
+					<CardHeader className="mb-3">
 						<CardTitle className="flex items-center gap-2">
 							<Heart className="h-5 w-5 text-red-500" />
-							Histori Risiko 30 Hari
+							Histori Risiko 30 Hari Terakhir
 						</CardTitle>
 					</CardHeader>
 					<CardContent>

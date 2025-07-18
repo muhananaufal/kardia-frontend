@@ -4,33 +4,34 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupConte
 import { Activity, BarChart3, ChevronRight, Heart, History, Home, LogOut, MessageSquare, Settings } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import logo from '@/assets/logo.png'; // Tambahkan baris ini
 
 const mainNavItems = [
-    {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: BarChart3,
-    },
-    {
-        title: "Analisis Baru",
-        url: "/dashboard/analysis",
-        icon: Activity,
-    },
-    {
-        title: "Riwayat",
-        url: "/dashboard/history",
-        icon: History,
-    },
-    {
-        title: "Chat AI",
-        url: "/dashboard/ai-chat",
-        icon: MessageSquare,
-    },
-    {
-        title: "Langkah Sehat",
-        url: "/dashboard/program",
-        icon: Heart,
-    }
+	{
+		title: 'Dashboard',
+		url: '/dashboard',
+		icon: BarChart3,
+	},
+	{
+		title: 'Lakukan Analisis',
+		url: '/dashboard/analysis',
+		icon: Activity,
+	},
+	{
+		title: 'Riwayat',
+		url: '/dashboard/history',
+		icon: History,
+	},
+	{
+		title: 'AI Chat',
+		url: '/dashboard/ai-chat',
+		icon: MessageSquare,
+	},
+	{
+		title: 'Langkah Sehat',
+		url: '/dashboard/program',
+		icon: Heart,
+	},
 ];
 
 const bottomNavItems = [
@@ -55,7 +56,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 	const location = useLocation();
 	let userPath = location.pathname;
 
-	if(location.pathname.startsWith('/dashboard/program/')) {
+	if (location.pathname.startsWith('/dashboard/program/')) {
 		userPath = '/dashboard/program';
 	}
 
@@ -65,8 +66,8 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 		<Sidebar className="border-r border-slate-200/60" collapsible="offcanvas">
 			<SidebarHeader className="p-6">
 				<motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="flex items-center gap-3">
-					<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-500 text-white shadow-lg">
-						<Heart className="h-6 w-6" />
+					<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-white shadow-lg">
+						<img src={logo} alt="Kardia Logo" className="h-9 w-9" />
 					</div>
 					<div className="group-data-[collapsible=icon]:hidden">
 						<h1 className="text-xl font-bold text-rose-500">Kardia</h1>
@@ -77,7 +78,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 
 			<SidebarContent className="px-4">
 				<SidebarGroup>
-					<SidebarGroupLabel className="text-slate-600 font-medium mb-2 group-data-[collapsible=icon]:hidden">Main Navigation</SidebarGroupLabel>
+					<SidebarGroupLabel className="text-slate-600 font-medium mb-2 group-data-[collapsible=icon]:hidden">Navigasi Utama</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{mainNavItems.map((item, index) => (
@@ -122,7 +123,7 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 				{/* <SidebarSeparator className="my-6 bg-slate-200/60" /> */}
 
 				<SidebarGroup>
-					<SidebarGroupLabel className="text-slate-600 font-medium mb-2 group-data-[collapsible=icon]:hidden">Quick Access</SidebarGroupLabel>
+					<SidebarGroupLabel className="text-slate-600 font-medium mb-2 group-data-[collapsible=icon]:hidden">Akses Cepat</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{bottomNavItems.map((item, index) => (
@@ -173,13 +174,13 @@ export function AppSidebar({ user, handleLogout }: AppSidebarProps) {
 													{user.first_name?.charAt(0).toUpperCase() || 'U'}
 													{user.last_name?.charAt(0).toUpperCase() || ''}
 												</AvatarFallback>
-                                            </Avatar>
-                                            <div className='grid flex-1'>
-                                                <span className="truncate font-medium">
-                                                    {user.first_name} {user.last_name}
-                                                </span>
-                                                <span className="truncate text-xs">{user.email}</span>
-                                            </div>
+											</Avatar>
+											<div className="grid flex-1">
+												<span className="truncate font-medium">
+													{user.first_name} {user.last_name}
+												</span>
+												<span className="truncate text-xs">{user.email}</span>
+											</div>
 										</div>
 										<ChevronRight className="ml-auto size-4" />
 									</SidebarMenuButton>

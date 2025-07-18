@@ -25,6 +25,19 @@ const ChatArea = (props: ChatAreaPropsTypes) => {
 	const { isSidebarOpen, setIsSidebarOpen, chatTitle, currentChatId, messages, setInput, input, handleNewChat, handleSubmit, isLoading, messagesEndRef, isReadOnly = false } = props;
 	const navigate = useNavigate();
 
+	const suggestionsForClosedSidebar = ['Fokus minggu ini apa?', 'Perkembangan terakhir saya bagaimana?', 'Bagaimana cara saya meningkatkan progres?', 'Saya kesulitan, tolong berikan saran!'];
+
+	const suggestionsForOpenSidebar = [
+		'Bagaimana cara menjaga kesehatan jantung?',
+		'Gejala penyakit jantung apa saja?',
+		'Rekomendasi olahraga untuk pemula',
+		'Tips diet sehat untuk menurunkan berat badan',
+		'Bagaimana kondisi terkahir jantung saya?',
+		'Bagaimana hasil analisis sebulan terakhir saya?',
+	];
+
+	const activeSuggestions = setIsSidebarOpen ? suggestionsForOpenSidebar : suggestionsForClosedSidebar;
+
 	return (
 		<div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? 'mr-80' : 'mr-0'}`}>
 			{/* Header */}
@@ -34,7 +47,11 @@ const ChatArea = (props: ChatAreaPropsTypes) => {
 						<div className="p-2 bg-rose-100 rounded-lg">{setIsSidebarOpen ? <MessageSquare className="h-6 w-6 text-rose-600" /> : <Bot className="h-6 w-6 text-rose-600" />}</div>
 						<div className="hidden md:block">
 							<h1 className="text-xl font-bold text-gray-900">{chatTitle || 'AI Chat'}</h1>
-							<p className="text-sm text-gray-600">{currentChatId ? 'Melanjutkan percakapan' : 'Konsultasi kesehatan dengan AI'}</p>
+							{setIsSidebarOpen ? (
+								<p className="text-sm text-gray-600">{currentChatId ? 'Melanjutkan percakapan' : 'Mulai percakapan kesehatan dengan AI'}</p>
+							) : (
+								<p className="text-sm text-gray-600">{currentChatId ? 'Melanjutkan konsultasi' : 'Mulai konsultasikan langkah sehat Anda dengan AI'}</p>
+							)}
 						</div>
 					</div>
 					{setIsSidebarOpen ? (
@@ -57,7 +74,7 @@ const ChatArea = (props: ChatAreaPropsTypes) => {
 					) : (
 						<div className="flex items-center gap-2">
 							<Button variant="ghost" size="sm" className="text-gray-600 hover:bg-gray-100 cursor-pointer" onClick={() => navigate(-1)}>
-                                <span className='me-0.5'>Kembali</span>
+								<span className="me-0.5">Kembali</span>
 								<ArrowLeftToLine className="h-4 w-4" />
 							</Button>
 						</div>
@@ -82,44 +99,59 @@ const ChatArea = (props: ChatAreaPropsTypes) => {
 							>
 								{setIsSidebarOpen ? <MessageSquare className="h-6 w-6 text-rose-600" /> : <Bot className="h-6 w-6 text-rose-600" />}
 							</motion.div>
-							<motion.h3 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg font-semibold text-gray-900 mb-2">
-								{currentChatId ? 'Lanjutkan Percakapan' : 'Mulai Konsultasi'}
-							</motion.h3>
-							<motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-gray-600 mb-6">
-								{currentChatId ? 'Anda dapat melanjutkan percakapan sebelumnya atau memulai topik baru' : 'Tanyakan apa saja tentang kesehatan Anda kepada AI assistant'}
-							</motion.p>
-							{setIsSidebarOpen && (
-								<motion.div
-									initial={{ opacity: 0, y: 20 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{
-										delay: 0.6,
-										staggerChildren: 0.1,
-									}}
-									className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto"
-								>
-									{['Bagaimana cara menjaga kesehatan jantung?', 'Apa saja gejala diabetes yang perlu diwaspadai?', 'Rekomendasi olahraga untuk pemula', 'Tips diet sehat untuk menurunkan berat badan'].map((suggestion, index) => (
-										<motion.div
-											key={index}
-											initial={{ opacity: 0, y: 20 }}
-											animate={{ opacity: 1, y: 0 }}
-											transition={{
-												delay: 0.7 + index * 0.1,
-											}}
-											whileHover={{
-												scale: 1.02,
-												y: -2,
-											}}
-											whileTap={{ scale: 0.98 }}
-										>
-											<Button variant="outline" className="p-4 h-auto text-left justify-start hover:bg-rose-50 hover:border-rose-200 w-full transition-all duration-200 cursor-pointer" onClick={() => setInput(suggestion)}>
-												<MessageSquare className="h-4 w-4 mr-3 text-rose-500 flex-shrink-0" />
-												<span className="text-sm">{suggestion}</span>
-											</Button>
-										</motion.div>
-									))}
-								</motion.div>
+							{setIsSidebarOpen ? (
+								<>
+									<motion.h3 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg font-semibold text-gray-900 mb-2">
+										{currentChatId ? 'Lanjutkan Percakapan' : 'Mulai Percakapan'}
+									</motion.h3>
+
+									<motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-gray-600 mb-6">
+										{currentChatId ? 'Anda dapat melanjutkan percakapan sebelumnya atau memulai topik baru' : 'Tanyakan apa saja tentang kesehatan Anda kepada asisten AI pribadi Anda'}
+									</motion.p>
+								</>
+							) : (
+								// Kode ini hanya akan dirender jika isSidebarOpen bernilai false
+								<>
+									<motion.h3 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg font-semibold text-gray-900 mb-2">
+										{currentChatId ? 'Lanjutkan Konsultasi' : 'Mulai Konsultasi'}
+									</motion.h3>
+
+									<motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-gray-600 mb-6">
+										{currentChatId ? 'Anda dapat melanjutkan konsultasi sebelumnya atau memulai konsultasi baru' : 'Konsultasikan langkah sehat Anda kepada AI coach'}
+									</motion.p>
+								</>
 							)}
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{
+									delay: 0.6,
+									staggerChildren: 0.1,
+								}}
+								className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto"
+							>
+								{/* 4. Gunakan .map() pada daftar yang sudah dipilih */}
+								{activeSuggestions.map((suggestion, index) => (
+									<motion.div
+										key={index}
+										initial={{ opacity: 0, y: 20 }}
+										animate={{ opacity: 1, y: 0 }}
+										transition={{
+											delay: 0.7 + index * 0.1,
+										}}
+										whileHover={{
+											scale: 1.02,
+											y: -2,
+										}}
+										whileTap={{ scale: 0.98 }}
+									>
+										<Button variant="outline" className="p-4 h-auto text-left justify-start hover:bg-rose-50 hover:border-rose-200 w-full transition-all duration-200 cursor-pointer" onClick={() => setInput(suggestion)}>
+											<MessageSquare className="h-4 w-4 mr-3 text-rose-500 flex-shrink-0" />
+											<span className="text-sm">{suggestion}</span>
+										</Button>
+									</motion.div>
+								))}
+							</motion.div>
 						</motion.div>
 					) : (
 						<AnimatePresence mode="popLayout">
@@ -321,7 +353,7 @@ const ChatArea = (props: ChatAreaPropsTypes) => {
 							</div>
 						</motion.div>
 						<motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-xs text-gray-500 mt-2 text-center">
-							AI dapat membuat kesalahan. Selalu konsultasikan dengan dokter untuk masalah kesehatan serius.
+							<span className='text-rose-600'>🛈</span> AI dapat membuat kesalahan. Selalu konsultasikan dengan dokter untuk masalah kesehatan serius.
 						</motion.p>
 					</form>
 				</motion.div>

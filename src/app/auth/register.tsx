@@ -161,7 +161,7 @@ const Register = () => {
 				<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.1 }}>
 					<Card className="rounded-2xl shadow-xl border border-gray-200 bg-white/80 backdrop-blur-sm">
 						<CardHeader className="pb-4">
-							<CardTitle className="text-xl font-bold text-gray-900 text-center">Sign Up</CardTitle>
+							<CardTitle className="text-xl font-bold text-gray-900 text-center">Buat Akun Sekarang</CardTitle>
 						</CardHeader>
 						<CardContent className="p-6 pt-0">
 							<form onSubmit={handleSubmit} className="space-y-6">
@@ -208,7 +208,7 @@ const Register = () => {
 											placeholder="Create a strong password"
 											disabled={isLoading}
 										/>
-										<button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors" disabled={isLoading}>
+										<button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" disabled={isLoading}>
 											{showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
 										</button>
 									</div>
@@ -279,7 +279,7 @@ const Register = () => {
 											placeholder="Confirm your password"
 											disabled={isLoading}
 										/>
-										<button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors" disabled={isLoading}>
+										<button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" disabled={isLoading}>
 											{showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
 										</button>
 									</div>
@@ -303,7 +303,7 @@ const Register = () => {
 										</>
 									) : (
 										<>
-											Buat Akun
+											Buat Akun Sekarang
 											<ArrowRight className="h-5 w-5 ml-2" />
 										</>
 									)}

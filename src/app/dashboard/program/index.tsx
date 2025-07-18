@@ -301,7 +301,7 @@ export default function CoachingDashboard() {
 							<div className="flex items-center justify-between">
 								<h3 className="text-lg font-semibold text-slate-900">Progress Program</h3>
 								<Badge className="bg-green-100 text-green-700 border-green-200 font-medium">
-									M {programData?.overall_progress?.current_week_number} / {programData.weeks.length}
+									Minggu ke-{programData?.overall_progress?.current_week_number} dari {programData.weeks.length}
 								</Badge>
 							</div>
 						</CardTitle>
@@ -595,19 +595,19 @@ export default function CoachingDashboard() {
 				{/* Pause & Cancel Program Section */}
 				{programData.status === 'completed' ? (
 					// Kartu Laporan Kelulusan (dengan Dialog)
-					<Card className="mb-8 border-violet-200 shadow-lg bg-violet-50">
+					<Card className="mb-8 border-sky-200 shadow-lg bg-sky-50">
 						<CardHeader>
-							<CardTitle className="text-lg font-semibold text-violet-800 flex items-center gap-2">
-								<Trophy className="w-5 h-5 text-violet-500" />
+							<CardTitle className="text-lg font-semibold text-sky-800 flex items-center gap-2">
+								<Trophy className="w-5 h-5 text-sky-500" />
 								Selamat, Program Telah Selesai!
 							</CardTitle>
 						</CardHeader>
 						<CardContent>
 							<div className="flex flex-col items-center gap-4">
-								<p className="text-center text-violet-700">Anda telah berhasil menyelesaikan program ini. Lihat laporan kelulusan Anda untuk melihat ringkasan pencapaian.</p>
+								<p className="text-center text-sky-700">Anda telah berhasil menyelesaikan program ini. Lihat laporan kelulusan Anda untuk melihat ringkasan pencapaian.</p>
 								<Dialog open={showGradReport} onOpenChange={setShowGradReport}>
 									<DialogTrigger asChild>
-										<Button className="bg-violet-600 hover:bg-violet-700 w-full h-[48px] cursor-pointer" disabled={!graduationDetails}>
+										<Button className="bg-sky-600 hover:bg-sky-700 w-full h-[48px] cursor-pointer" disabled={!graduationDetails}>
 											{graduationDetails ? (
 												<>
 													<Award className="w-4 h-4 mr-2" />

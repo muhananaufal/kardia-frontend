@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logo from '@/assets/logo.png';
 
 const navItems = [
 	{ name: 'Alasan', href: '#alasan' },
@@ -77,8 +78,9 @@ const MainNavbar = () => {
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-16' : 'h-20'}`}>
 						{/* Logo */}
-						<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-							<span className={`font-semibold text-slate-900 transition-all duration-300 ${isScrolled ? 'text-xl' : 'text-2xl'}`}>Kardia ❤️</span>
+						<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+							<img src={logo} alt="Kardia Logo" className={`transition-all duration-300 ${isScrolled ? 'h-7' : 'h-8'}`} />
+							<span className={`font-bold text-slate-900 transition-all duration-300 ${isScrolled ? 'text-xl' : 'text-2xl'}`}>Kardia</span>
 						</motion.div>
 
 						{/* Desktop Navigation */}

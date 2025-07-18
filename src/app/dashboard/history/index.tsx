@@ -5,7 +5,6 @@ import {
 	AlertTriangle,
 	ArrowDown,
 	Filter,
-	History,
 	Loader2,
 	Minus,
 	Search,
@@ -265,10 +264,10 @@ export default function RiwayatPage() {
 		<div className="min-h-screen bg-slate-50">
 			<motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full mx-auto px-4 md:px-8 py-8 md:py-12 space-y-8">
 				<motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="space-y-2">
-					<div className="flex items-center gap-3">
-						<History className="w-8 h-8 text-rose-500" />
-						<div>
-							<h1 className="text-2xl md:text-4xl font-bold text-gray-900">Perjalanan Kesehatan Anda</h1>
+					<div className="flex items-center gap-3 justify-center">
+						{/* <History className="w-8 h-8 text-rose-500" /> */}
+						<div className="justify-items-center items-center mb-5">
+							<h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-[15px]">Perjalanan Kesehatan Anda</h1>
 							<p className="text-md md:text-lg text-gray-600">Lihat rekam jejak dan evolusi kesehatan jantung Anda di sini.</p>
 						</div>
 					</div>
@@ -411,7 +410,7 @@ export default function RiwayatPage() {
 																		e.stopPropagation();
 																		navigate(`/dashboard/program/${record.program_slug}`);
 																	}}
-																	className="flex-1 bg-gradient-to-r bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-sm hover:shadow-md h-11 transition-all duration-300 rounded-lg cursor-pointer"
+																	className="flex-1 bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-700 hover:to-indigo-700 text-white font-semibold shadow-sm hover:shadow-md h-11 transition-all duration-300 rounded-lg cursor-pointer"
 																>
 																	<BookOpen className="w-4 h-4 mr-2" />
 																	Lihat Laporan Program
@@ -490,11 +489,11 @@ export default function RiwayatPage() {
 									setShowConfirmModal(false);
 									setConfirmText('');
 								}}
-								className="flex-1 border-2 border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold rounded-md"
+								className="flex-1 border-2 border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold rounded-md cursor-pointer"
 							>
 								Batal
 							</Button>
-							<Button onClick={handleConfirmNewProgram} disabled={confirmText !== 'LANGKAH BARU'} className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md disabled:opacity-50">
+							<Button onClick={handleConfirmNewProgram} disabled={confirmText !== 'LANGKAH BARU'} className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md disabled:opacity-50 cursor-pointer">
 								Konfirmasi
 							</Button>
 						</div>
@@ -524,7 +523,7 @@ export default function RiwayatPage() {
 							<Button onClick={() => handleNewProgram(programSlug!)} className="bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-md" disabled={isNewProgramLoading}>
 								{isNewProgramLoading ? (
 									<>
-										<Loader2 className="animate-spin h-4 w-4 mr-2" /> Memulai...
+										<Loader2 className="animate-spin h-4 w-4 mr-2" /> Memulai Program...
 									</>
 								) : (
 									'Mulai Program Baru'

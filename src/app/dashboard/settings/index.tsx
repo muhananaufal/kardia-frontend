@@ -275,7 +275,15 @@ export default function SettingsPage() {
 							{isEditing ? (
 								<Input id="date_of_birth" type="date" value={formatDateForInput(profileData.date_of_birth)} onChange={(e) => setProfileData((p) => ({ ...p, date_of_birth: e.target.value }))} className="mt-1 h-[48px]" />
 							) : (
-								<p className="text-gray-800 mt-2">{profileData.date_of_birth ? new Date(profileData.date_of_birth).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}</p>
+								<p className="text-gray-800 mt-2">
+									{profileData.date_of_birth
+										? new Date(profileData.date_of_birth.split('/').reverse().join('-')).toLocaleDateString('id-ID', {
+												day: 'numeric',
+												month: 'long',
+												year: 'numeric',
+										})
+										: '-'}
+								</p>
 							)}
 						</div>
 						{/* Gender */}
@@ -410,7 +418,9 @@ export default function SettingsPage() {
 						<div className="w-full">
 							<SettingsRow icon={KeyRound} title="Ubah Password" description="Ganti password Anda secara berkala.">
 								<DialogTrigger asChild>
-									<Button variant="outline" className="cursor-pointer w-24">Ubah</Button>
+									<Button variant="outline" className="cursor-pointer w-24">
+										Ubah
+									</Button>
 								</DialogTrigger>
 							</SettingsRow>
 						</div>

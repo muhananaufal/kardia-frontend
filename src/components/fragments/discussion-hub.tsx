@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, MessageCircle, MoreHorizontal, Edit3, Trash2 } from 'lucide-react';
+import { Plus, MessageCircle, MoreHorizontal, Edit3, Trash2, Edit } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
+import { Label } from '../ui/label';
 
 interface Discussion {
 	slug: string;
@@ -51,11 +52,11 @@ export function DiscussionHub({ programSlug, discussions, isReadOnly = false, on
 					// Empty State
 					<div className="text-center py-8">
 						<MessageCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-						<p className="text-slate-600 mb-4">Belum ada diskusi yang dibuat. Mulai diskusi baru untuk bertanya atau berbagi pengalaman.</p>
+						<p className="text-slate-600 mb-4">Belum ada konsultasi yang dibuat. Mulai konsultasi baru untuk bertanya atau berbagi pengalaman.</p>
 						<Link to={`/dashboard/program/chat/new?program=${programSlug}&readOnly=${isReadOnly}`} className={isReadOnly ? 'pointer-events-none' : ''}>
 							<Button className={`bg-rose-500 hover:bg-rose-600 text-white cursor-pointer` + (isReadOnly ? 'cursor-not-allowed' : 'cursor-pointer')} disabled={isReadOnly}>
 								<Plus className="w-4 h-4 mr-2" />
-								Mulai Diskusi Baru
+								Mulai Konsultasi Baru
 							</Button>
 						</Link>
 					</div>
@@ -98,29 +99,52 @@ export function DiscussionHub({ programSlug, discussions, isReadOnly = false, on
 															setEditingId(discussion.slug);
 															setEditTitle(discussion.title);
 														}}
+														className="cursor-pointer"
 													>
 														<Edit3 className="w-4 h-4 mr-2" />
 														Edit Judul
 													</DropdownMenuItem>
 												</DialogTrigger>
-												<DialogContent>
+												<DialogContent className="sm:max-w-md">
 													<DialogHeader>
-														<DialogTitle>Edit Judul Diskusi</DialogTitle>
+														<DialogTitle className="flex items-center gap-2">
+															<Edit className="h-5 w-5 text-rose-500" />
+															Edit Judul Konsultasi
+														</DialogTitle>
 													</DialogHeader>
-													<div className="space-y-4">
-														<Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} placeholder="Masukkan judul baru..." />
-														<div className="flex justify-end gap-2">
-															<Button variant="outline" onClick={() => setEditingId(null)}>
-																Batal
-															</Button>
-															<Button onClick={() => handleEditSubmit(discussion.slug)}>Simpan</Button>
+													<div className="space-y-4 py-4">
+														<div className="space-y-2">
+															<Label htmlFor="edit-title-diskusi">Judul Konsultasi</Label>
+															<Input
+																id="edit-title-diskusi"
+																value={editTitle}
+																onChange={(e) => setEditTitle(e.target.value)}
+																placeholder="Masukkan judul baru..."
+																className="w-full"
+																autoFocus
+																onKeyDown={(e) => {
+																	if (e.key === 'Enter' && editTitle.trim()) {
+																		handleEditSubmit(discussion.slug);
+																	} else if (e.key === 'Escape') {
+																		setEditingId(null);
+																	}
+																}}
+															/>
 														</div>
 													</div>
+													<DialogFooter className="flex gap-2">
+														<Button variant="outline" onClick={() => setEditingId(null)} className='cursor-pointer'>
+															Batal
+														</Button>
+														<Button onClick={() => handleEditSubmit(discussion.slug)} disabled={!editTitle.trim()} className="bg-rose-500 hover:bg-rose-600 cursor-pointer">
+															Simpan
+														</Button>
+													</DialogFooter>
 												</DialogContent>
 											</Dialog>
-											<DropdownMenuItem className="text-red-600" onSelect={() => onDeleteThread(discussion.slug)}>
+											<DropdownMenuItem className="text-red-600 cursor-pointer" onSelect={() => onDeleteThread(discussion.slug)}>
 												<Trash2 className="w-4 h-4 mr-2" />
-												Hapus Diskusi
+												Hapus Konsultasi
 											</DropdownMenuItem>
 										</DropdownMenuContent>
 									</DropdownMenu>
@@ -130,7 +154,7 @@ export function DiscussionHub({ programSlug, discussions, isReadOnly = false, on
 						<Link to={`/dashboard/program/chat/new?program=${programSlug}&readOnly=${isReadOnly}`} className={isReadOnly ? 'pointer-events-none' : ''}>
 							<Button variant="outline" className={`w-full cursor-pointer` + (isReadOnly ? 'cursor-not-allowed' : 'cursor-pointer')} disabled={isReadOnly}>
 								<Plus className="w-4 h-4 mr-2" />
-								Mulai Diskusi Baru
+								Mulai Konsultasi Baru
 							</Button>
 						</Link>
 					</div>

@@ -39,7 +39,7 @@ export default function ChatPage() {
 
 	useEffect(() => {
 		if (isNewChat) {
-			setChatTitle('Konsultasi Baru');
+			setChatTitle('AI Coach');
 			setMessages([]);
 			setCurrentChatId(null);
 		} else {
@@ -90,16 +90,31 @@ export default function ChatPage() {
 		setIsLoading(true);
 
 		try {
+			// Logika untuk memulai percakapan baru
 			if (isNewChat) {
 				if (!programParam) return;
+
+				// Panggil API untuk membuat thread baru
 				const res = await createNewThread(programParam, token, input);
+
+				// Periksa apakah slug (ID unik) dari thread baru ada
 				if (res?.thread?.slug) {
-					navigate(`/dashboard/program/chat/${res.thread.slug}`);
+					// BENTUK URL BARU DENGAN MENYERTAKAN KEMBALI `programParam`
+					const newUrl = `/dashboard/program/chat/${res.thread.slug}?program=${programParam}`;
+
+					// Arahkan ke URL baru yang sudah lengkap.
+					// Ini akan me-render ulang komponen dengan data thread yang baru.
+					navigate(newUrl);
 				} else {
-					console.error('Thread slug is undefined');
+					console.error('Thread slug is undefined after creation.');
 				}
+
+				// Logika jika ini adalah percakapan yang sudah ada
 			} else if (params.threadId) {
+				// Kirim pesan ke thread yang sudah ada
 				const res = await sendThreadMessage(token, params.threadId, input);
+
+				// Siapkan objek pesan dari asisten
 				const assistantMessage: Message = {
 					id: Date.now().toString() + 'ai',
 					role: 'assistant',
@@ -107,6 +122,8 @@ export default function ChatPage() {
 						reply_components: res.reply.reply_components,
 					},
 				};
+
+				// Tambahkan balasan dari asisten ke daftar pesan
 				setMessages((prev) => [...prev, assistantMessage]);
 				setCurrentChatId(params.threadId || null);
 			}

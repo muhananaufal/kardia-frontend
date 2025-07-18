@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import MainNavbar from '@/components/fragments/main-navbar';
+import logo from '@/assets/logo.png';
 
 const fadeInUp = {
 	initial: { opacity: 0, y: 60 },
@@ -581,9 +582,8 @@ const Homepage = () => {
 					<div className="grid md:grid-cols-4 gap-8 mb-12">
 						<div className="space-y-4">
 							<div className="flex items-center gap-3">
-								<div className="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
-									<Heart className="h-6 w-6 text-white" fill="currentColor" />
-								</div>
+								{/* Ikon Hati diganti dengan tag img untuk logo */}
+								<img src={logo} alt="Kardia Logo" className="w-10 h-10" />
 								<div>
 									<h3 className="text-xl font-bold">Kardia</h3>
 									<p className="text-sm text-slate-400">Deteksi Dini, Jaga Jantung Setiap Hari</p>

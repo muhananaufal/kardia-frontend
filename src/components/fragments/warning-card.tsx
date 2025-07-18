@@ -25,12 +25,12 @@ export default function WarningCard(props: any) {
                     </div>
 
                     {/* Header */}
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
                         {title}
                     </h2>
 
                     {/* Description */}
-                    <p className="text-gray-600 text-base leading-relaxed px-2">
+                    <p className="text-gray-600 text-base leading-relaxed px-2 mb-5">
                         {description}
                     </p>
                 </CardHeader>
