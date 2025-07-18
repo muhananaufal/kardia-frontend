@@ -18,18 +18,18 @@ const registerSchema = z
 		email: z.string().email({ message: 'Please enter a valid email address' }),
 		password: z
 			.string()
-			.min(8, { message: 'Password must be at least 8 characters' })
+			.min(8, { message: 'Password harus minimal 8 karakter' })
 			.regex(/[A-Z]/, {
-				message: 'Password must contain at least one uppercase letter',
+				message: 'Password harus memiliki setidaknya satu huruf kapital',
 			})
 			.regex(/[a-z]/, {
-				message: 'Password must contain at least one lowercase letter',
+				message: 'Password harus memiliki setidaknya satu huruf kecil',
 			})
 			.regex(/[0-9]/, {
-				message: 'Password must contain at least one number',
+				message: 'Password harus memiliki setidaknya satu angka',
 			})
 			.regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, {
-				message: 'Password must contain at least one symbol',
+				message: 'Password harus memiliki setidaknya satu simbol',
 			}),
 		confirmPassword: z.string(),
 	})
@@ -208,7 +208,12 @@ const Register = () => {
 											placeholder="Create a strong password"
 											disabled={isLoading}
 										/>
-										<button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" disabled={isLoading}>
+										<button
+											type="button"
+											onClick={() => setShowPassword(!showPassword)}
+											className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+											disabled={isLoading}
+										>
 											{showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
 										</button>
 									</div>
@@ -279,7 +284,12 @@ const Register = () => {
 											placeholder="Confirm your password"
 											disabled={isLoading}
 										/>
-										<button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" disabled={isLoading}>
+										<button
+											type="button"
+											onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+											className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+											disabled={isLoading}
+										>
 											{showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
 										</button>
 									</div>

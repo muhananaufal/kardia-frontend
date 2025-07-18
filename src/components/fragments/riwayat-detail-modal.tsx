@@ -1,3 +1,4 @@
+import { healthParameters, proxyKeyMap } from '@/constants/healthParameters';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
 	X,
@@ -36,7 +37,7 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const modalVariants = {
 	hidden: { opacity: 0, scale: 0.95, y: 20 },
@@ -63,12 +64,28 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 
 	if (!record) return null;
 
+	const questionLabelMap = useMemo(() => {
+		const map: Record<string, string> = {};
+		// Gabungkan semua pertanyaan dari semua parameter menjadi satu
+		const allProxyQuestions = healthParameters.flatMap((p) => p.proxyQuestions);
+
+		allProxyQuestions.forEach((question) => {
+			const qKey = proxyKeyMap[question.key];
+			if (qKey && !map[qKey]) {
+				// Cek agar tidak menimpa kunci yang sama
+				map[qKey] = question.label;
+			}
+		});
+		return map;
+	}, []); // Array dependensi kosong agar hanya dibuat sekali
+
 	const getUserInputData = (record: AnalysisRecord) => {
+		// --- Bagian 1: Data Inti & Metrik Kesehatan ---
 		const coreData = {
 			age: record.generated_value.age,
 			gender: record.generated_value.sex_label,
 			smokingStatus: record.input.smoking_status === 'Bukan perokok saat ini' ? 'never' : 'current',
-			region: 'Indonesia', // fallback default karena tidak disediakan API
+			region: 'Indonesia',
 			diabetesStatus: record.input.has_diabetes ? 'yes' : 'no',
 			diabetesAge: record.input.has_diabetes ? record.input.age_at_diabetes_diagnosis : undefined,
 		};
@@ -84,53 +101,94 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 		const estimatedValues: string[] = [];
 		const estimatedParameters = [];
 
-		// Estimasi SBP
-		if (record.input.sbp_input_type === 'proxy' && record.input.sbp_proxy_answers) {
-			estimatedValues.push('sbp');
-			estimatedParameters.push({
+		// --- Bagian 2: Logika Estimasi Parameter ---
+
+		// Konfigurasi untuk parameter yang diestimasi via proxy
+		const parameterConfig = [
+			{
+				type: 'proxy',
+				key: 'sbp',
 				name: 'Tekanan Darah (SBP)',
-				value: `${record.generated_value.sbp}`,
 				unit: 'mmHg',
+				proxyAnswersKey: 'sbp_proxy_answers',
+				valueKey: 'sbp',
 				estimationMethod: 'Berdasarkan jawaban proxy terkait tekanan darah',
-				proxyResponses: Object.entries(record.input.sbp_proxy_answers)?.map(([qKey, answer]) => ({
-					question: qKey.replace('q_', '').replace(/_/g, ' ').toUpperCase(),
-					// question: qKey.replace('q_', '').replace(/_/g, ' ').toUpperCase(),
-					answer: answer,
-				})),
-			});
-		}
-
-		// Estimasi TCHOL
-		if (record.input.tchol_input_type === 'proxy' && record.input.tchol_proxy_answers) {
-			estimatedValues.push('totalCholesterol');
-			estimatedParameters.push({
+			},
+			{
+				type: 'proxy',
+				key: 'tchol',
 				name: 'Kolesterol Total',
-				value: `${record.generated_value.tchol}`,
 				unit: 'mmol/L',
+				proxyAnswersKey: 'tchol_proxy_answers',
+				valueKey: 'tchol',
+				estimatedValueName: 'totalCholesterol',
 				estimationMethod: 'Berdasarkan jawaban proxy terkait kolesterol',
-				proxyResponses: Object.entries(record.input.tchol_proxy_answers)?.map(([qKey, answer]) => ({
-					question: qKey.replace('q_', '').replace(/_/g, ' ').toUpperCase(),
-					answer: answer,
-				})),
-			});
-		}
-
-		// Estimasi HDL
-		if (record.input.hdl_input_type === 'proxy' && record.input.hdl_proxy_answers) {
-			estimatedValues.push('hdl');
-			estimatedParameters.push({
+			},
+			{
+				type: 'proxy',
+				key: 'hdl',
 				name: 'Kolesterol HDL',
-				value: `${record.generated_value.hdl}`,
 				unit: 'mmol/L',
+				proxyAnswersKey: 'hdl_proxy_answers',
+				valueKey: 'hdl',
 				estimationMethod: 'Berdasarkan jawaban proxy terkait HDL',
-				proxyResponses: Object.entries(record.input.hdl_proxy_answers)?.map(([qKey, answer]) => ({
-					question: qKey.replace('q_', '').replace(/_/g, ' ').toUpperCase(),
-					answer: answer,
-				})),
-			});
-		}
+			},
+			{
+				type: 'direct', // Tipe baru untuk parameter non-proxy
+				key: 'hba1c',
+				name: 'HBA1C',
+				unit: '%',
+				valueKey: 'hba1c',
+				estimationMethod: 'Dihitung berdasarkan data diabetes dan usia diagnosis',
+			},
+			{
+				type: 'direct', // Tipe baru untuk parameter non-proxy
+				key: 'scr',
+				name: 'Serum Creatinine',
+				unit: 'mg/dL',
+				valueKey: 'scr',
+				estimatedValueName: 'serumCreatinine',
+				estimationMethod: 'Dihitung berdasarkan data diabetes dan usia diagnosis',
+			},
+		];
 
-		// Estimasi HBA1C
+		// Loop melalui konfigurasi untuk memproses estimasi proxy
+  parameterConfig.forEach(config => {
+    // Logika untuk parameter yang diestimasi dari proxy
+    if (config.type === 'proxy') {
+      const proxyAnswers = record.input[config.proxyAnswersKey as keyof typeof record.input];
+      if (record.input[`${config.key}_input_type` as keyof typeof record.input] === 'proxy' && proxyAnswers) {
+        estimatedValues.push(config.estimatedValueName || config.key);
+        estimatedParameters.push({
+          name: config.name,
+          value: `${record.generated_value[config.valueKey as keyof typeof record.generated_value]}`,
+          unit: config.unit,
+          estimationMethod: config.estimationMethod,
+          proxyResponses: Object.entries(proxyAnswers)?.map(([qKey, answer]) => ({
+            question: questionLabelMap[qKey] || qKey.replace('q_', '').replace(/_/g, ' ').toUpperCase(),
+            answer: answer as string,
+          })),
+        });
+      }
+    }
+    
+    // Logika untuk parameter yang dihitung langsung (termasuk diabetes)
+    if (config.type === 'direct') {
+      const value = record.generated_value[config.valueKey as keyof typeof record.generated_value];
+      if (value !== undefined && value !== null) {
+        estimatedValues.push(config.estimatedValueName || config.key);
+        estimatedParameters.push({
+          name: config.name,
+          value: `${value}`,
+          unit: config.unit,
+          estimationMethod: config.estimationMethod,
+          proxyResponses: [], // Tidak ada proxy question untuk tipe ini
+        });
+      }
+    }
+  });
+
+		// Proses estimasi non-proxy (yang tidak menggunakan jawaban pertanyaan)
 		if (record.generated_value.hba1c !== undefined) {
 			estimatedValues.push('hba1c');
 			estimatedParameters.push({
@@ -142,7 +200,6 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 			});
 		}
 
-		// Estimasi Serum Creatinine
 		if (record.generated_value.scr !== undefined) {
 			estimatedValues.push('serumCreatinine');
 			estimatedParameters.push({
@@ -154,6 +211,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 			});
 		}
 
+		// --- Bagian 3: Mengembalikan Hasil ---
 		return {
 			coreData,
 			healthMetrics,
@@ -235,6 +293,12 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 		}
 	};
 
+	const severityTextMap = {
+		LOW: 'Rendah',
+		MEDIUM: 'Sedang',
+		HIGH: 'Tinggi',
+	};
+
 	const getSeverityBadge = (severity: string) => {
 		const colors = {
 			HIGH: 'bg-red-100 text-red-700 border-red-200',
@@ -242,6 +306,12 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 			LOW: 'bg-green-100 text-green-700 border-green-200',
 		};
 		return colors[severity as keyof typeof colors] || colors.LOW;
+	};
+
+	const metricStatusMap = {
+		POOR: 'Buruk',
+		FAIR: 'Cukup',
+		GOOD: 'Baik',
 	};
 
 	const getMetricStatusColor = (status: string) => {
@@ -259,11 +329,17 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 
 	const getRecommendationBadge = (level: string) => {
 		const colors = {
-			URGENT: 'bg-red-100 text-red-700 border-red-200',
-			RECOMMENDED: 'bg-blue-100 text-blue-700 border-blue-200',
-			OPTIONAL: 'bg-gray-100 text-gray-700 border-gray-200',
+			GENERAL_ADVICE: 'bg-green-100 text-green-700 border-green-200',
+			CONSIDER_INTERVENTION: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+			URGENT_INTERVENTION: 'bg-red-100 text-red-700 border-red-200',
 		};
-		return colors[level as keyof typeof colors] || colors.RECOMMENDED;
+		return colors[level as keyof typeof colors] || colors.CONSIDER_INTERVENTION;
+	};
+
+	const recommendationTextMap = {
+		GENERAL_ADVICE: 'Saran Umum',
+		CONSIDER_INTERVENTION: 'Pertimbangkan Intervensi',
+		URGENT_INTERVENTION: 'Intervensi Segera',
 	};
 
 	const toggleMyth = (index: number) => {
@@ -299,6 +375,13 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 	const isEstimated = (fieldName: string) => {
 		return userInputData.estimatedValues.includes(fieldName);
 	};
+
+	// 1. Konversi string ke angka secara eksplisit menggunakan parseFloat()
+	const percentage = parseFloat(detailedAnalysis.riskSummary.riskPercentage);
+	const reduction = parseFloat(detailedAnalysis.actionPlan.impactSimulation.predictedRiskReduction);
+
+	// 2. Lakukan perhitungan. Jika salah satu konversi gagal, hasilnya akan NaN.
+	const riskValue = percentage - reduction;
 
 	console.log('Detailed Analysis:', detailedAnalysis);
 
@@ -344,7 +427,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 										</TabsTrigger>
 										<TabsTrigger value="input" className="flex items-center gap-2 rounded-lg text-sm md:text-base font-medium transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-sm cursor-pointer">
 											<FileText className="h-4 w-4" />
-											Input User 
+											Input Pengguna
 										</TabsTrigger>
 									</TabsList>
 
@@ -380,7 +463,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 																	<div key={index} className="p-3 rounded-lg bg-gray-50 border border-gray-200">
 																		<div className="flex items-start justify-between gap-3 mb-2">
 																			<h5 className="font-medium text-gray-900 text-sm md:text-base">{contributor.title}</h5>
-																			<Badge className={`${getSeverityBadge(contributor.severity)} text-xs font-medium`}>{contributor.severity}</Badge>
+																			<Badge className={`${getSeverityBadge(contributor.severity)} text-xs font-medium`}>{severityTextMap[contributor.severity] || contributor.severity}</Badge>
 																		</div>
 																		<p className="text-xs md:text-sm text-gray-600 leading-relaxed">{contributor.explanation}</p>
 																	</div>
@@ -434,10 +517,12 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 													<CardContent className="p-4 md:p-6 space-y-4">
 														<div className="flex items-center gap-3">
 															<Stethoscope className="h-5 w-5 text-blue-600" />
-															<h4 className="font-bold text-gray-900 text-base md:text-lg">Konsultasi Medis</h4>
-															<Badge className={`${getRecommendationBadge(detailedAnalysis.actionPlan.medicalConsultation.recommendationLevel)} text-xs font-medium uppercase tracking-wide`}>
-																{detailedAnalysis.actionPlan.medicalConsultation.recommendationLevel}
-															</Badge>
+															<div className="w-full flex justify-between">
+																<h4 className="font-bold text-gray-900 text-base md:text-lg">Konsultasi Medis</h4>
+																<Badge className={`${getRecommendationBadge(detailedAnalysis.actionPlan.medicalConsultation.recommendationLevel)} text-xs font-medium uppercase tracking-wide`}>
+																	{recommendationTextMap[detailedAnalysis.actionPlan.medicalConsultation.recommendationLevel as keyof typeof recommendationTextMap]}
+																</Badge>
+															</div>
 														</div>
 														<p className="text-sm md:text-base text-gray-600 leading-relaxed">{detailedAnalysis.actionPlan.medicalConsultation.explanation}</p>
 
@@ -510,7 +595,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 															</div>
 															<ArrowRight className="h-5 w-5 text-purple-600" />
 															<div className="text-center">
-																<p className="text-2xl font-bold text-green-600">{detailedAnalysis.riskSummary.riskPercentage - detailedAnalysis.actionPlan.impactSimulation.predictedRiskReduction}%</p>
+																<p className="text-2xl font-bold text-green-600">{isNaN(riskValue) ? '0.00' : riskValue.toFixed(2)}%</p>
 																<p className="text-xs text-gray-600">Setelah 6 bulan</p>
 															</div>
 														</div>
@@ -538,7 +623,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 																<div key={index} className="p-4 rounded-lg bg-gray-50 border border-gray-200">
 																	<div className="flex items-center justify-between mb-2">
 																		<h5 className="font-medium text-gray-900 text-sm md:text-base">{metric.name}</h5>
-																		<Badge className={`${getMetricStatusColor(metric.status)} text-xs font-medium`}>{metric.status}</Badge>
+																		<Badge className={`${getMetricStatusColor(metric.status)} text-xs font-medium`}>{metricStatusMap[metric.status] || metric.status}</Badge>
 																	</div>
 																	<div className="space-y-1">
 																		<p className="text-sm text-gray-600">
@@ -808,7 +893,7 @@ export function RiwayatDetailModal({ record, isOpen, onClose }: RiwayatDetailMod
 																			<div className="space-y-4">
 																				<div className="flex items-center gap-2 mb-3">
 																					<HelpCircle className="h-4 w-4 text-orange-600" />
-																					<h5 className="font-bold text-gray-900 text-sm md:text-base">Proxy Question Responses</h5>
+																					<h5 className="font-bold text-gray-900 text-sm md:text-base">Jawaban Pertanyaan Proxy</h5>
 																				</div>
 																				<div className="space-y-3">
 																					{param.proxyResponses?.map((response, responseIndex) => (

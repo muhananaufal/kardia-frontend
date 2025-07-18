@@ -1,6 +1,7 @@
+/* eslint-disable no-useless-escape */
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Shield, Palette, Globe, Save, Edit3, Sun, Moon, Laptop, KeyRound, Loader2, AlertTriangle } from 'lucide-react';
+import { User, Shield, Palette, Globe, Save, Edit3, Sun, Moon, Laptop, KeyRound, Loader2, AlertTriangle, EyeOff, Eye, CheckCircle, X } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,22 +26,38 @@ const pageVariants = {
 };
 
 // --- ZOD SCHEMA FOR PASSWORD VALIDATION ---
-const passwordSchema = z
+const getPasswordStrength = (password: string) => {
+	const checks = [
+		{ label: 'Minimal 8 karakter', test: password.length >= 8 },
+		{ label: 'Satu huruf kapital', test: /[A-Z]/.test(password) },
+		{ label: 'Satu huruf kecil', test: /[a-z]/.test(password) },
+		{ label: 'Satu angka', test: /[0-9]/.test(password) },
+		{ label: 'Satu simbol', test: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) },
+	];
+
+	const passedChecks = checks.filter((check) => check.test).length;
+	return { checks, strength: passedChecks };
+};
+
+const changePasswordSchema = z
 	.object({
 		password: z
 			.string()
-			.min(8, { message: 'Password minimal 8 karakter.' })
-			.regex(/[A-Z]/, { message: 'Password harus mengandung huruf kapital.' })
-			.regex(/[a-z]/, { message: 'Password harus mengandung huruf kecil.' })
-			.regex(/[0-9]/, { message: 'Password harus mengandung angka.' }),
+			.min(8, { message: 'Password harus minimal 8 karakter' })
+			.regex(/[A-Z]/, { message: 'Password harus memiliki setidaknya satu huruf kapital' })
+			.regex(/[a-z]/, { message: 'Password harus memiliki setidaknya satu huruf kecil' })
+			.regex(/[0-9]/, { message: 'Password harus memiliki setidaknya satu angka' })
+			.regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, {
+				message: 'Password harus memiliki setidaknya satu simbol',
+			}),
 		confirmPassword: z.string(),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
-		message: 'Password tidak cocok.',
+		message: 'Konfirmasi password tidak cocok',
 		path: ['confirmPassword'],
 	});
 
-type PasswordFormValues = z.infer<typeof passwordSchema>;
+type PasswordFormValues = z.infer<typeof changePasswordSchema>;
 
 // --- HELPER COMPONENT FOR CONSISTENT SETTINGS ROWS ---
 const SettingsRow = ({ icon: Icon, title, description, children }: { icon: React.ElementType; title: string; description: string; children: React.ReactNode }) => (
@@ -95,6 +112,14 @@ export default function SettingsPage() {
 	const [isChangingPassword, setIsChangingPassword] = useState(false);
 	const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
+	// --- BARU: State untuk UI Password ---
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [showPasswordStrength, setShowPasswordStrength] = useState(false);
+
+	// --- BARU: Hitung kekuatan password setiap kali berubah ---
+	const passwordStrength = getPasswordStrength(passwordForm.password);
+
 	// Sync local state if auth user changes
 	useEffect(() => {
 		if (user) {
@@ -126,7 +151,7 @@ export default function SettingsPage() {
 		e.preventDefault();
 		setErrors({});
 
-		const validation = passwordSchema.safeParse(passwordForm);
+		const validation = changePasswordSchema.safeParse(passwordForm);
 		if (!validation.success) {
 			const formattedErrors: Partial<Record<keyof PasswordFormValues, string>> = {};
 			validation.error.errors.forEach((err) => {
@@ -147,6 +172,7 @@ export default function SettingsPage() {
 			toast.success('Password berhasil diperbarui!');
 			(document.getElementById('close-password-dialog') as HTMLButtonElement)?.click();
 			setPasswordForm({ password: '', confirmPassword: '' });
+			setShowPasswordStrength(false);
 		} catch (error) {
 			console.error('Failed to reset password:', error);
 			toast.error('Gagal memperbarui password. Pastikan password lama benar.');
@@ -281,7 +307,7 @@ export default function SettingsPage() {
 												day: 'numeric',
 												month: 'long',
 												year: 'numeric',
-										})
+										  })
 										: '-'}
 								</p>
 							)}
@@ -414,7 +440,7 @@ export default function SettingsPage() {
 					</div>
 				</CardHeader>
 				<CardContent className="p-2">
-					<Dialog>
+					<Dialog onOpenChange={(open) => !open && setShowPasswordStrength(false)}>
 						<div className="w-full">
 							<SettingsRow icon={KeyRound} title="Ubah Password" description="Ganti password Anda secara berkala.">
 								<DialogTrigger asChild>
@@ -424,47 +450,102 @@ export default function SettingsPage() {
 								</DialogTrigger>
 							</SettingsRow>
 						</div>
+						{/* --- UBAH: Seluruh form di dalam DialogContent --- */}
 						<DialogContent>
 							<DialogHeader>
 								<DialogTitle>Ubah Password</DialogTitle>
 								<DialogDescription>Pastikan untuk menggunakan password yang kuat dan unik.</DialogDescription>
 							</DialogHeader>
-							<form onSubmit={handlePasswordChange}>
-								<div className="space-y-4 py-4">
-									<div>
-										<Label htmlFor="password">Password Baru</Label>
-										<Input id="password" type="password" value={passwordForm.password} onChange={(e) => setPasswordForm((p) => ({ ...p, password: e.target.value }))} className={`mt-1 ${errors.password ? 'border-red-500' : ''}`} />
-										{errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+							<form onSubmit={handlePasswordChange} className="space-y-4">
+								{/* --- Password Baru Field --- */}
+								<div className="space-y-2">
+									<Label htmlFor="password">Password Baru</Label>
+									<div className="relative">
+										<KeyRound className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+										<Input
+											id="password"
+											type={showPassword ? 'text' : 'password'}
+											value={passwordForm.password}
+											onFocus={() => setShowPasswordStrength(true)}
+											onChange={(e) => {
+												setPasswordForm((p) => ({ ...p, password: e.target.value }));
+												if (errors.password) setErrors((prev) => ({ ...prev, password: '' }));
+											}}
+											className={`pl-10 pr-10 h-12 rounded-xl border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 ${errors.password ? 'border-red-500' : ''}`}
+											placeholder="Masukkan password baru"
+										/>
+										<button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer">
+											{showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+										</button>
 									</div>
-									<div>
-										<Label htmlFor="confirmPassword">Konfirmasi Password Baru</Label>
+									{errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+								</div>
+
+								{/* --- Indikator Kekuatan Password --- */}
+								{showPasswordStrength && passwordForm.password && (
+									<motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm">
+										<div className="flex items-center justify-between mb-2">
+											<span className="font-medium text-gray-700">Kekuatan Password</span>
+											<span className="text-gray-600">{passwordStrength.strength}/5</span>
+										</div>
+										<div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+											<div
+												className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.strength <= 2 ? 'bg-red-500' : passwordStrength.strength <= 3 ? 'bg-yellow-500' : 'bg-green-500'}`}
+												style={{ width: `${(passwordStrength.strength / 5) * 100}%` }}
+											/>
+										</div>
+										<div className="space-y-1">
+											{passwordStrength.checks.map((check, index) => (
+												<div key={index} className="flex items-center gap-2">
+													{check.test ? <CheckCircle className="h-3.5 w-3.5 text-green-500" /> : <X className="h-3.5 w-3.5 text-gray-400" />}
+													<span className={`text-xs ${check.test ? 'text-green-700' : 'text-gray-600'}`}>{check.label}</span>
+												</div>
+											))}
+										</div>
+									</motion.div>
+								)}
+
+								{/* --- Konfirmasi Password Field --- */}
+								<div className="space-y-2">
+									<Label htmlFor="confirmPassword">Konfirmasi Password Baru</Label>
+									<div className="relative">
+										<KeyRound className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
 										<Input
 											id="confirmPassword"
-											type="password"
+											type={showConfirmPassword ? 'text' : 'password'}
 											value={passwordForm.confirmPassword}
-											onChange={(e) => setPasswordForm((p) => ({ ...p, confirmPassword: e.target.value }))}
-											className={`mt-1 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+											onChange={(e) => {
+												setPasswordForm((p) => ({ ...p, confirmPassword: e.target.value }));
+												if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: '' }));
+											}}
+											className={`pl-10 pr-10 h-12 rounded-xl border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all duration-300 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+											placeholder="Konfirmasi password Anda"
 										/>
-										{errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+										<button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer">
+											{showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+										</button>
 									</div>
+									{errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
 								</div>
-								<DialogFooter>
+								<DialogFooter className="pt-4">
 									<DialogClose asChild>
 										<Button id="close-password-dialog" type="button" variant="ghost" className="cursor-pointer">
 											Batal
 										</Button>
 									</DialogClose>
-									<Button type="submit" disabled={isChangingPassword} className="bg-rose-600 hover:bg-rose-700 w-32 cursor-pointer">
+									{/* UBAH: Tambahkan validasi kekuatan password */}
+									<Button
+										type="submit"
+										// --- UBAH BARIS INI ---
+										disabled={isChangingPassword || passwordStrength.strength < 5 || !passwordForm.confirmPassword || passwordForm.password !== passwordForm.confirmPassword}
+										className="bg-rose-600 hover:bg-rose-700 w-32 cursor-pointer"
+									>
 										{isChangingPassword ? <Loader2 className="animate-spin" /> : 'Simpan'}
 									</Button>
 								</DialogFooter>
 							</form>
 						</DialogContent>
 					</Dialog>
-					{/* <Separator className="my-1" /> */}
-					{/* <SettingsRow icon={Lock} title="Autentikasi Dua Faktor (2FA)" description="Tambahkan lapisan keamanan ekstra.">
-						<Switch checked={isTwoFactorEnabled} onCheckedChange={setIsTwoFactorEnabled} />
-					</SettingsRow> */}
 				</CardContent>
 			</Card>
 
@@ -487,7 +568,9 @@ export default function SettingsPage() {
 						</div>
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button variant="destructive">Hapus Akun</Button>
+								<Button variant="destructive" className="cursor-pointer bg-rose-600 hover:bg-rose-700">
+									Hapus Akun
+								</Button>
 							</DialogTrigger>
 							<DialogContent>
 								<DialogHeader>
@@ -502,11 +585,11 @@ export default function SettingsPage() {
 									</div>
 									<DialogFooter>
 										<DialogClose asChild>
-											<Button type="button" variant="ghost">
+											<Button type="button" variant="ghost" className="cursor-pointer">
 												Batal
 											</Button>
 										</DialogClose>
-										<Button type="submit" variant="destructive" disabled={isDeletingAccount} className="w-40">
+										<Button type="submit" variant="destructive" disabled={isDeletingAccount} className="w-40 cursor-pointer bg-rose-600 hover:bg-rose-700">
 											{isDeletingAccount ? <Loader2 className="animate-spin" /> : 'Ya, Hapus Akun Saya'}
 										</Button>
 									</DialogFooter>

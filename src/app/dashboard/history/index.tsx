@@ -78,6 +78,8 @@ export default function RiwayatPage() {
 					const sortedHistory = responseData.data.assessment_history.sort((a: AnalysisRecord, b: AnalysisRecord) => new Date(b.date).getTime() - new Date(a.date).getTime());
 					const sanitizedHistory = sortedHistory.map((record: any) => ({
 						...record,
+						risk_percentage: parseFloat(record.risk_percentage) || 0,
+
 						program_slug: record.program_slug || '',
 						program_status: record.program_status || null,
 						result_details: record.result_details || defaultResultDetails,
@@ -520,7 +522,7 @@ export default function RiwayatPage() {
 							</SelectContent>
 						</Select>
 						<div className="flex justify-end pt-4">
-							<Button onClick={() => handleNewProgram(programSlug!)} className="bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-md" disabled={isNewProgramLoading}>
+							<Button onClick={() => handleNewProgram(programSlug!)} className="bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-md cursor-pointer" disabled={isNewProgramLoading}>
 								{isNewProgramLoading ? (
 									<>
 										<Loader2 className="animate-spin h-4 w-4 mr-2" /> Memulai Program...

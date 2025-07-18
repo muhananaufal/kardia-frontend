@@ -181,8 +181,10 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 							{status === 'active' && (
 								<div className="w-full md:w-48">
 									<div className="flex justify-between mb-1">
-										<span className="text-xs font-semibold text-violet-700">Progress Hari</span>
-										<span className="text-xs font-semibold text-violet-700">{Math.round(progressValue)}%</span>
+										<span className="text-xs font-semibold text-violet-700">Progress Hari </span>
+										<span className="text-xs font-semibold text-violet-700">
+											Ke-{Math.max(1, progress.current_day_in_program)} / {progress.total_days_in_program}
+										</span>
 									</div>
 									<Progress value={progressValue} className="h-2 [&>div]:bg-violet-500" />
 								</div>
