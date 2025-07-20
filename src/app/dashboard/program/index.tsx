@@ -131,6 +131,24 @@ export default function CoachingDashboard() {
 	// Tentukan minggu yang sudah selesai untuk di-highlight di timeline
 	const completedWeeks = programData?.weeks?.filter((week) => week.status === 'completed' || week.completion_percentage === 100).map((week) => week.week_number);
 
+	// Fungsi ini mengubah "20 July 2025" atau "21st July 2025" menjadi "2025-07-20"
+	const convertAPIDateToISO = (dateString) => {
+		if (!dateString) return '';
+		// Hapus 'st', 'nd', 'rd', 'th' dari tanggal
+		const cleanDateString = dateString.replace(/(\d+)(st|nd|rd|th)/, '$1');
+		const date = new Date(cleanDateString);
+		if (isNaN(date.getTime())) {
+			// Jika parsing gagal, kembalikan string kosong atau handle error
+			return '';
+		}
+
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+
+		return `${year}-${month}-${day}`;
+	};
+
 	// Handler untuk menyelesaikan tugas (mission/task)
 	const handleMissionComplete = async (id: string) => {
 		if (isReadOnly || !currentWeekData) return;
@@ -185,22 +203,27 @@ export default function CoachingDashboard() {
 	const todayDate = new Date();
 	todayDate.setHours(0, 0, 0, 0);
 
-	const today = new Date().toLocaleDateString('en-GB', {
-		day: '2-digit',
-		month: 'long',
-		year: 'numeric',
-	});
+	// const today = new Date().toLocaleDateString('en-GB', {
+	// 	day: '2-digit',
+	// 	month: 'long',
+	// 	year: 'numeric',
+	// });
+
+	const todayISO = new Date().toISOString().split('T')[0]; // Hasil: "2025-07-20"
 
 	const groupedTasks = useMemo(() => {
 		if (!currentWeekData?.tasks) return {};
 
 		// Menggunakan reduce untuk mengelompokkan tugas berdasarkan tanggal
-		return currentWeekData.tasks.reduce((acc: { [key: string]: any[] }, task: any) => {
-			const date = task.task_date;
-			if (!acc[date]) {
-				acc[date] = [];
+		return currentWeekData.tasks.reduce((acc, task) => {
+			// TERAPKAN FUNGSI DI SINI!
+			const isoDate = convertAPIDateToISO(task.task_date);
+			if (!isoDate) return acc; // Lewati jika tanggal tidak valid
+
+			if (!acc[isoDate]) {
+				acc[isoDate] = [];
 			}
-			acc[date].push(task);
+			acc[isoDate].push(task);
 			return acc;
 		}, {});
 	}, [currentWeekData]);
@@ -347,117 +370,91 @@ export default function CoachingDashboard() {
 						{programData.status === 'active' ? (
 							// Tampilan untuk program AKTIF (hanya tugas hari ini)
 							<>
-								{groupedTasks[today] && groupedTasks[today].length > 0 ? (
-									groupedTasks[today].map((mission: any) => (
-										<div
-											className={`${
-												mission.is_completed ? 'bg-green-50 border-green-200' : new Date(mission.task_date.replace(/(\d+)(st|nd|rd|th)/, '$1')) > todayDate && !mission.is_completed ? 'bg-red-50 border-red-200' : 'bg-white border-slate-200'
-											} rounded-lg border p-6 mb-4 transition-all duration-300 hover:shadow-sm`}
-										>
-											<div key={mission.id} className="flex items-start gap-4">
-												<div className="flex-shrink-0 hidden md:inline">
-													{mission.is_completed ? (
-														<CheckCircle2 className="w-6 h-6 text-green-600" />
-													) : new Date(mission.task_date.replace(/(\d+)(st|nd|rd|th)/, '$1')) > todayDate && !mission.is_completed ? (
-														<XCircle className="w-6 h-6 text-red-600" />
-													) : mission.task_type === 'main_mission' ? (
-														<Target className="w-6 h-6 text-blue-600" />
-													) : (
-														<Sparkles className="w-6 h-6 text-yellow-600" />
-													)}
-												</div>
-												<div className="flex-1">
-													<div className="flex items-start justify-between gap-3 mb-2">
-														<div className="flex flex-col-reverse md:flex-row items-start gap-3">
-															<h4
-																className={`font-semibold text-slate-900 ${
-																	mission.is_completed ? 'line-through text-green-600' : new Date(mission.task_date.replace(/(\d+)(st|nd|rd|th)/, '$1')) > todayDate && !mission.is_completed ? 'text-red-600 line-through' : ''
-																}`}
-															>
-																{mission.title}
-																<div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
-																	<span>{mission.task_date}</span>
+								{/* Gunakan `todayISO` sebagai kunci untuk mencari tugas hari ini */}
+								{groupedTasks[todayISO] && groupedTasks[todayISO].length > 0 ? (
+									groupedTasks[todayISO].map((mission) => {
+										// Konversi tanggal misi ke format ISO sekali saja untuk semua perbandingan
+										const missionISO = convertAPIDateToISO(mission.task_date);
+										// Tentukan apakah misi terlewat (missed)
+										const isMissed = missionISO < todayISO && !mission.is_completed;
+
+										return (
+											<div key={mission.id}>
+												<div
+													className={`${mission.is_completed ? 'bg-green-50 border-green-200' : isMissed ? 'bg-red-50 border-red-200' : 'bg-white border-slate-200'} rounded-lg border p-6 mb-4 transition-all duration-300 hover:shadow-sm`}
+												>
+													<div className="flex items-start gap-4">
+														<div className="flex-shrink-0 hidden md:inline">
+															{mission.is_completed ? (
+																<CheckCircle2 className="w-6 h-6 text-green-600" />
+															) : isMissed ? (
+																<XCircle className="w-6 h-6 text-red-600" />
+															) : mission.task_type === 'main_mission' ? (
+																<Target className="w-6 h-6 text-blue-600" />
+															) : (
+																<Sparkles className="w-6 h-6 text-yellow-600" />
+															)}
+														</div>
+														<div className="flex-1">
+															<div className="flex items-start justify-between gap-3 mb-2">
+																<div className="flex flex-col-reverse md:flex-row items-start gap-3">
+																	<h4 className={`font-semibold text-slate-900 ${mission.is_completed ? 'line-through text-green-600' : isMissed ? 'text-red-600 line-through' : ''}`}>
+																		{mission.title}
+																		<div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+																			<span>{mission.task_date}</span>
+																		</div>
+																	</h4>
+																	<Badge variant="outline" className={`text-[10px] mt-1 ${mission.task_type === 'main_mission' ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200'}`}>
+																		{mission.task_type === 'main_mission' ? 'Utama' : 'Bonus'}
+																	</Badge>
 																</div>
-															</h4>
-
-															<Badge variant="outline" className={`text-[10px] mt-1 ${mission.task_type === 'main_mission' ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200'}`}>
-																{mission.task_type === 'main_mission' ? 'Utama' : 'Bonus'}
-															</Badge>
-														</div>
-														<div className="flex-shrink-0">
-															<motion.button
-																className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-																	mission.is_completed ? 'bg-green-600 border-green-600 hover:bg-green-700' : 'bg-white border-slate-300'
-																} ${isReadOnly ? 'cursor-not-allowed opacity-50' : ' cursor-pointer hover:border-green-500 hover:bg-green-50'}`}
-																onClick={() => handleMissionComplete(mission.id)}
-																whileHover={
-																	isReadOnly
-																		? {}
-																		: {
-																				scale: 1.05,
-																		  }
-																}
-																whileTap={
-																	isReadOnly
-																		? {}
-																		: {
-																				scale: 0.95,
-																		  }
-																}
-																disabled={isReadOnly}
-															>
-																{mission.is_completed && <CheckCircle2 className="w-6 h-6 text-white" />}
-															</motion.button>
+																<div className="flex-shrink-0">
+																	<motion.button
+																		className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+																			mission.is_completed ? 'bg-green-600 border-green-600 hover:bg-green-700' : 'bg-white border-slate-300'
+																		} ${isReadOnly || isMissed ? 'cursor-not-allowed opacity-50' : ' cursor-pointer hover:border-green-500 hover:bg-green-50'}`}
+																		onClick={() => handleMissionComplete(mission.id)}
+																		whileHover={isReadOnly || isMissed ? {} : { scale: 1.05 }}
+																		whileTap={isReadOnly || isMissed ? {} : { scale: 0.95 }}
+																		disabled={isReadOnly || isMissed}
+																	>
+																		{mission.is_completed && <CheckCircle2 className="w-6 h-6 text-white" />}
+																	</motion.button>
+																</div>
+															</div>
+															<p className="text-slate-400 text-sm">{mission.description}</p>
 														</div>
 													</div>
-													<p className="text-slate-400 text-sm">{mission.description}</p>
 												</div>
+
+												{/* Bagian notifikasi setelah div utama misi */}
+												{mission.is_completed && (
+													<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-[-1rem] mb-4 p-4 bg-green-50 border border-green-200 rounded-b-xl">
+														<div className="flex items-center gap-2">
+															<Trophy className="w-5 h-5 text-green-600" />
+															<span className="font-semibold text-green-700">Misi ini telah selesai!</span>
+															{showSparkles && <Sparkles className="w-5 h-5 text-yellow-500 animate-pulse" />}
+														</div>
+														<p className="text-green-600 text-sm mt-1">Keren! Kamu telah menyelesaikan misi ini. Terus semangat!</p>
+													</motion.div>
+												)}
+
+												{isMissed && (
+													<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-[-1rem] mb-4 p-4 bg-red-50 border border-red-200 rounded-b-xl">
+														<div className="flex items-center gap-2">
+															<XCircle className="w-5 h-5 text-red-600" />
+															<span className="font-semibold text-red-700">Misi Terlewat</span>
+														</div>
+														<p className="text-red-600 text-sm mt-1">Sayang sekali, kamu belum menyelesaikan misi ini. Jangan khawatir, masih ada misi lain!</p>
+													</motion.div>
+												)}
 											</div>
-
-											{mission.is_completed && (
-												<motion.div
-													initial={{
-														opacity: 0,
-														y: 10,
-													}}
-													animate={{
-														opacity: 1,
-														y: 0,
-													}}
-													className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl"
-												>
-													<div className="flex items-center gap-2">
-														<Trophy className="w-5 h-5 text-green-600" />
-														<span className="font-semibold text-green-700">Misi ini telah selesai!</span>
-														{showSparkles && <Sparkles className="w-5 h-5 text-yellow-500 animate-pulse" />}
-													</div>
-													<p className="text-green-600 text-sm mt-1">Keren! Kamu telah menyelesaikan misi ini. Terus semangat!</p>
-												</motion.div>
-											)}
-
-											{new Date(mission.task_date.replace(/(\d+)(st|nd|rd|th)/, '$1')) > todayDate && !mission.is_completed && (
-												<motion.div
-													initial={{
-														opacity: 0,
-														y: 10,
-													}}
-													animate={{
-														opacity: 1,
-														y: 0,
-													}}
-													className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl"
-												>
-													<div className="flex items-center gap-2">
-														<XCircle className="w-5 h-5 text-red-600" />
-														<span className="font-semibold text-red-700">Misi Terlewat</span>
-													</div>
-													<p className="text-red-600 text-sm mt-1">Sayang sekali, kamu belum menyelesaikan misi ini. Jangan khawatir, masih ada misi lain yang bisa kamu kerjakan!</p>
-												</motion.div>
-											)}
-										</div>
-									))
+										);
+									})
 								) : (
-									<p className="text-slate-500">Tidak ada tugas untuk hari ini. Selamat beristirahat!</p>
+									<div className="text-center py-8 px-4 border border-dashed rounded-lg">
+										<p className="text-slate-500">Tidak ada tugas untuk hari ini. Selamat beristirahat! 🌴</p>
+									</div>
 								)}
 							</>
 						) : (
