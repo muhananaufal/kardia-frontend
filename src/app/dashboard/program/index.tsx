@@ -301,6 +301,23 @@ export default function CoachingDashboard() {
 		);
 	}
 
+	// VVV TAMBAHKAN KODE INI DI SINI VVV
+	console.log('--- DEBUG RENDER ---');
+	console.log('programData.status:', programData?.status);
+	console.log('Tipe selectedWeek:', typeof selectedWeek, '| Nilai:', selectedWeek);
+	console.log('Tipe current_week_number:', typeof programData?.overall_progress?.current_week_number, '| Nilai:', programData?.overall_progress?.current_week_number);
+	// Lakukan perbandingan dengan konversi ke Number untuk memastikan
+	const isWeekBeforeCurrent = Number(selectedWeek) < Number(programData?.overall_progress?.current_week_number);
+	console.log('Apakah minggu terpilih < minggu sekarang?:', isWeekBeforeCurrent);
+
+	// Kalkulasi ulang isReadOnly di sini untuk debug
+	const isProgramInactiveY = programData?.status !== 'active';
+	const isReadOnlyDebug = isProgramInactiveY || isWeekBeforeCurrent;
+	console.log('isProgramInactive:', isProgramInactiveY);
+	console.log('Final isReadOnly:', isReadOnlyDebug);
+	console.log('--------------------');
+	// ^^^ SAMPAI SINI ^^^
+
 	return (
 		<div className="min-h-screen">
 			<div className="container mx-auto px-4 md:px-6 pb-8 mt-[48px]">
