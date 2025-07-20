@@ -122,14 +122,14 @@ export default function CoachingDashboard() {
 	}, [token, params.slug, activeProgram]);
 
 	// Dapatkan data minggu yang dipilih dari array 'weeks'
-	const currentWeekData = programData?.weeks?.find((week) => Number(week.week_number) === selectedWeek);
+	const currentWeekData = programData?.weeks?.find((week) => Number(week.week_number) == selectedWeek);
 	const isProgramInactive = programData?.status !== 'active';
 	// const isProgramCompleted = programData?.status === "completed";
 	const isProgramPaused = programData?.status === 'paused';
 	const isReadOnly = isProgramInactive || (selectedWeek ?? 0) < programData?.overall_progress?.current_week_number;
 
 	// Tentukan minggu yang sudah selesai untuk di-highlight di timeline
-	const completedWeeks = programData?.weeks?.filter((week) => week.status === 'completed' || week.completion_percentage === 100).map((week) => week.week_number);
+	const completedWeeks = programData?.weeks?.filter((week) => week.status === 'completed' || week.completion_percentage == 100).map((week) => week.week_number);
 
 	// Fungsi ini mengubah "20 July 2025" atau "21st July 2025" menjadi "2025-07-20"
 	const convertAPIDateToISO = (dateString: any) => {
@@ -157,12 +157,12 @@ export default function CoachingDashboard() {
 
 		const newProgramData = JSON.parse(JSON.stringify(programData));
 
-		const weekToUpdate = newProgramData?.weeks?.find((week: any) => week.week_number === selectedWeek);
+		const weekToUpdate = newProgramData?.weeks?.find((week: any) => week.week_number == selectedWeek);
 
 		try {
 			if (weekToUpdate) {
 				weekToUpdate.tasks = weekToUpdate.tasks.map((task: any) => {
-					if (task.id === id) {
+					if (task.id == id) {
 						setShowSparkles(!task.is_completed);
 						return { ...task, is_completed: !task.is_completed };
 					}
@@ -301,23 +301,9 @@ export default function CoachingDashboard() {
 		);
 	}
 
-	// VVV TAMBAHKAN KODE INI DI SINI VVV
-	console.log('--- DEBUG RENDER ---');
-	console.log('programData.status:', programData?.status);
-	console.log('Tipe selectedWeek:', typeof selectedWeek, '| Nilai:', selectedWeek);
-	console.log('Tipe current_week_number:', typeof programData?.overall_progress?.current_week_number, '| Nilai:', programData?.overall_progress?.current_week_number);
-	// Lakukan perbandingan dengan konversi ke Number untuk memastikan
-	const isWeekBeforeCurrent = Number(selectedWeek) < Number(programData?.overall_progress?.current_week_number);
-	console.log('Apakah minggu terpilih < minggu sekarang?:', isWeekBeforeCurrent);
 
-	// Kalkulasi ulang isReadOnly di sini untuk debug
-	const isProgramInactiveY = programData?.status !== 'active';
-	const isReadOnlyDebug = isProgramInactiveY || isWeekBeforeCurrent;
-	console.log('isProgramInactive:', isProgramInactiveY);
-	console.log('Final isReadOnly:', isReadOnlyDebug);
-	console.log('--------------------');
-	// ^^^ SAMPAI SINI ^^^
 
+	
 	return (
 		<div className="min-h-screen">
 			<div className="container mx-auto px-4 md:px-6 pb-8 mt-[48px]">
