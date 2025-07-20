@@ -270,7 +270,7 @@ export default function RiwayatPage() {
 						{/* <History className="w-8 h-8 text-rose-500" /> */}
 						<div className="justify-items-center items-center mb-5">
 							<h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-[15px]">Perjalanan Kesehatan Anda</h1>
-							<p className="text-md md:text-lg text-gray-600">Lihat rekam jejak dan evolusi kesehatan jantung Anda di sini.</p>
+							<p className="text-md md:text-lg text-gray-600 text-center">Lihat rekam jejak dan evolusi kesehatan jantung Anda di sini.</p>
 						</div>
 					</div>
 				</motion.div>

@@ -336,7 +336,7 @@ export default function DashboardPage() {
 					{/* <ChartColumn className="w-8 h-8 text-rose-500" /> */}
 					<div className="justify-items-center items-center mb-5">
 						<h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-[15px]">Dashboard Kesehatan</h1>
-						<p className="text-md md:text-lg text-gray-600">Ringkasan, wawasan, dan rencana aksi personal untuk Anda.</p>
+						<p className="text-md md:text-lg text-gray-600 text-center">Ringkasan, wawasan, dan rencana aksi personal untuk Anda.</p>
 					</div>
 				</div>
 			</motion.div>
@@ -416,17 +416,22 @@ export default function DashboardPage() {
 			<motion.div variants={cardVariants}>
 				<Tabs defaultValue="summary" className="w-full">
 					<TabsList className="grid w-full grid-cols-3 bg-slate-200/80">
+						{/* Tab 1: Ringkasan */}
 						<TabsTrigger value="summary" className="cursor-pointer">
-							<Lightbulb className="w-4 h-4 mr-2" />
-							Ringkasan
+							<Lightbulb className="h-5 w-5 md:mr-2" />
+							<span className="hidden md:inline">Ringkasan</span>
 						</TabsTrigger>
+
+						{/* Tab 2: Rencana Aksi */}
 						<TabsTrigger className="cursor-pointer" value="action-plan">
-							<Target className="w-4 h-4 mr-2" />
-							Rencana Aksi
+							<Target className="h-5 w-5 md:mr-2" />
+							<span className="hidden md:inline">Rencana Aksi</span>
 						</TabsTrigger>
+
+						{/* Tab 3: Wawasan */}
 						<TabsTrigger className="cursor-pointer" value="insights">
-							<Stethoscope className="w-4 h-4 mr-2" />
-							Wawasan
+							<Stethoscope className="h-5 w-5 md:mr-2" />
+							<span className="hidden md:inline">Wawasan</span>
 						</TabsTrigger>
 					</TabsList>
 
