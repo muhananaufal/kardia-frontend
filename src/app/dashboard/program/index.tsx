@@ -132,7 +132,7 @@ export default function CoachingDashboard() {
 	const completedWeeks = programData?.weeks?.filter((week) => week.status === 'completed' || week.completion_percentage === 100).map((week) => week.week_number);
 
 	// Fungsi ini mengubah "20 July 2025" atau "21st July 2025" menjadi "2025-07-20"
-	const convertAPIDateToISO = (dateString) => {
+	const convertAPIDateToISO = (dateString: any) => {
 		if (!dateString) return '';
 		// Hapus 'st', 'nd', 'rd', 'th' dari tanggal
 		const cleanDateString = dateString.replace(/(\d+)(st|nd|rd|th)/, '$1');
@@ -215,7 +215,7 @@ export default function CoachingDashboard() {
 		if (!currentWeekData?.tasks) return {};
 
 		// Menggunakan reduce untuk mengelompokkan tugas berdasarkan tanggal
-		return currentWeekData.tasks.reduce((acc, task) => {
+		return currentWeekData.tasks.reduce((acc: any, task: any) => {
 			// TERAPKAN FUNGSI DI SINI!
 			const isoDate = convertAPIDateToISO(task.task_date);
 			if (!isoDate) return acc; // Lewati jika tanggal tidak valid
@@ -372,7 +372,7 @@ export default function CoachingDashboard() {
 							<>
 								{/* Gunakan `todayISO` sebagai kunci untuk mencari tugas hari ini */}
 								{groupedTasks[todayISO] && groupedTasks[todayISO].length > 0 ? (
-									groupedTasks[todayISO].map((mission) => {
+									groupedTasks[todayISO].map((mission: any) => {
 										// Konversi tanggal misi ke format ISO sekali saja untuk semua perbandingan
 										const missionISO = convertAPIDateToISO(mission.task_date);
 										// Tentukan apakah misi terlewat (missed)
