@@ -129,7 +129,7 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 	}
 
 	const { status, title, progress, slug } = program;
-	const progressValue = (Math.max(0, progress.current_day_in_program) / progress.total_days_in_program) * 100;
+	const progressValue = (Math.max(0, progress.current_day_in_program * -1 + 1) / progress.total_days_in_program) * 100;
 	// Konfigurasi untuk setiap status
 	const statusConfig = {
 		active: {
@@ -160,6 +160,8 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 
 	const currentConfig = statusConfig[status];
 
+	// console.log(progress.current_week);
+
 	return (
 		<motion.div variants={cardVariants} initial="initial" animate="animate" transition={{ delay: 0.2 }}>
 			<Card className={`rounded-2xl shadow-sm border ${currentConfig.bgColor} ${currentConfig.borderColor} overflow-hidden transition-all duration-300`}>
@@ -172,7 +174,8 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 								<h3 className={`text-lg font-bold ${currentConfig.titleColor}`}>{title}</h3>
 								{status === 'completed' && <p className="text-sm font-medium text-sky-700">Selamat! Program telah selesai.</p>}
 								{status === 'paused' && <p className="text-sm font-medium text-amber-700">Program sedang dijeda.</p>}
-								{status === 'active' && <p className="text-sm font-medium text-violet-700">{`Minggu ${progress.current_week} dari ${progress.total_weeks} sedang berjalan`}</p>}
+								{/* {status === 'active' && <p className="text-sm font-medium text-violet-700">{`Minggu ${progress.current_week} dari ${progress.total_weeks} sedang berjalan`}</p>} */}
+								{status === 'active' && <p className="text-sm font-medium text-violet-700">{`Minggu ${Math.max(1, progress.current_week + 1)} dari ${progress.total_weeks} sedang berjalan`}</p>}
 							</div>
 						</div>
 
@@ -181,9 +184,9 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 							{status === 'active' && (
 								<div className="w-full md:w-48">
 									<div className="flex justify-between mb-1">
-										<span className="text-xs font-semibold text-violet-700">Progress Hari </span>
+										<span className="text-xs font-semibold text-violet-700">Progress Hari</span>
 										<span className="text-xs font-semibold text-violet-700">
-											Ke-{Math.max(1, progress.current_day_in_program)} / {progress.total_days_in_program}
+											Ke-{Math.max(0, progress.current_day_in_program * -1 + 1)} / {progress.total_days_in_program}
 										</span>
 									</div>
 									<Progress value={progressValue} className="h-2 [&>div]:bg-violet-500" />
