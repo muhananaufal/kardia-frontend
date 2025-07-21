@@ -119,7 +119,7 @@ const ProgramOverviewCard = ({ program }: { program: ProgramOverviewData | null 
 							<h3 className="text-lg font-bold text-slate-800">Mulai Perjalanan Sehat Anda</h3>
 							<p className="text-slate-600 text-sm mt-1">Jelajahi program kesehatan terpandu yang dirancang khusus untuk Anda.</p>
 						</div>
-						<Link to="/dashboard/programs" className="w-full md:w-auto">
+						<Link to="/dashboard/history" className="w-full md:w-auto">
 							<Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold cursor-pointer">Jelajahi Program</Button>
 						</Link>
 					</CardContent>
